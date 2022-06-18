@@ -7,4 +7,6 @@ Discord Channel: https://discord.com/channels/987060541627445259/987060541627445
 
 Trello Board: https://trello.com/b/mz8chdTP/main
 
-Google Docs: https://docs.google.com/document/d/1uzREuE4WGKQFyTj6X2Dqtl5WaXsmne2laYvtoryNMxs/edit?usp=sharing
+Google Drive Folder: https://drive.google.com/drive/u/2/folders/1IrNj8SJbxrrNcP-9jAEU1Gup13xqUzyc
+
+
