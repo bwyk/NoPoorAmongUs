@@ -14,12 +14,12 @@ namespace Models
 				public string Status { get; set; }
 
 
-				//[ValidateNever]
-				//[ForeignKey("GuardianId")]
-				//public List<Guardian> Guardians { get; set; }
+                [ValidateNever]
+                [ForeignKey("GuardianId")]
+                public List<Guardian> Guardians { get; set; }
 
-				//[ValidateNever]
-				//[ForeignKey("RatingsId")]
-				//public Ratings Ratings { get; set; }
-		}
+                [ValidateNever]
+                [ForeignKey("RatingsId")]
+                public Ratings Ratings { get; set; }
+    }
 }

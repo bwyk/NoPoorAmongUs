@@ -16,7 +16,26 @@ namespace DataAccess.Repository
         {
             _db = db;
 
+
         }
+
+        public IApplicantsRepository Applicant { get; private set; }
+
+        public IClassesRepository Class { get; private set; }
+
+        public ICoursesRepository Course { get; private set; }
+
+        public IEmployeesRepository Employee { get; private set; }
+
+        public IGuardiansRepository Guardian { get; private set; }
+
+        public IPersonsRepository Person { get; private set; }
+
+        public IRatingsRepository Rating { get; private set; }
+
+        public IStudentsRepository Student { get; private set; }
+
+        public ITermsRepository Term { get; private set; }
 
         public void Save()
         {
