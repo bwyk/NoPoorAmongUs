@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NPAU.Models;
+using Models;
 using System.Diagnostics;
 
 namespace NPAU.Controllers

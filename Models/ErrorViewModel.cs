@@ -1,4 +1,4 @@
-namespace NPAU.Models
+namespace Models
 {
     public class ErrorViewModel
     {

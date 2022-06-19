@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-		public class Employee : Person
-		{
-				public string Email { get; set; }
-				public string Role { get; set; }
-		}
+    public class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+    }
 }
