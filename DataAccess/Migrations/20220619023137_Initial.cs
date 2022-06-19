@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccess.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,6 +59,21 @@ namespace DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -198,6 +213,12 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Classes", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Classes_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Classes_Terms_TermId",
                         column: x => x.TermId,
                         principalTable: "Terms",
@@ -206,7 +227,7 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Persons",
+                name: "Students",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -216,32 +237,58 @@ namespace DataAccess.Migrations
                     Village = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RatingsId = table.Column<int>(type: "int", nullable: true),
-                    StudentId = table.Column<int>(type: "int", nullable: true),
-                    EnglishLevel = table.Column<int>(type: "int", nullable: true),
-                    ComputerLevel = table.Column<int>(type: "int", nullable: true),
-                    ClassId = table.Column<int>(type: "int", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Relationship = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    GuardianId = table.Column<int>(type: "int", nullable: true)
+                    EnglishLevel = table.Column<int>(type: "int", nullable: false),
+                    ComputerLevel = table.Column<int>(type: "int", nullable: false),
+                    ClassId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Persons", x => x.Id);
+                    table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Persons_Classes_ClassId",
+                        name: "FK_Students_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Applicants",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Birthday = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Village = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RatingsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Applicants", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Guardians",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Relationship = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GuardianId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Guardians", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Persons_Persons_GuardianId",
+                        name: "FK_Guardians_Applicants_GuardianId",
                         column: x => x.GuardianId,
-                        principalTable: "Persons",
+                        principalTable: "Applicants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -263,12 +310,18 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Ratings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ratings_Persons_ApplicantId",
+                        name: "FK_Ratings_Applicants_ApplicantId",
                         column: x => x.ApplicantId,
-                        principalTable: "Persons",
+                        principalTable: "Applicants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applicants_RatingsId",
+                table: "Applicants",
+                column: "RatingsId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -320,37 +373,23 @@ namespace DataAccess.Migrations
                 column: "TermId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Persons_ClassId",
-                table: "Persons",
-                column: "ClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Persons_GuardianId",
-                table: "Persons",
+                name: "IX_Guardians_GuardianId",
+                table: "Guardians",
                 column: "GuardianId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Persons_RatingsId",
-                table: "Persons",
-                column: "RatingsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ratings_ApplicantId",
                 table: "Ratings",
-                column: "ApplicantId",
-                unique: true);
+                column: "ApplicantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_ClassId",
+                table: "Students",
+                column: "ClassId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Classes_Persons_EmployeeId",
-                table: "Classes",
-                column: "EmployeeId",
-                principalTable: "Persons",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Persons_Ratings_RatingsId",
-                table: "Persons",
+                name: "FK_Applicants_Ratings_RatingsId",
+                table: "Applicants",
                 column: "RatingsId",
                 principalTable: "Ratings",
                 principalColumn: "Id",
@@ -360,12 +399,8 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Classes_Persons_EmployeeId",
-                table: "Classes");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Ratings_Persons_ApplicantId",
-                table: "Ratings");
+                name: "FK_Applicants_Ratings_RatingsId",
+                table: "Applicants");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -386,22 +421,31 @@ namespace DataAccess.Migrations
                 name: "Courses");
 
             migrationBuilder.DropTable(
+                name: "Guardians");
+
+            migrationBuilder.DropTable(
+                name: "Students");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Persons");
+                name: "Classes");
 
             migrationBuilder.DropTable(
-                name: "Classes");
+                name: "Employees");
+
+            migrationBuilder.DropTable(
+                name: "Terms");
 
             migrationBuilder.DropTable(
                 name: "Ratings");
 
             migrationBuilder.DropTable(
-                name: "Terms");
+                name: "Applicants");
         }
     }
 }

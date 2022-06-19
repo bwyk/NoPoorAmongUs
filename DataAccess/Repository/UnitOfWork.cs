@@ -29,8 +29,6 @@ namespace DataAccess.Repository
 
         public IGuardiansRepository Guardian { get; private set; }
 
-        public IPersonsRepository Person { get; private set; }
-
         public IRatingsRepository Rating { get; private set; }
 
         public IStudentsRepository Student { get; private set; }

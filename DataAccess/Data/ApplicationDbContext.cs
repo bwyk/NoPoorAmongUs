@@ -21,7 +21,6 @@ namespace DataAccess.Data
         public DbSet<Applicant> Applicants => Set<Applicant>();
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<Guardian> Guardians => Set<Guardian>();
-        public DbSet<Person> Persons => Set<Person>();
         public DbSet<Student> Students => Set<Student>();
     }
 }

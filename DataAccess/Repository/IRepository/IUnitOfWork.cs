@@ -13,7 +13,6 @@ namespace DataAccess.Repository.IRepository
         ICoursesRepository Course { get; }
         IEmployeesRepository Employee { get; }
         IGuardiansRepository Guardian { get; }
-        IPersonsRepository Person { get; }
         IRatingsRepository Rating { get; }
         IStudentsRepository Student { get; }
         ITermsRepository Term { get; }

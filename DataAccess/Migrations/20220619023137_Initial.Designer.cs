@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220619015236_initial")]
-    partial class initial
+    [Migration("20220619023137_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -222,6 +222,49 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Models.Applicant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Birthday")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RatingsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Village")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RatingsId")
+                        .IsUnique();
+
+                    b.ToTable("Applicants");
+                });
+
             modelBuilder.Entity("Models.Class", b =>
                 {
                     b.Property<int>("Id")
@@ -269,7 +312,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("Models.Person", b =>
+            modelBuilder.Entity("Models.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -277,15 +320,7 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Birthday")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -293,19 +328,39 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Village")
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Persons");
+                    b.ToTable("Employees");
+                });
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
+            modelBuilder.Entity("Models.Guardian", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GuardianId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Relationship")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuardianId");
+
+                    b.ToTable("Guardians");
                 });
 
             modelBuilder.Entity("Models.Ratings", b =>
@@ -342,10 +397,53 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicantId")
-                        .IsUnique();
+                    b.HasIndex("ApplicantId");
 
                     b.ToTable("Ratings");
+                });
+
+            modelBuilder.Entity("Models.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Birthday")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ComputerLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EnglishLevel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Village")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Models.Term", b =>
@@ -372,74 +470,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Terms");
-                });
-
-            modelBuilder.Entity("Models.Applicant", b =>
-                {
-                    b.HasBaseType("Models.Person");
-
-                    b.Property<int>("RatingsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("RatingsId");
-
-                    b.HasDiscriminator().HasValue("Applicant");
-                });
-
-            modelBuilder.Entity("Models.Employee", b =>
-                {
-                    b.HasBaseType("Models.Person");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Employee");
-                });
-
-            modelBuilder.Entity("Models.Guardian", b =>
-                {
-                    b.HasBaseType("Models.Person");
-
-                    b.Property<int>("GuardianId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Relationship")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("GuardianId");
-
-                    b.HasDiscriminator().HasValue("Guardian");
-                });
-
-            modelBuilder.Entity("Models.Student", b =>
-                {
-                    b.HasBaseType("Models.Applicant");
-
-                    b.Property<int?>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ComputerLevel")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EnglishLevel")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasDiscriminator().HasValue("Student");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -493,6 +523,17 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Models.Applicant", b =>
+                {
+                    b.HasOne("Models.Ratings", "Ratings")
+                        .WithOne()
+                        .HasForeignKey("Models.Applicant", "RatingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ratings");
+                });
+
             modelBuilder.Entity("Models.Class", b =>
                 {
                     b.HasOne("Models.Employee", "Instructor")
@@ -512,28 +553,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Term");
                 });
 
-            modelBuilder.Entity("Models.Ratings", b =>
-                {
-                    b.HasOne("Models.Applicant", "Applicant")
-                        .WithOne()
-                        .HasForeignKey("Models.Ratings", "ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Applicant");
-                });
-
-            modelBuilder.Entity("Models.Applicant", b =>
-                {
-                    b.HasOne("Models.Ratings", "Ratings")
-                        .WithMany()
-                        .HasForeignKey("RatingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ratings");
-                });
-
             modelBuilder.Entity("Models.Guardian", b =>
                 {
                     b.HasOne("Models.Applicant", "Dependent")
@@ -545,6 +564,17 @@ namespace DataAccess.Migrations
                     b.Navigation("Dependent");
                 });
 
+            modelBuilder.Entity("Models.Ratings", b =>
+                {
+                    b.HasOne("Models.Applicant", "Applicant")
+                        .WithMany()
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+                });
+
             modelBuilder.Entity("Models.Student", b =>
                 {
                     b.HasOne("Models.Class", null)
@@ -552,14 +582,14 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ClassId");
                 });
 
-            modelBuilder.Entity("Models.Class", b =>
-                {
-                    b.Navigation("EnrolledStudents");
-                });
-
             modelBuilder.Entity("Models.Applicant", b =>
                 {
                     b.Navigation("Guardians");
+                });
+
+            modelBuilder.Entity("Models.Class", b =>
+                {
+                    b.Navigation("EnrolledStudents");
                 });
 #pragma warning restore 612, 618
         }
