@@ -7,6 +7,7 @@ namespace Models
 {
     public class Student
     {
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Birthday { get; set; }
@@ -16,7 +17,7 @@ namespace Models
         public int EnglishLevel { get; set; }
         public int ComputerLevel { get; set; }
         [ValidateNever]
-        [ForeignKey("Applicant")]
+        [ForeignKey("ApplicantId")]
         public Applicant Applicant { get; set; }
         public int ApplicantId { get; set; }
     }

@@ -19,25 +19,25 @@ namespace Models
 
 
 
-
-        [ValidateNever]
-        [ForeignKey("Instructor")]
-        public Instructor Instructor { get; set; }
         public int InstructorId { get; set; }
-
         [ValidateNever]
-        [ForeignKey("Term")]
-        public Term Term { get; set; }
+        [ForeignKey("InstructorId")]
+        public Instructor Instructor { get; set; }
+
         public int TermId { get; set; }
-
         [ValidateNever]
-        [ForeignKey("School")]
-        public School School { get; set; }
+        [ForeignKey("TermId")]
+        public Term Term { get; set; }
+
         public int SchoolId { get; set; }
-
         [ValidateNever]
-        [ForeignKey("Course")]
-        public Course Course { get; set; }
+        [ForeignKey("SchoolId")]
+        public School School { get; set; }
+
         public int CourseId { get; set; }
+        [ValidateNever]
+        [ForeignKey("CourseId")]
+        public Course Course { get; set; }
+        
     }
 }

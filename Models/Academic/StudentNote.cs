@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,15 @@ namespace Models.Academic
 {
     public class StudentNote
     {
+        [Key]
         public int Id { get; set; }
         public string Text { get; set; }
-        [ForeignKey("Student")]
-        public Student Student { get; set; }
         public int StudentId { get; set; }
-        [ForeignKey("NoteType")]
-        public NoteType NoteType { get; set; }
+        [ForeignKey("StudentId")]
+        public Student Student { get; set; }
         public int NoteTypeId { get; set; }
+        [ForeignKey("NoteTypeId")]
+        public NoteType NoteType { get; set; }
+        
     }
 }
