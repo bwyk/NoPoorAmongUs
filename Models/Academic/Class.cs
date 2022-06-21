@@ -24,7 +24,6 @@ namespace Models
 				public List<Days> DaysOfWeek { get; set; }
 				public List<Student> EnrolledStudents { get; set; }
 
-
 				public int InstructorId { get; set; }
 				[ValidateNever]
 				[ForeignKey("EmployeeId")]

@@ -4,12 +4,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NPAU", "NPAU\NPAU.csproj", "{FEC64AD2-5B91-4102-A404-CE136B3A146D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{25376F75-5E7D-47A5-AF94-A9003FBFE1AB} = {25376F75-5E7D-47A5-AF94-A9003FBFE1AB}
+		{8594EAAC-06EC-4A0A-B486-7840F9ED7AB3} = {8594EAAC-06EC-4A0A-B486-7840F9ED7AB3}
+		{230486BC-27D4-4D4F-9686-36F65E8D07AC} = {230486BC-27D4-4D4F-9686-36F65E8D07AC}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{25376F75-5E7D-47A5-AF94-A9003FBFE1AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{25376F75-5E7D-47A5-AF94-A9003FBFE1AB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{230486BC-27D4-4D4F-9686-36F65E8D07AC} = {230486BC-27D4-4D4F-9686-36F65E8D07AC}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{230486BC-27D4-4D4F-9686-36F65E8D07AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{230486BC-27D4-4D4F-9686-36F65E8D07AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{8594EAAC-06EC-4A0A-B486-7840F9ED7AB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{8594EAAC-06EC-4A0A-B486-7840F9ED7AB3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{25376F75-5E7D-47A5-AF94-A9003FBFE1AB} = {25376F75-5E7D-47A5-AF94-A9003FBFE1AB}
+		{230486BC-27D4-4D4F-9686-36F65E8D07AC} = {230486BC-27D4-4D4F-9686-36F65E8D07AC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
