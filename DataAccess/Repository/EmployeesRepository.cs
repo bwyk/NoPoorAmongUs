@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class EmployeesRepository : Repository<Employee>, IEmployeesRepository
+    public class EmployeesRepository : Repository<Instructor>, IEmployeesRepository
     {
         private readonly ApplicationDbContext _db;
         public EmployeesRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
-        public void Update(Employee obj)
+        public void Update(Instructor obj)
         {
             _db.Employees.Add(obj);
         }

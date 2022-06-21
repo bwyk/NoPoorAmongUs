@@ -6,19 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Models.Academic
 {
-    public class Guardian
+    public class ClassSession
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Relationship { get; set; }
-
-        public int ApplicantId { get; set; }
-        [ForeignKey("ApplicantId")]
-        public Applicant Applicant { get; set; }
+        //Does the day need to be a different data type?
+        public string Day { get; set; }
+        public int ClassId { get; set; }
+        [ForeignKey("ClassId")]
+        public Class Class { get; set; }
         
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,18 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Models.Academic
 {
-    public class Guardian
+    public  class Assessment
     {
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Relationship { get; set; }
-
-        public int ApplicantId { get; set; }
-        [ForeignKey("ApplicantId")]
-        public Applicant Applicant { get; set; }
+        public int ClassId { get; set; }
+        [ValidateNever]
+        [ForeignKey("ClassId")]
+        public Class Class { get; set; }
         
 
     }
