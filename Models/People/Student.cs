@@ -15,5 +15,9 @@ namespace Models
         public string Phone { get; set; }
         public int EnglishLevel { get; set; }
         public int ComputerLevel { get; set; }
+        [ValidateNever]
+        [ForeignKey("Applicant")]
+        public Applicant Applicant { get; set; }
+        public int ApplicantId { get; set; }
     }
 }

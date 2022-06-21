@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-		public class Ratings
+		public class Rating
 		{
 				public int Id { get; set; }
 				public int Age { get; set; }
@@ -20,7 +20,8 @@ namespace Models
 				public int FamilySupport { get; set; }
 
 				[ValidateNever]
-				[ForeignKey("ApplicantId")]
+				[ForeignKey("Applicant")]
 				public Applicant Applicant { get; set; }
+		public int ApplicantId { get; set; }
 		}
 }
