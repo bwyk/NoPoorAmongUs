@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository.IRepository
 {
-    public interface IEmployeesRepository : IRepository<Employee>
+    public interface IEmployeesRepository : IRepository<Instructor>
     {
-        void Update(Employee obj);
+        void Update(Instructor obj);
     }
 }

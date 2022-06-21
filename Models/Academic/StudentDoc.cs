@@ -6,19 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Models.Academic
 {
-    public class Guardian
+    public class StudentDoc
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Relationship { get; set; }
-
-        public int ApplicantId { get; set; }
-        [ForeignKey("ApplicantId")]
-        public Applicant Applicant { get; set; }
+        public string Title { get; set; }
+        public int DocTypeId { get; set; }
+        [ForeignKey("DocTypeId")]
+        public DocType DocType { get; set; }
         
-
     }
 }

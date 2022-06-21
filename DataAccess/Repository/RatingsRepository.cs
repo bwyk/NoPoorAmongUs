@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class RatingsRepository : Repository<Ratings>, IRatingsRepository
+    public class RatingsRepository : Repository<Rating>, IRatingsRepository
     {
         private readonly ApplicationDbContext _db;
         public RatingsRepository(ApplicationDbContext db) : base(db)
@@ -18,7 +18,7 @@ namespace DataAccess.Repository
             _db = db;
         }
 
-        public void Update(Ratings obj)
+        public void Update(Rating obj)
         {
             _db.Ratings.Update(obj);
         }

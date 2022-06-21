@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Models.Academic
 {
-    public class Course
+    public class School
     {
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-
     }
 }
