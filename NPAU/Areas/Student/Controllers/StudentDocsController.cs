@@ -2,7 +2,7 @@
 
 namespace NPAU.Controllers
 {
-    [Area("Applicant")]
+    [Area("Student")]
     public class StudentDocsController : Controller
     {
         public IActionResult Index()
