@@ -24,13 +24,4 @@
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Admin\" />
-    <Folder Include="Areas\Applicant\" />
-    <Folder Include="Areas\Employee\Instructor\" />
-    <Folder Include="Areas\Employee\Rater\" />
-    <Folder Include="Areas\Employee\SocialWorker\" />
-    <Folder Include="Areas\Student\" />
-  </ItemGroup>
-
 </Project>
