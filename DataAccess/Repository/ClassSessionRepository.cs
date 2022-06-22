@@ -1,6 +1,7 @@
 ﻿using DataAccess.Data;
 using DataAccess.Repository.IRepository;
 using Models;
+using Models.Academic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class EmployeesRepository : Repository<Instructor>, IEmployeesRepository
+    public class ClassSessionsRepository : Repository<ClassSession>, IClassSessionsRepository
     {
         private readonly ApplicationDbContext _db;
-        public EmployeesRepository(ApplicationDbContext db) : base(db)
+        public ClassSessionsRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
-        public void Update(Instructor obj)
+        public void Update(ClassSession obj)
         {
-            _db.Employees.Add(obj);
+            _db.ClassSessions.Add(obj);
         }
     }
 }

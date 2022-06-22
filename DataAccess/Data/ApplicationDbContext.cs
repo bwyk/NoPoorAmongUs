@@ -1,7 +1,7 @@
 ﻿using Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
+using Models.Academic;
 namespace DataAccess.Data
 {
 
@@ -19,8 +19,18 @@ namespace DataAccess.Data
         public DbSet<Rating> Ratings => Set<Rating>();
         public DbSet<Term> Terms => Set<Term>();
         public DbSet<Applicant> Applicants => Set<Applicant>();
-        public DbSet<Instructor> Employees => Set<Instructor>();
+        public DbSet<Instructor> Instructors => Set<Instructor>();
         public DbSet<Guardian> Guardians => Set<Guardian>();
         public DbSet<Student> Students => Set<Student>();
+        public DbSet<Assessment> Assessments => Set<Assessment>();
+        public DbSet<Attendance> Attendances => Set<Attendance>();
+        public DbSet<ClassEnrollment> ClassEnrollments => Set<ClassEnrollment>();
+        public DbSet<ClassSession> ClassSessions => Set<ClassSession>();
+        public DbSet<DocType> DocTypes => Set<DocType>();
+        public DbSet<Grade> Grades => Set<Grade>();
+        public DbSet<NoteType> NoteTypes => Set<NoteType>();
+        public DbSet<School> Schools => Set<School>();
+        public DbSet<StudentDoc> StudentDocs => Set<StudentDoc>();
+        public DbSet<StudentNote> StudentNotes => Set<StudentNote>();
     }
 }

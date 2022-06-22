@@ -3,7 +3,7 @@
 namespace NPAU.Controllers
 {
     [Area("Employee")]
-    public class IntructorController : Controller
+    public class InstructorController : Controller
     {
         public IActionResult Index()
         {
