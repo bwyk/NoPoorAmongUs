@@ -24,7 +24,41 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Class</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Student</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Student Bio</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Notes</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Documents</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Certifications</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Student Schedule</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Instructor</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Class Attendance</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Grades</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Assessments</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Applicant</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Applicant" asp-controller="Home" asp-action="Index">Application</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Course</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Rating</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">School</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Term</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">User Management</a>
+                            </div>
                         </li>
                     </ul>
                 </div>
