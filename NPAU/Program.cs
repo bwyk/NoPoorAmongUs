@@ -35,5 +35,5 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Employee}/{controller=Home}/{action=Index}/{id?}");
-
+SeedData.EnsurePopulated(app);
 app.Run();
