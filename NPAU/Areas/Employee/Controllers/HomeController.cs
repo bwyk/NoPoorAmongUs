@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NPAU.Models;
+using Models;
 using System.Diagnostics;
 
 namespace NPAU.Controllers
 {
+    [Area("Employee")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
