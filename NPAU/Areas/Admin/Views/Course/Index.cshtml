@@ -1,5 +1,24 @@
-﻿@using Models
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
-@model Course
+
+ <h2 class="text-primary">Course List</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Course Name</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <td>
+                    @obj.Name
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

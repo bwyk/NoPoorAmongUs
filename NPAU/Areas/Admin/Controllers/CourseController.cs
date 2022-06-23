@@ -1,13 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace NPAU.Controllers
 {
     [Area("Admin")]
     public class CourseController : Controller
     {
-        public IActionResult Index()
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CourseController(IUnitOfWork unitOfWork)
         {
-            return View();
+            _unitOfWork = unitOfWork;
+        }
+        public ViewResult Index()
+        {
+            IEnumerable<Course> objCourseList = _unitOfWork.Course.GetAll();
+            return View(objCourseList);
         }
     }
 }

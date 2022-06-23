@@ -15,8 +15,7 @@ namespace DataAccess.Repository
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
-
-
+            Course = new CoursesRepository(_db);
         }
 
         public IApplicantsRepository Applicant { get; private set; }
