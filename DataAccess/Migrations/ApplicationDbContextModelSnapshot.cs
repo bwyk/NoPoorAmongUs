@@ -427,43 +427,6 @@ namespace DataAccess.Migrations
                     b.ToTable("StudentNotes");
                 });
 
-            modelBuilder.Entity("Models.Applicant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Birthday")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Village")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Applicants");
-                });
-
             modelBuilder.Entity("Models.Class", b =>
                 {
                     b.Property<int>("Id")
@@ -522,9 +485,6 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ApplicantId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -533,9 +493,12 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicantId");
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Guardians");
                 });
@@ -582,9 +545,6 @@ namespace DataAccess.Migrations
                     b.Property<int>("AnnualIncome")
                         .HasColumnType("int");
 
-                    b.Property<int>("ApplicantId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Determination")
                         .HasColumnType("int");
 
@@ -597,9 +557,12 @@ namespace DataAccess.Migrations
                     b.Property<int>("SchoolLevel")
                         .HasColumnType("int");
 
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicantId");
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Ratings");
                 });
@@ -629,11 +592,19 @@ namespace DataAccess.Migrations
                     b.Property<int>("EnglishLevel")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -642,8 +613,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicantId");
 
                     b.ToTable("Students");
                 });
@@ -863,35 +832,24 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Guardian", b =>
                 {
-                    b.HasOne("Models.Applicant", "Applicant")
+                    b.HasOne("Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("ApplicantId")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Applicant");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Models.Rating", b =>
                 {
-                    b.HasOne("Models.Applicant", "Applicant")
+                    b.HasOne("Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("ApplicantId")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Applicant");
-                });
-
-            modelBuilder.Entity("Models.Student", b =>
-                {
-                    b.HasOne("Models.Applicant", "Applicant")
-                        .WithMany()
-                        .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Applicant");
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }

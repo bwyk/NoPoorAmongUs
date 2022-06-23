@@ -17,7 +17,7 @@ namespace Models.Academic
         public int ClassId { get; set; }
         [ValidateNever]
         [ForeignKey("ClassId")]
-        public Class Class { get; set; }
+        public Course Class { get; set; }
         
 
     }

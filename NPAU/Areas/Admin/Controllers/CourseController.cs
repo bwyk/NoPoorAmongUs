@@ -15,7 +15,7 @@ namespace NPAU.Controllers
         }
         public ViewResult Index()
         {
-            IEnumerable<Course> objCourseList = _unitOfWork.Course.GetAll();
+            IEnumerable<Subject> objCourseList = _unitOfWork.Course.GetAll();
             return View(objCourseList);
         }
     }

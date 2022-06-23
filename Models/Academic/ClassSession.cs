@@ -16,7 +16,7 @@ namespace Models.Academic
         public string Day { get; set; }
         public int ClassId { get; set; }
         [ForeignKey("ClassId")]
-        public Class Class { get; set; }
+        public Course Class { get; set; }
         
     }
 }

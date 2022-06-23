@@ -42,42 +42,18 @@ namespace DataAccess.Data
             if (!context.Courses.Any())
             {
                 context.Courses.AddRange(
-                    new Course
+                    new Subject
                     {
                         Name = "English 1"
                     },
-                    new Course
+                    new Subject
                     {
                         Name = "Computers 1"
                     }
                 );
                 context.SaveChanges();
             }
-            if (!context.Applicants.Any())
-            {
-                context.Applicants.AddRange(
-                    new Applicant
-                    {
-                        Status = "Applicant",
-                        Name = "Sara Blue",
-                        Birthday = "January 5, 2006",
-                        Village = "Village 1",
-                        Address = "123 W",
-                        Phone = "258 234 567"
 
-                    },
-                    new Applicant
-                    {
-                        Status = "Applicant",
-                        Name = "Cindy Adams",
-                        Birthday = "April 24, 2005",
-                        Village = "Village 2",
-                        Address = "789 S",
-                        Phone = "258 123 456"
-                    }
-                    );
-                context.SaveChanges();
-            }
             if (!context.Schools.Any())
             {
                 context.Schools.AddRange(
@@ -92,6 +68,35 @@ namespace DataAccess.Data
                     );
                 context.SaveChanges();
             }
+            if (!context.Students.Any())
+            {
+                context.Students.AddRange(
+                    new Student
+                    {
+                        Status = "Student",
+                        FirstName = "Sara",
+                        LastName = "Blue",
+                        Birthday = "January 5, 2006",
+                        Village = "Village 1",
+                        Address = "123 W",
+                        Phone = "258 234 567",
+                        EnglishLevel = 3,
+                        ComputerLevel = 4,
+
+                    },
+                    new Student
+                    {
+                        Status = "Applicant",
+                        FirstName = "Cindy",
+                        LastName = "Adams",
+                        Birthday = "April 24, 2005",
+                        Village = "Village 2",
+                        Address = "789 S",
+                        Phone = "258 123 456"
+                    }
+                    );
+                context.SaveChanges();
+            }
             if (!context.Guardians.Any())
             {
                 context.Guardians.AddRange(
@@ -99,34 +104,18 @@ namespace DataAccess.Data
                     {
                         Name = "Jessica Blue",
                         Relationship = "Mother",
-                        ApplicantId = 3
+                        StudentId = 1
                     },
                     new Guardian
                     {
                         Name = "Tom Adams",
                         Relationship = "Father",
-                        ApplicantId = 4
+                        StudentId = 2
                     }
                     );
                 context.SaveChanges();
             }
-            if (!context.Students.Any())
-            {
-                context.Students.AddRange(
-                    new Student
-                    {
-                        Name = "Sara Blue",
-                        Birthday = "January 5, 2006",
-                        Village = "Village 1",
-                        Address = "123 W",
-                        Phone = "258 234 567",
-                        EnglishLevel = 3,
-                        ComputerLevel = 4,
-                        ApplicantId = 3
-                    }
-                    );
-                context.SaveChanges();
-            }
+
             if (!context.Terms.Any())
             {
                 context.Terms.AddRange(
@@ -144,10 +133,10 @@ namespace DataAccess.Data
             if (!context.Classes.Any())
             {
                 context.Classes.AddRange(
-                    new Class
+                    new Course
                     {
-                        InstructorId = 11,
-                        SchoolId = 4,
+                        InstructorId = 1,
+                        SchoolId = 2,
                         TermId = 1,
                         CourseId = 2
                     }
@@ -166,7 +155,7 @@ namespace DataAccess.Data
                         AnnualIncome = 200,
                         Determination = 5,
                         FamilySupport = 1,
-                        ApplicantId = 3
+                        StudentId = 1
                     }
                     );
                 context.SaveChanges();

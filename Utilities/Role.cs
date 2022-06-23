@@ -11,6 +11,9 @@
 				public const string Status_Pending = "Pending";
 				public const string Status_Rejected = "Rejected";
 
+				public const string Student_Status_Applicant = "Applicant";
+				public const string Student_Status_Student = "Student";
+
 				public const string School_Public = "Public";
 		}
 }
