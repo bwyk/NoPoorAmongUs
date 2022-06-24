@@ -8,7 +8,6 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork
     {
-        IApplicantsRepository Applicant { get; }
         IClassesRepository Class { get; }
         ICoursesRepository Course { get; }
         IInstructorRepository Employee { get; }

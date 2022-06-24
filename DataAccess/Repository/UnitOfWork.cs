@@ -18,7 +18,6 @@ namespace DataAccess.Repository
             Course = new CoursesRepository(_db);
         }
 
-        public IApplicantsRepository Applicant { get; private set; }
         public IClassesRepository Class { get; private set; }
         public ICoursesRepository Course { get; private set; }
         public IInstructorRepository Employee { get; private set; }

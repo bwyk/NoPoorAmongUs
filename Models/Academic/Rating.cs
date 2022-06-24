@@ -21,10 +21,10 @@ namespace Models
         public int Determination { get; set; }
         public int FamilySupport { get; set; }
 
-        public int ApplicantId { get; set; }
+        public int StudentId { get; set; }
         [ValidateNever]
-        [ForeignKey("ApplicantId")]
-        public Applicant Applicant { get; set; }
+        [ForeignKey("StudentId")]
+        public Student Student { get; set; }
 
     }
 }

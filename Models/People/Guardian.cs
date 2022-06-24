@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,10 +16,10 @@ namespace Models
         public string Name { get; set; }
         public string Relationship { get; set; }
 
-        public int ApplicantId { get; set; }
-        [ForeignKey("ApplicantId")]
-        public Applicant Applicant { get; set; }
-        
+        public int StudentId { get; set; }
+        [ValidateNever]
+        [ForeignKey("StudentId")]
+        public Student Student { get; set; }
 
     }
 }
