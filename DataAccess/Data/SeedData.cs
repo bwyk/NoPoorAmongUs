@@ -104,13 +104,13 @@ namespace DataAccess.Data
                     {
                         Name = "Jessica Blue",
                         Relationship = "Mother",
-                        StudentId = 1
+                        StudentId = 2
                     },
                     new Guardian
                     {
                         Name = "Tom Adams",
                         Relationship = "Father",
-                        StudentId = 2
+                        StudentId = 3
                     }
                     );
                 context.SaveChanges();
@@ -155,7 +155,7 @@ namespace DataAccess.Data
                         AnnualIncome = 200,
                         Determination = 5,
                         FamilySupport = 1,
-                        StudentId = 1
+                        StudentId = 2
                     }
                     );
                 context.SaveChanges();
