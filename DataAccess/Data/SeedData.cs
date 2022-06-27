@@ -76,23 +76,24 @@ namespace DataAccess.Data
                         Status = "Student",
                         FirstName = "Sara",
                         LastName = "Blue",
-                        Birthday = "January 5, 2006",
+                        Birthday = new DateTime(2005, 12, 25),
                         Village = "Village 1",
                         Address = "123 W",
                         Phone = "258 234 567",
                         EnglishLevel = 3,
-                        ComputerLevel = 4,
-
+                        ComputerLevel = 4
                     },
                     new Student
                     {
                         Status = "Applicant",
                         FirstName = "Cindy",
                         LastName = "Adams",
-                        Birthday = "April 24, 2005",
+                        Birthday = new DateTime(2006, 1, 1),
                         Village = "Village 2",
                         Address = "789 S",
-                        Phone = "258 123 456"
+                        Phone = "258 123 456",
+                        EnglishLevel = 1,
+                        ComputerLevel = 2
                     }
                     );
                 context.SaveChanges();
@@ -104,13 +105,13 @@ namespace DataAccess.Data
                     {
                         Name = "Jessica Blue",
                         Relationship = "Mother",
-                        StudentId = 2
+                        StudentId = 1
                     },
                     new Guardian
                     {
                         Name = "Tom Adams",
                         Relationship = "Father",
-                        StudentId = 3
+                        StudentId = 2
                     }
                     );
                 context.SaveChanges();

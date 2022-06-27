@@ -16,6 +16,7 @@ namespace DataAccess.Repository
         {
             _db = db;
             Course = new CoursesRepository(_db);
+            Student = new StudentsRepository(_db);
         }
 
         public IClassesRepository Class { get; private set; }
