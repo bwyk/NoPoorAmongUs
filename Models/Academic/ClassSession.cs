@@ -14,9 +14,9 @@ namespace Models.Academic
         public int Id { get; set; }
         //Does the day need to be a different data type?
         public string Day { get; set; }
-        public int ClassId { get; set; }
-        [ForeignKey("ClassId")]
-        public Course Class { get; set; }
+        public int CourseId { get; set; }
+        [ForeignKey("CourseId")]
+        public Course CCourse { get; set; }
         
     }
 }

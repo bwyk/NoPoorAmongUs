@@ -31,9 +31,9 @@ namespace Models
         [ForeignKey("SchoolId")]
         public School School { get; set; }
 
-        public int CourseId { get; set; }
+        public int SubjectId { get; set; }
         [ValidateNever]
-        [ForeignKey("CourseId")]
+        [ForeignKey("SubjectId")]
         public Subject Subject { get; set; }
         
     }

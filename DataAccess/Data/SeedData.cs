@@ -39,9 +39,9 @@ namespace DataAccess.Data
                     );
                 context.SaveChanges();
             }
-            if (!context.Courses.Any())
+            if (!context.Subjects.Any())
             {
-                context.Courses.AddRange(
+                context.Subjects.AddRange(
                     new Subject
                     {
                         Name = "English 1"
@@ -131,15 +131,15 @@ namespace DataAccess.Data
                     );
                 context.SaveChanges();
             }
-            if (!context.Classes.Any())
+            if (!context.Courses.Any())
             {
-                context.Classes.AddRange(
+                context.Courses.AddRange(
                     new Course
                     {
                         InstructorId = 1,
                         SchoolId = 2,
                         TermId = 1,
-                        CourseId = 2
+                        SubjectId = 2
                     }
                     );
                 context.SaveChanges();

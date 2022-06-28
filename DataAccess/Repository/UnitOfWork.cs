@@ -20,7 +20,7 @@ namespace DataAccess.Repository
             Guardian = new GuardiansRepository(_db);
         }
 
-        public IClassesRepository Class { get; private set; }
+        
         public ICoursesRepository Course { get; private set; }
         public IInstructorRepository Employee { get; private set; }
         public IGuardiansRepository Guardian { get; private set; }
@@ -37,6 +37,7 @@ namespace DataAccess.Repository
         public ISchoolRepository School { get; private set; }
         public IStudentDocRepository StudentDoc { get; private set; }
         public IStudentNoteRepository StudentNote { get; private set; }
+        public ISubjectRepository Subject { get; private set; }
 
         public void Save()
         {

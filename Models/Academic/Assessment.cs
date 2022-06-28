@@ -14,10 +14,10 @@ namespace Models.Academic
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int ClassId { get; set; }
+        public int CourseId { get; set; }
         [ValidateNever]
-        [ForeignKey("ClassId")]
-        public Course Class { get; set; }
+        [ForeignKey("CourseId")]
+        public Course Course { get; set; }
         
 
     }

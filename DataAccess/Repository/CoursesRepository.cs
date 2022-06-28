@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class CoursesRepository : Repository<Subject>, ICoursesRepository
+    public class CoursesRepository : Repository<Course>, ICoursesRepository
     {
         private readonly ApplicationDbContext _db;
         public CoursesRepository(ApplicationDbContext db) : base(db)
@@ -17,7 +17,7 @@ namespace DataAccess.Repository
             _db = db;
         }
 
-        public void Update(Subject obj)
+        public void Update(Course obj)
         {
             _db.Courses.Update(obj);
         }

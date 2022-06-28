@@ -14,8 +14,8 @@ namespace DataAccess.Data
 
             //We register the  DBContextOptions as a "service" in the "build" pipeline within the Program.cs file 
         }
-        public DbSet<Course> Classes => Set<Course>();
-        public DbSet<Subject> Courses => Set<Subject>();
+        public DbSet<Course> Courses => Set<Course>();
+        public DbSet<Subject> Subjects => Set<Subject>();
         public DbSet<Rating> Ratings => Set<Rating>();
         public DbSet<Term> Terms => Set<Term>();
         public DbSet<Instructor> Instructors => Set<Instructor>();
