@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository.IRepository
 {
-    public interface ICoursesRepository : IRepository<Subject>
+    public interface ICoursesRepository : IRepository<Course>
     {
-        void Update(Subject obj);
+        void Update(Course obj);
     }
 }
