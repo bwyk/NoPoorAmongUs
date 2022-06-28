@@ -131,19 +131,19 @@ namespace DataAccess.Data
                     );
                 context.SaveChanges();
             }
-            if (!context.Courses.Any())
-            {
-                context.Courses.AddRange(
-                    new Course
-                    {
-                        InstructorId = 1,
-                        SchoolId = 2,
-                        TermId = 1,
-                        SubjectId = 2
-                    }
-                    );
-                context.SaveChanges();
-            }
+            //if (!context.Courses.Any())
+            //{
+            //    context.Courses.AddRange(
+            //        new Course
+            //        {
+            //            InstructorId = 1,
+            //            SchoolId = 2,
+            //            TermId = 1,
+            //            SubjectId = 2
+            //        }
+            //        );
+            //    context.SaveChanges();
+            //}
             if (!context.Ratings.Any())
             {
                 context.Ratings.AddRange(
