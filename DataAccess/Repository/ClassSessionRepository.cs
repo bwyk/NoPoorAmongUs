@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class ClassSessionsRepository : Repository<ClassSession>, IClassSessionsRepository
+    public class ClassSessionsRepository : Repository<ClassSession>, ICourseSessionsRepository
     {
         private readonly ApplicationDbContext _db;
         public ClassSessionsRepository(ApplicationDbContext db) : base(db)

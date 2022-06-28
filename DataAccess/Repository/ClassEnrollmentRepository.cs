@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class ClassEnrollmentRepository : Repository<ClassEnrollment>, IClassEnrollmentsRepository
+    public class ClassEnrollmentRepository : Repository<ClassEnrollment>, ICourseEnrollmentsRepository
     {
         private readonly ApplicationDbContext _db;
         public ClassEnrollmentRepository(ApplicationDbContext db) : base(db)

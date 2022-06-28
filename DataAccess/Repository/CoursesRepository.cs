@@ -19,7 +19,7 @@ namespace DataAccess.Repository
 
         public void Update(Course obj)
         {
-            _db.Subjects.Update(obj);
+            _db.Courses.Update(obj);
         }
     }
 }
