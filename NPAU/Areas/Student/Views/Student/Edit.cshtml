@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Edit a Student";
+}
+
+@model Student
+
+<form method="post">
+    <div class="border p-3 mt-4" style="width:50%">
+        <div class="row pb-2">
+            <h2 class="text-primary">Edit a Student</h2>
+            <hr />
+        </div>
+        <div>
+            <div class="mb-3">
+                <label asp-for="Status"></label>
+                <input asp-for="Status" class="form-control"/>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control"/>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control"/>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Birthday"></label>
+                <input asp-for="Birthday" class="form-control"/>
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control"/>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Village"></label>
+                <input asp-for="Village" class="form-control"/>
+                <span asp-validation-for="Village" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" class="form-control"/>
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EnglishLevel"></label>
+                <input asp-for="EnglishLevel" class="form-control"/>
+                <span asp-validation-for="EnglishLevel" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ComputerLevel"></label>
+                <input asp-for="ComputerLevel" class="form-control"/>
+                <span asp-validation-for="ComputerLevel" class="text-danger"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:150px">Save Changes</button>
+        <a asp-controller="Student" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back to List
+        </a>
+    </div>
+</form>
