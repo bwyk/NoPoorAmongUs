@@ -23,10 +23,43 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Student</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Student" asp-controller="Student" asp-action="Index">Student Bio</a>
+                                <a class="dropdown-item" asp-area="Student" asp-controller="StudentNotes" asp-action="Index">Notes</a>
+                                <a class="dropdown-item" asp-area="Student" asp-controller="StudentDocs" asp-action="Index">Documents</a>
+                                <a class="dropdown-item" asp-area="Student" asp-controller="Attendance" asp-action="Index">Attendance</a>
+                                <a class="dropdown-item" asp-area="Student" asp-controller="Assignments" asp-action="Index">Assignments</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Employee</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Employee" asp-controller="Instructor" asp-action="Index">Instructor</a>
+                                <a class="dropdown-item" asp-area="Employee" asp-controller="Rater" asp-action="Index">Rater</a>
+                                <a class="dropdown-item" asp-area="Employee" asp-controller="SocialWorker" asp-action="Index">SocialWorker</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Applicant</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index">Application</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Course" asp-action="Index">Course</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Ratings" asp-action="Index">Rating</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="School" asp-action="Index">School</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Term" asp-action="Index">Term</a>
+                                <a class="dropdown-item" asp-area="Student" asp-controller="Student" asp-action="Index">Student</a>
+                                <a class="dropdown-item" asp-area="Student" asp-controller="Guardian" asp-action="Index">Guardian</a>
+                            </div>
                         </li>
                     </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>

@@ -43,6 +43,7 @@ namespace NPAU.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _emailSender = emailSender;
         }
 
         /// <summary>

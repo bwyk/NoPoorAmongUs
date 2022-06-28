@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.Academic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository.IRepository
 {
-    public interface IApplicantsRepository : IRepository<Applicant>
+    public interface IDocTypeRepository : IRepository<DocType>
     {
-        void Update(Applicant obj);
+        void Update(DocType obj);
     }
 }

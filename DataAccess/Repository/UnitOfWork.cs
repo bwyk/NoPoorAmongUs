@@ -15,25 +15,28 @@ namespace DataAccess.Repository
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
-
-
+            Course = new CoursesRepository(_db);
+            Student = new StudentsRepository(_db);
+            Guardian = new GuardiansRepository(_db);
         }
 
-        public IApplicantsRepository Applicant { get; private set; }
-
         public IClassesRepository Class { get; private set; }
-
         public ICoursesRepository Course { get; private set; }
-
-        public IEmployeesRepository Employee { get; private set; }
-
+        public IInstructorRepository Employee { get; private set; }
         public IGuardiansRepository Guardian { get; private set; }
-
         public IRatingsRepository Rating { get; private set; }
-
         public IStudentsRepository Student { get; private set; }
-
         public ITermsRepository Term { get; private set; }
+        public IAssessmentsRepository Assessment { get; private set; }
+        public IAttendanceRepository Attendance { get; private set; }
+        public IClassEnrollmentsRepository ClassEnrollment { get; private set; }
+        public IClassSessionsRepository ClassSession { get; private set; }
+        public IDocTypeRepository DocType { get; private set; }
+        public IGradeRepository Grade { get; private set; }
+        public INoteTypeRepository NoteType { get; private set; }
+        public ISchoolRepository School { get; private set; }
+        public IStudentDocRepository StudentDoc { get; private set; }
+        public IStudentNoteRepository StudentNote { get; private set; }
 
         public void Save()
         {
