@@ -29,8 +29,8 @@ namespace DataAccess.Repository
         public ITermsRepository Term { get; private set; }
         public IAssessmentsRepository Assessment { get; private set; }
         public IAttendanceRepository Attendance { get; private set; }
-        public IClassEnrollmentsRepository ClassEnrollment { get; private set; }
-        public IClassSessionsRepository ClassSession { get; private set; }
+        public ICourseEnrollmentsRepository ClassEnrollment { get; private set; }
+        public ICourseSessionsRepository ClassSession { get; private set; }
         public IDocTypeRepository DocType { get; private set; }
         public IGradeRepository Grade { get; private set; }
         public INoteTypeRepository NoteType { get; private set; }
