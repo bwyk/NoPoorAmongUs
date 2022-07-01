@@ -18,11 +18,26 @@ namespace DataAccess.Repository
             Course = new CoursesRepository(_db);
             Student = new StudentsRepository(_db);
             Guardian = new GuardiansRepository(_db);
+            Rating = new RatingsRepository(_db);
+            Term = new TermsRepository(_db);
+            Assessment = new AssessmentsRepository(_db);
+            Attendance = new AttendanceRepository(_db);
+            ClassEnrollment = new ClassEnrollmentRepository(_db);
+            ClassSession = new ClassSessionsRepository(_db);
+            DocType = new DocTypeRepository(_db);
+            Grade = new GradeRepository(_db);
+            NoteType = new NoteTypeRepository(_db);
+            School = new SchoolRepository(_db);
+            StudentDoc = new StudentDocRepository(_db);
+            StudentNote = new StudentNoteRepository(_db);
+            Subject = new SubjectRepository(_db);
+            Instructor = new InstructorRepository(_db);
+
         }
 
         
         public ICoursesRepository Course { get; private set; }
-        public IInstructorRepository Employee { get; private set; }
+        public IInstructorRepository Instructor { get; private set; }
         public IGuardiansRepository Guardian { get; private set; }
         public IRatingsRepository Rating { get; private set; }
         public IStudentsRepository Student { get; private set; }
