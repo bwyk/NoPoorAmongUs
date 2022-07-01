@@ -22,7 +22,10 @@
                 Guardian ID
             </th>
             <th>
-                Full Name
+                First Name
+            </th>
+            <th>
+                Last Name
             </th>
             <th>
                Relationship
@@ -40,7 +43,10 @@
                     @obj.Id
                 </td>
                 <td width="10%">
-                    @obj.Name
+                    @obj.FirstName
+                </td>
+                <td width="10%">
+                    @obj.LastName
                 </td>
                 <td width="10%">
                     @obj.Relationship
@@ -48,8 +54,8 @@
                 <td width="10%">
                     @obj.StudentId
                 </td>
-                <td>
-                    <div class="w-75 btn-group" role="group">
+                <td width="10%">
+                    <div class="d-flex justify-content-center" role="group">
                         <a asp-controller="Guardian" asp-action="Edit" asp-route-id="@obj.Id"
                         class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
                         <a asp-controller="Guardian" asp-action="Delete" asp-route-id="@obj.Id"
