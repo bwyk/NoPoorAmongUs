@@ -1,6 +1,7 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Models.ViewModels;
 using System.Diagnostics;
 using Utilities;
 
@@ -20,6 +21,29 @@ namespace NPAU.Controllers
         {
             IEnumerable<Student> objStudentList = _unitOfWork.Student.GetAll();
             return View(objStudentList);
+        }
+
+        [HttpGet]
+        public ViewResult AddNewStudent()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddNewStudent(StudentVM obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Student.Add(obj.Student);
+                _unitOfWork.Save();
+                obj.Guardian.StudentId = obj.Student.Id;
+                _unitOfWork.Guardian.Add(obj.Guardian);
+                _unitOfWork.Save();
+                TempData["success"] = "Student added successfully";
+                return RedirectToAction("Index");
+            }
+            return View(obj);
         }
 
         [HttpGet]
