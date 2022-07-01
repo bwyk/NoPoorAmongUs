@@ -22,6 +22,11 @@
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="mb-3">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" disabled class="form-control"/>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
                 <label asp-for="Relationship"></label>
                 <input asp-for="Relationship" disabled class="form-control"/>
                 <span asp-validation-for="Relationship" class="text-danger"></span>
