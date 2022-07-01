@@ -267,7 +267,7 @@ namespace DataAccess.Repository
 				private (School, School) GetSchools() 
 				{
 						bool saveChanges = false;
-						School? publicSchool = _db.Schools.FirstOrDefault(s => s.Name == "Public");
+						School? publicSchool = _db.Schools.FirstOrDefault(s => s.Name == "Public School");
 						School? boanne = _db.Schools.FirstOrDefault(s => s.Name == "Boanne");
 						if(publicSchool is null) 
 						{
