@@ -158,12 +158,13 @@ namespace DataAccess.Repository
 								_db.Courses.AddRange(
 										new Course
 										{
+												Name = "Computers 1",
 												InstructorId = cindyReed.Id,
 												SchoolId = boanne.Id,
 												TermId = fall22.Id,
 												SubjectId = computers1.Id
 										}
-										);
+										);;
 								_db.SaveChanges();
 						}
 				}

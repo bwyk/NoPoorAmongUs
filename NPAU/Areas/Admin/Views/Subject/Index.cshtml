@@ -1,15 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Instructor List";
+    ViewData["Title"] = "Subject List";
 }
 
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Instructor List</h2>
+            <h2 class="text-primary">Subject List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Instructor" asp-action="Create" class="btn btn-primary">
-               <i class="bi bi-plus-circle"></i> &nbsp; Add New Instructor
+            <a asp-controller="Subject" asp-action="Create" class="btn btn-primary">
+               <i class="bi bi-plus-circle"></i> &nbsp; Add New Subject
             </a>
         </div>
     </div>
@@ -19,20 +19,12 @@
     <thead>
         <tr>
             <th>
-                Instructor ID
+                Subject ID
             </th>
             <th>
-                First Name
+                Subject Name
             </th>
-            <th>
-                Last Name
-            </th>
-            <th>
-               Email
-            </th>
-            <th>
-                Role
-            </th>
+            
         </tr>
     </thead>
     <tbody>
@@ -43,22 +35,14 @@
                     @obj.Id
                 </td>
                 <td width="10%">
-                    @obj.FirstName
+                    @obj.Name
                 </td>
-                <td width="10%">
-                    @obj.LastName
-                </td>
-                <td width="10%">
-                    @obj.Email
-                </td>
-                <td width="10%">
-                    @obj.Role
-                </td>
+                
                 <td width="10%">
                     <div class="d-flex justify-content-center" role="group">
-                        <a asp-controller="Instructor" asp-action="Edit" asp-route-id="@obj.Id"
+                        <a asp-controller="Subject" asp-action="Edit" asp-route-id="@obj.Id"
                         class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                        <a asp-controller="Instructor" asp-action="Delete" asp-route-id="@obj.Id"
+                        <a asp-controller="Subject" asp-action="Delete" asp-route-id="@obj.Id"
                         class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>
                 </td>

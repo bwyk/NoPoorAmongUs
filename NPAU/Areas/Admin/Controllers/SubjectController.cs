@@ -1,23 +1,21 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.Academic;
 
-namespace NPAU.Controllers
+namespace NPAU.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class SchoolController : Controller
+    public class SubjectController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public SchoolController(IUnitOfWork unitOfWork)
+        public SubjectController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            IEnumerable<School> objSchoolList = _unitOfWork.School.GetAll();
-            return View(objSchoolList);
+            IEnumerable<Subject> objSubjectList = _unitOfWork.Subject.GetAll();
+            return View(objSubjectList);
         }
 
         [HttpGet]
@@ -28,13 +26,13 @@ namespace NPAU.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(School obj)
+        public IActionResult Create(Subject obj)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.School.Add(obj);
+                _unitOfWork.Subject.Add(obj);
                 _unitOfWork.Save();
-                TempData["success"] = "School added successfully!";
+                TempData["success"] = "Subject added successfully!";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -48,24 +46,24 @@ namespace NPAU.Controllers
                 return NotFound();
             }
 
-            var schoolFromDb = _unitOfWork.School.GetFirstOrDefault(t => t.Id == id);
+            var subjectFromDb = _unitOfWork.Subject.GetFirstOrDefault(t => t.Id == id);
 
-            if (schoolFromDb == null)
+            if (subjectFromDb == null)
             {
                 return NotFound();
             }
 
-            return View(schoolFromDb);
+            return View(subjectFromDb);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Edit(School obj)
+        public IActionResult Edit(Subject obj)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.School.Update(obj);
+                _unitOfWork.Subject.Update(obj);
                 _unitOfWork.Save();
-                TempData["success"] = "School updated successfully!";
+                TempData["success"] = "Subject updated successfully!";
                 return RedirectToAction("Index");
             }
 
@@ -80,28 +78,28 @@ namespace NPAU.Controllers
                 return NotFound();
             }
 
-            var schoolFromDb = _unitOfWork.School.GetFirstOrDefault(t => t.Id == id);
+            var subjectFromDb = _unitOfWork.Subject.GetFirstOrDefault(t => t.Id == id);
 
-            if (schoolFromDb == null)
+            if (subjectFromDb == null)
             {
                 return NotFound();
             }
 
-            return View(schoolFromDb);
+            return View(subjectFromDb);
         }
 
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _unitOfWork.School.GetFirstOrDefault(c => c.Id == id);
+            var obj = _unitOfWork.Subject.GetFirstOrDefault(c => c.Id == id);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.School.Remove(obj);
+            _unitOfWork.Subject.Remove(obj);
             _unitOfWork.Save();
-            TempData["success"] = "School deleted successfully.";
+            TempData["success"] = "Subject deleted successfully.";
             return RedirectToAction("Index");
         }
     }
