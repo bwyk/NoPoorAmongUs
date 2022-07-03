@@ -43,7 +43,7 @@ namespace DataAccess.Repository
 						{
 								saraBlue = new Student
 								{
-										Status = "Student",
+										Status = SD.StudentStatusAccepted,
 										FirstName = "Sara",
 										LastName = "Blue",
 										Birthday = new DateTime(2006, 01, 05),
@@ -60,7 +60,7 @@ namespace DataAccess.Repository
 						{
 								cindyAdams = new Student
 								{
-										Status = "Applicant",
+										Status = SD.StudentStatusPending,
 										FirstName = "Cindy",
 										LastName = "Adams",
 										Birthday = new DateTime(2005, 04, 24),
