@@ -27,7 +27,7 @@ function loadDataTable(status) {
             "emptyTable": "No Students Found"
         },
         "ajax": {
-            "url": "/Student/Student/GetAll?status=" + status
+            "url": "/Applicant/Manage/GetAll?status=" + status
         },
         "columns": [
             { "data": "status", "width": "%10" },

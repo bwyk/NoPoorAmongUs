@@ -12,7 +12,7 @@ namespace NPAU.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         [BindProperty]
-        public StudentVM StudentVM { get; set; }
+        public StudentVM StudentVM { get; set; } = null!;
         public ManageController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -95,6 +95,31 @@ namespace NPAU.Controllers
                 return RedirectToAction("Index");
             }
             return View(obj);
+        }
+
+        [HttpGet]
+        public IActionResult GetAll(string status)
+        {
+            IEnumerable<Student> students;
+            students = _unitOfWork.Student.GetAll();
+   
+
+            switch (status)
+            {
+                case "pending":
+                    students = students.Where(s => s.Status == SD.StudentStatusPending);
+                    break;
+                case "student":
+                    students = students.Where(s => s.Status == SD.StudentStatusAccepted);
+                    break;
+                case "rejected":
+                    students = students.Where(s => s.Status == SD.StudentStatusRejected);
+                    break;
+                default:
+                    break;
+            }
+
+            return Json(new { data = students });
         }
     }
 }
