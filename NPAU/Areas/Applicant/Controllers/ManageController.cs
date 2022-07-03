@@ -57,12 +57,14 @@ namespace NPAU.Controllers
                 return NotFound();
             }
 
-            Student student = _unitOfWork.Student.GetFirstOrDefault(c => c.Id == id);           
-
-            SelectListItem pending = new SelectListItem(SD.StudentStatusPending,SD.StudentStatusPending, student.Status == SD.StudentStatusPending);
-            SelectListItem accepted = new SelectListItem(SD.StudentStatusAccepted,SD.StudentStatusAccepted, student.Status == SD.StudentStatusAccepted);
-            SelectListItem rejected = new SelectListItem(SD.StudentStatusRejected,SD.StudentStatusRejected, student.Status == SD.StudentStatusRejected);
-            List<SelectListItem> statusList = new List<SelectListItem>() { pending, accepted, rejected };
+            Student student = _unitOfWork.Student.GetFirstOrDefault(c => c.Id == id);
+            var statusList = SD.StudentStatusList;
+            foreach (SelectListItem item in statusList) 
+            {
+                if (item.Value == student.Status)
+                    item.Selected = true;
+            }
+            
             StudentVM = new StudentVM()
             {
                 Student = student,
