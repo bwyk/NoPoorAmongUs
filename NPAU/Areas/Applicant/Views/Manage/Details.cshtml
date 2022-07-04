@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Student Details";
+}
+@model Models.ViewModels.StudentVM
+@using Utilities
+<form method="post">
+    <div class="border p-3 mt-4" style="width:50%">
+        <div class="row pb-2">
+            <h2 class="text-primary">Edit a Student</h2>
+            <hr />
+        </div>
+        <input asp-for="Student.Id" hidden readonly />
+        <input asp-for="Guardian.Id" hidden readonly/>
+        <input asp-for="Guardian.StudentId" hidden readonly/>
+        <div>
+            <div class="mb-3">
+                <label asp-for="Student.Status"></label>
+                <input asp-for="Student.Status" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Student.FirstName"></label>
+                <input asp-for="Student.FirstName" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Student.LastName"></label>
+                <input asp-for="Student.LastName" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Student.Birthday"></label>
+                <input asp-for="Student.Birthday"readonly  class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Student.Address"></label>
+                <input asp-for="Student.Address" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Student.Village"></label>
+                <input asp-for="Student.Village" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Student.Phone"></label>
+                <input asp-for="Student.Phone" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Student.EnglishLevel"></label>
+                <input asp-for="Student.EnglishLevel" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Student.ComputerLevel"></label>
+                <input asp-for="Student.ComputerLevel" readonly class="form-control"/>
+            </div>
+        </div>
+         <div>
+
+            <h3 class="text-primary">Guardian Information</h3>
+            <div class="mb-3">
+                <label asp-for="Guardian.FirstName"></label>
+                <input asp-for="Guardian.FirstName" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Guardian.LastName"></label>
+                <input asp-for="Guardian.LastName" readonly class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Guardian.Relationship"></label>
+                <input asp-for="Guardian.Relationship" readonly class="form-control"/>
+            </div>
+        </div>
+        <a asp-controller="Applicant" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back to List
+        </a>
+    </div>
+</form>

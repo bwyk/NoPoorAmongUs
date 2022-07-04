@@ -30,8 +30,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Student</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="Student" asp-controller="Student" asp-action="AddNewStudent">Add New Student</a>
-                                <a class="dropdown-item" asp-area="Student" asp-controller="Student" asp-action="Index">Student Bio</a>
+                                <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="student">Students</a>
                                 <a class="dropdown-item" asp-area="Student" asp-controller="StudentNotes" asp-action="Index">Notes</a>
                                 <a class="dropdown-item" asp-area="Student" asp-controller="StudentDocs" asp-action="Index">Documents</a>
                                 <a class="dropdown-item" asp-area="Student" asp-controller="Attendance" asp-action="Index">Attendance</a>
@@ -49,7 +48,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Applicant</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index">Applications</a>
+                                <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="pending">Applications</a>
                                 <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Create">New Application</a>
                             </div>
                         </li>

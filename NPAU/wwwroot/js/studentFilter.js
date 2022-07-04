@@ -1,6 +1,7 @@
 ﻿var dataTable;
 
 $(document).ready(function () {
+
     var url = window.location.search;
     if (url.includes("student")) {
         loadDataTable("student");
@@ -37,9 +38,20 @@ function loadDataTable(status) {
                 "render": DataTable.render.date()
             },
             { "data": "address", "width": "10%" },
-            { "data": "village", "width": "10%" },
             { "data": "englishLevel", "width": "10%" },
             { "data": "computerLevel", "width": "10%" },
+            {
+                "data": "id",
+                "render": function (data) {
+                    return `
+                        <div class="w-75 btn-group" role="group">
+                        <a href="/Applicant/Manage/Details?id=${data}"
+                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Details</a>
+                        </div>
+                        `
+                },
+                "width": "10%"
+            },
             {
                 "data": "id",
                 "render": function (data) {
@@ -57,7 +69,7 @@ function loadDataTable(status) {
                 "render": function (data) {
                     return `
                         <div class="w-75 btn-group" role="group">
-                        <a href="/Student/Student/Delete?id=${data}"
+                        <a href="/Applicant/Manage/Delete?id=${data}"
                         class="btn btn-danger mx-2"> <i class="bi bi-pencil-square"></i>Delete</a>
                         </div>
                         `

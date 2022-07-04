@@ -10,9 +10,9 @@
             <h2 class="text-primary">Edit a Student</h2>
             <hr />
         </div>
-        <input asp-for="Student.Id" hidden />
-        <input asp-for="Guardian.Id" hidden />
-        <input asp-for="Guardian.StudentId" hidden />
+        <input asp-for="Student.Id" hidden readonly />
+        <input asp-for="Guardian.Id" hidden readonly/>
+        <input asp-for="Guardian.StudentId" hidden readonly/>
         <div>
             <div class="mb-3">
                 <label asp-for="Student.Status"></label>
@@ -81,7 +81,7 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Save Changes</button>
-        <a asp-controller="Student" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>
