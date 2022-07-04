@@ -32,6 +32,7 @@ namespace DataAccess.Repository
 						}
 						SeedGuardians();
 						SeedCourses();
+						SeedCourseSession();
 				}
 
 				private (Student, Student) GetStudents()
@@ -168,8 +169,80 @@ namespace DataAccess.Repository
 								_db.SaveChanges();
 						}
 				}
+		private (Course, Course) GetCourses()
+		{
+			Instructor cindyReed;
+			Instructor samPrice;
+			Instructor alicePeterson;
+			(cindyReed, samPrice, alicePeterson) = GetInstructors();
+			School publicSchool;
+			School boanne;
+			(publicSchool, boanne) = GetSchools();
+			Term fall22 = GetTerm();
+			Subject english;
+			Subject computers;
+			(english, computers) = GetSubjects();
+			Course? computers1 = _db.Courses.FirstOrDefault(g => g.Subject == computers);
+			Course? english1 = _db.Courses.FirstOrDefault(g => g.Subject == english);
+			if (computers1 is null)
+			{
+				_db.Courses.Add(
+						computers1 = new Course
+						{
+							InstructorId = cindyReed.Id,
+							SchoolId = boanne.Id,
+							TermId = fall22.Id,
+							SubjectId = computers.Id
+						}
+				);
+				_db.SaveChanges();
+			}
+			if (english1 is null)
+			{
+				_db.Courses.Add(
+						english1 = new Course
+						{
+							InstructorId = alicePeterson.Id,
+							SchoolId = publicSchool.Id,
+							TermId = fall22.Id,
+							SubjectId = english.Id
+						}
+				);
+				_db.SaveChanges();
+			}
+			return (english1, computers1);
+		}
+		private void SeedCourseSession()
+		{
+			Course course1;
+			Course course2;
+			(course1, course2) = GetCourses();
+			Subject english1;
+			Subject computers1;
+			(english1, computers1) = GetSubjects();
 
-				private Term GetTerm()
+			if (!_db.CourseSessions.Any())
+			{
+				_db.CourseSessions.AddRange(
+						new CourseSession
+						{
+							CourseId = course1.Id,
+							Course = course1,
+							CourseName = computers1.Name,
+							Day = "Monday"
+						},
+						new CourseSession
+						{
+							CourseId = course2.Id,
+							Course = course2,
+							CourseName = english1.Name,
+							Day = "Tuesday"
+						}
+						); ;
+				_db.SaveChanges();
+			}
+		}
+		private Term GetTerm()
 				{
 						Term? fall2022 = _db.Terms.FirstOrDefault(g => g.Name == "Fall 2022");
 						if (fall2022 is null)

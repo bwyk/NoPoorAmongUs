@@ -4,6 +4,7 @@ using Models;
 
 namespace NPAU.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class SubjectController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

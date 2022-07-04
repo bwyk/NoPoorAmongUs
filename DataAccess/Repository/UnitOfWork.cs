@@ -22,8 +22,8 @@ namespace DataAccess.Repository
             Term = new TermsRepository(_db);
             Assessment = new AssessmentsRepository(_db);
             Attendance = new AttendanceRepository(_db);
-            ClassEnrollment = new ClassEnrollmentRepository(_db);
-            ClassSession = new ClassSessionsRepository(_db);
+            CourseEnrollment = new CourseEnrollmentRepository(_db);
+            CourseSession = new ClassSessionsRepository(_db);
             DocType = new DocTypeRepository(_db);
             Grade = new GradeRepository(_db);
             NoteType = new NoteTypeRepository(_db);
@@ -44,8 +44,8 @@ namespace DataAccess.Repository
         public ITermsRepository Term { get; private set; }
         public IAssessmentsRepository Assessment { get; private set; }
         public IAttendanceRepository Attendance { get; private set; }
-        public ICourseEnrollmentsRepository ClassEnrollment { get; private set; }
-        public ICourseSessionsRepository ClassSession { get; private set; }
+        public ICourseEnrollmentsRepository CourseEnrollment { get; private set; }
+        public ICourseSessionsRepository CourseSession { get; private set; }
         public IDocTypeRepository DocType { get; private set; }
         public IGradeRepository Grade { get; private set; }
         public INoteTypeRepository NoteType { get; private set; }

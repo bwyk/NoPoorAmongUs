@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Models.Academic
 {
-    public class ClassSession
+    public class CourseSession
     {
         [Key]
         public int Id { get; set; }
@@ -16,7 +16,8 @@ namespace Models.Academic
         public string Day { get; set; }
         public int CourseId { get; set; }
         [ForeignKey("CourseId")]
-        public Course CCourse { get; set; }
+        public Course? Course { get; set; }
+        public string CourseName { get; set; }
         
     }
 }
