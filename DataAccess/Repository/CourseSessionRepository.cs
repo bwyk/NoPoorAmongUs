@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class ClassEnrollmentRepository : Repository<ClassEnrollment>, ICourseEnrollmentsRepository
+    public class ClassSessionsRepository : Repository<CourseSession>, ICourseSessionsRepository
     {
         private readonly ApplicationDbContext _db;
-        public ClassEnrollmentRepository(ApplicationDbContext db) : base(db)
+        public ClassSessionsRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
-        public void Update(ClassEnrollment obj)
+        public void Update(CourseSession obj)
         {
-            _db.ClassEnrollments.Add(obj);
+            _db.CourseSessions.Add(obj);
         }
     }
 }

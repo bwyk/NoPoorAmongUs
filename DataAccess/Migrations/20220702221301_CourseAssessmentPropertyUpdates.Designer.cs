@@ -4,6 +4,7 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220702221301_CourseAssessmentPropertyUpdates")]
+    partial class CourseAssessmentPropertyUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,7 +240,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Attendances");
                 });
 
-            modelBuilder.Entity("Models.Academic.CourseEnrollment", b =>
+            modelBuilder.Entity("Models.Academic.ClassEnrollment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -246,7 +248,7 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CourseSessionId")
+                    b.Property<int>("ClassSessionId")
                         .HasColumnType("int");
 
                     b.Property<int>("StudentId")
@@ -254,14 +256,14 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseSessionId");
+                    b.HasIndex("ClassSessionId");
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("CourseEnrollments");
+                    b.ToTable("ClassEnrollments");
                 });
 
-            modelBuilder.Entity("Models.Academic.CourseSession", b =>
+            modelBuilder.Entity("Models.Academic.ClassSession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -272,10 +274,6 @@ namespace DataAccess.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CourseName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Day")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -284,7 +282,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("CourseSessions");
+                    b.ToTable("ClassSessions");
                 });
 
             modelBuilder.Entity("Models.Academic.DocType", b =>
@@ -712,7 +710,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Academic.Attendance", b =>
                 {
-                    b.HasOne("Models.Academic.CourseEnrollment", "ClassEnrollment")
+                    b.HasOne("Models.Academic.ClassEnrollment", "ClassEnrollment")
                         .WithMany()
                         .HasForeignKey("ClassEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -721,11 +719,11 @@ namespace DataAccess.Migrations
                     b.Navigation("ClassEnrollment");
                 });
 
-            modelBuilder.Entity("Models.Academic.CourseEnrollment", b =>
+            modelBuilder.Entity("Models.Academic.ClassEnrollment", b =>
                 {
-                    b.HasOne("Models.Academic.CourseSession", "CourseSession")
+                    b.HasOne("Models.Academic.ClassSession", "ClassSession")
                         .WithMany()
-                        .HasForeignKey("CourseSessionId")
+                        .HasForeignKey("ClassSessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -735,20 +733,20 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CourseSession");
+                    b.Navigation("ClassSession");
 
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Models.Academic.CourseSession", b =>
+            modelBuilder.Entity("Models.Academic.ClassSession", b =>
                 {
-                    b.HasOne("Models.Course", "Course")
+                    b.HasOne("Models.Course", "CCourse")
                         .WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Course");
+                    b.Navigation("CCourse");
                 });
 
             modelBuilder.Entity("Models.Academic.Grade", b =>
@@ -759,7 +757,7 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Academic.CourseEnrollment", "ClassEnrollment")
+                    b.HasOne("Models.Academic.ClassEnrollment", "ClassEnrollment")
                         .WithMany()
                         .HasForeignKey("ClassEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)

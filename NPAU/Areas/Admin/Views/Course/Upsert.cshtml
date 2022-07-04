@@ -17,6 +17,10 @@
                     <hr />
                 </div>
                 <div class="mb-3 col-6">
+                    <label asp-for="Course.Name"></label>
+                    <input asp-for="Course.Name" class="form-control" />
+                </div>
+                <div class="mb-3 col-6">
                     <label asp-for="Course.SchoolId"></label>
                     <select asp-for="Course.SchoolId" asp-items="@Model.SchoolList" class="form-select">
                         <option disabled selected>--Select School--</option>

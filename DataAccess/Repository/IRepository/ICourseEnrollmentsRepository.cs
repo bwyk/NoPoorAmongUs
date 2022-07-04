@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository.IRepository
 {
-    public interface ICourseEnrollmentsRepository : IRepository<ClassEnrollment>
+    public interface ICourseEnrollmentsRepository : IRepository<CourseEnrollment>
     {
-        void Update(ClassEnrollment obj);
+        void Update(CourseEnrollment obj);
     }
 }

@@ -23,8 +23,8 @@ namespace DataAccess.Data
         public DbSet<Student> Students => Set<Student>();
         public DbSet<Assessment> Assessments => Set<Assessment>();
         public DbSet<Attendance> Attendances => Set<Attendance>();
-        public DbSet<ClassEnrollment> ClassEnrollments => Set<ClassEnrollment>();
-        public DbSet<ClassSession> ClassSessions => Set<ClassSession>();
+        public DbSet<CourseEnrollment> CourseEnrollments => Set<CourseEnrollment>();
+        public DbSet<CourseSession> CourseSessions => Set<CourseSession>();
         public DbSet<DocType> DocTypes => Set<DocType>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<NoteType> NoteTypes => Set<NoteType>();
