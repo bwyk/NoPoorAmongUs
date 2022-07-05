@@ -1,0 +1,50 @@
+﻿@using Models.Academic.ViewModel
+@model Models.Academic.ViewModel.StudentDocVM
+
+<form method="post">
+    <input asp-for="StudentDoc.Id" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Create Document</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="StudentDoc.DocUrl"></label>
+            <input type="file" id="uploadBox" name="file" class="form-control" />
+        </div>
+        <div class="mb-3 col-6">
+            <label asp-for="StudentDoc.DocTypeId"></label>
+            <select asp-for="StudentDoc.DocTypeId" class="form-control">
+                <option disabled selected>--Select Document Type--</option>
+            </select>
+            <span asp-validation-for="StudentDoc.DocTypeId"></span>
+        </div>
+        <div>
+            <button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px">Create</button>
+            <a asp-controller="StudentDocsController" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                Back to Documents
+            </a>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script>
+
+        function ValidateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please upload an Image!',
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

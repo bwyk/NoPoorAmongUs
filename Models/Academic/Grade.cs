@@ -19,7 +19,7 @@ namespace Models.Academic
 
         public int ClassEnrollmentId { get; set; }
         [ForeignKey("ClassEnrollmentId")]
-        public ClassEnrollment ClassEnrollment { get; set; }
+        public CourseEnrollment ClassEnrollment { get; set; }
         
 
     }

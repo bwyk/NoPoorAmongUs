@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Models.Academic
 {
-    public class ClassEnrollment
+    public class CourseEnrollment
     {
         [Key]
         public int Id{ get; set; }
         public int ClassSessionId { get; set; }
         [ForeignKey("ClassSessionId")]
-        public ClassSession ClassSession { get; set; }
+        public CourseSession ClassSession { get; set; }
 
         public int StudentId { get; set; }
         [ForeignKey("StudentId")]
