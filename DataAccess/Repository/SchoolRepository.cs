@@ -20,7 +20,7 @@ namespace DataAccess.Repository
         }
         public void Update(School obj)
         {
-            _db.Schools.Add(obj);
+            _db.Schools.Update(obj);
         }
     }
 }

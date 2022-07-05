@@ -20,7 +20,7 @@ namespace DataAccess.Repository
         }
         public void Update(Grade obj)
         {
-            _db.Grades.Add(obj);
+            _db.Grades.Update(obj);
         }
     }
 }
