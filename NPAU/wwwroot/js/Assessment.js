@@ -21,8 +21,8 @@ function loadDataTable() {
                 "data": "description", "width": "15%"
             },
             {
-                "data": "maxscore", "width": "15%"
-            }
+                "data": "maxScore", "width": "15%"
+            },
             {
                 "data": "course.name", "width": "15%"
             },
