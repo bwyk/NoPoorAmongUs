@@ -173,7 +173,7 @@ namespace DataAccess.Repository
                 _db.Courses.Add(
                     computers1 = new Course
                     {
-                        Name = english1CourseName,
+                        Name = computers1CourseName,
                         InstructorId = cindyReed.Id,
                         TermId = fall22.Id,
                         SchoolId = boanne.Id,
@@ -187,7 +187,7 @@ namespace DataAccess.Repository
                 _db.Courses.Add(
                     english1 = new Course
                     {
-                        Name = computers1CourseName,
+                        Name = english1CourseName,
                         InstructorId = alicePeterson.Id,
                         SchoolId = publicSchool.Id,
                         TermId = fall22.Id,

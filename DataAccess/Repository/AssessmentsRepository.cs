@@ -20,7 +20,7 @@ namespace DataAccess.Repository
         }
         public void Update(Assessment obj)
         {
-            _db.Assessments.Add(obj);
+            _db.Assessments.Update(obj);
         }
     }
 }

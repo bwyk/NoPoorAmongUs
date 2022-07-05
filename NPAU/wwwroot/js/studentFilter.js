@@ -48,26 +48,10 @@ function loadDataTable(status) {
                         <a href="/Applicant/Manage/Details?id=${data}"
                         class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Details</a>
                         </div>
-                        `
-                },
-                "width": "10%"
-            },
-            {
-                "data": "id",
-                "render": function (data) {
-                    return `
                         <div class="w-75 btn-group" role="group">
                         <a href="/Applicant/Manage/Edit?id=${data}"
                         class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
                         </div>
-                        `
-                },
-                "width": "10%"
-            },
-            {
-                "data": "id",
-                "render": function (data) {
-                    return `
                         <div class="w-75 btn-group" role="group">
                         <a href="/Applicant/Manage/Delete?id=${data}"
                         class="btn btn-danger mx-2"> <i class="bi bi-pencil-square"></i>Delete</a>
