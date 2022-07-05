@@ -4,6 +4,7 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220705181631_AssessmentAddMaxScore")]
+    partial class AssessmentAddMaxScore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,7 +313,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AssessmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CourseEnrollmentId")
+                    b.Property<int>("ClassEnrollmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("Score")
@@ -321,7 +323,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("AssessmentId");
 
-                    b.HasIndex("CourseEnrollmentId");
+                    b.HasIndex("ClassEnrollmentId");
 
                     b.ToTable("Grades");
                 });
@@ -762,15 +764,15 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Academic.CourseEnrollment", "CourseEnrollment")
+                    b.HasOne("Models.Academic.CourseEnrollment", "ClassEnrollment")
                         .WithMany()
-                        .HasForeignKey("CourseEnrollmentId")
+                        .HasForeignKey("ClassEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Assessment");
 
-                    b.Navigation("CourseEnrollment");
+                    b.Navigation("ClassEnrollment");
                 });
 
             modelBuilder.Entity("Models.Academic.StudentDoc", b =>

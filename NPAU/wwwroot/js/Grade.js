@@ -7,7 +7,7 @@ $(document).ready(function () {
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Student/Assessment/GetAll"
+            "url": "/Student/Grade/GetAll"
         },
         "columns": [
             {
@@ -15,26 +15,23 @@ function loadDataTable() {
                 "render": DataTable.render.number(null, null)
             },
             {
-                "data": "name", "width": "15%"
+                "data": "assessment.name", "width": "15%"
             },
             {
-                "data": "description", "width": "15%"
-            },
-            {
-                "data": "maxscore", "width": "15%"
-            }
-            {
-                "data": "course.name", "width": "15%"
+                "data": "score", "width": "15%"
             },
             
+            {
+                "data": "courseenrollment.student.fullname", "width": "15%"
+            },
             {
                 "data": "id",
                 "render": function (data) {
                     return `
                         <div class="w-75 btn-group" role="group">
-                        <a href="/Student/Assessment/Upsert?id=${data}"
+                        <a href="/Student/Grade/Upsert?id=${data}"
                         class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                        <a onClick=Delete('/Student/Assessment/Delete/${data}')
+                        <a onClick=Delete('/Student/Grade/Delete/${data}')
                         class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>
                         `
