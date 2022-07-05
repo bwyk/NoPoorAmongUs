@@ -10,13 +10,8 @@ function loadDataTable() {
             "url": "/Admin/Course/GetAll"
         },
         "columns": [
-            {
-                "data": "id", "width": "15%",
-                "render": DataTable.render.number(null, null)
-            },
-            {
-                "data": "school.name", "width": "15%"
-            },
+            { "data": "name", "width": "15%" },
+            { "data": "school.name", "width": "15%" },
             {
                 "data": "instructor.firstName",
                 "data": "instructor.lastName",
@@ -24,12 +19,8 @@ function loadDataTable() {
                     return row.instructor.firstName + ' ' + row.instructor.lastName;
                 }                
             },
-            {
-                "data": "subject.name", "width": "15%"
-            },
-            {
-                "data": "term.name", "width": "15%"
-            },
+            { "data": "subject.name", "width": "15%" },
+            { "data": "term.name", "width": "15%" },
             {
                 "data": "id",
                 "render": function (data) {
