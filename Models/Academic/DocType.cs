@@ -11,6 +11,7 @@ namespace Models.Academic
     {
         [Key]
         public int Id { get; set; }
+        public string TypeName { get; set; }
         
     }
 }
