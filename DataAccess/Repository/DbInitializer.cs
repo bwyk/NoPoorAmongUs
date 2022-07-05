@@ -14,6 +14,10 @@ namespace DataAccess.Repository
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _db;
 
+        private string english1CourseName = "Course: English 1";
+        private string computers1CourseName = "Course: Computers 1";
+
+
         public DbInitializer(
                 UserManager<IdentityUser> userManager,
                 RoleManager<IdentityRole> roleManager,
@@ -31,7 +35,7 @@ namespace DataAccess.Repository
                 _db.Database.Migrate();
             }
             SeedGuardians();
-            SeedCourses();
+            //SeedCourses();
             SeedCourseSession();
             SeedCourseEnrollment();
         }
@@ -43,34 +47,36 @@ namespace DataAccess.Repository
             Student? cindyAdams = _db.Students.FirstOrDefault(s => s.LastName == "Adams");
             if (saraBlue is null)
             {
-                saraBlue = new Student
-                {
-                    Status = SD.StudentStatusAccepted,
-                    FirstName = "Sara",
-                    LastName = "Blue",
-                    Birthday = new DateTime(2006, 01, 05),
-                    Village = "Village 1",
-                    Address = "123 W",
-                    Phone = "258 234 567",
-                    EnglishLevel = 3,
-                    ComputerLevel = 4,
-                };
-                _db.Students.Add(saraBlue);
+                _db.Students.Add(
+                    saraBlue = new Student
+                    {
+                        Status = SD.StudentStatusAccepted,
+                        FirstName = "Sara",
+                        LastName = "Blue",
+                        Birthday = new DateTime(2006, 01, 05),
+                        Village = "Village 1",
+                        Address = "123 W",
+                        Phone = "258 234 567",
+                        EnglishLevel = 3,
+                        ComputerLevel = 4,
+                    }
+                );
                 saveChanges = true;
             }
             if (cindyAdams is null)
             {
-                cindyAdams = new Student
-                {
-                    Status = SD.StudentStatusPending,
-                    FirstName = "Cindy",
-                    LastName = "Adams",
-                    Birthday = new DateTime(2005, 04, 24),
-                    Village = "Village 2",
-                    Address = "789 S",
-                    Phone = "258 123 456"
-                };
-                _db.Students.Add(cindyAdams);
+                _db.Students.Add(
+                    cindyAdams = new Student
+                    {
+                        Status = SD.StudentStatusPending,
+                        FirstName = "Cindy",
+                        LastName = "Adams",
+                        Birthday = new DateTime(2005, 04, 24),
+                        Village = "Village 2",
+                        Address = "789 S",
+                        Phone = "258 123 456"
+                    }
+                );
                 saveChanges = true;
             }
             if (saveChanges)
@@ -87,30 +93,30 @@ namespace DataAccess.Repository
             SeedRatings(cindyAdams);
             Guardian? saraBlueGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Blue");
             Guardian? cindyAdamsGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Adams");
-
-
             if (saraBlueGuardian is null)
             {
-                saraBlueGuardian = new Guardian
-                {
-                    FirstName = "Jessica",
-                    LastName = "Blue",
-                    Relationship = "Mother",
-                    StudentId = saraBlue.Id
-                };
-                _db.Guardians.Add(saraBlueGuardian);
+                _db.Guardians.Add(
+                    new Guardian
+                    {
+                        FirstName = "Jessica",
+                        LastName = "Blue",
+                        Relationship = "Mother",
+                        StudentId = saraBlue.Id
+                    }
+                );                
                 saveChanges = true;
             }
             if (cindyAdamsGuardian is null)
             {
-                cindyAdamsGuardian = new Guardian
-                {
-                    FirstName = "Tom",
-                    LastName = "Adams",
-                    Relationship = "Father",
-                    StudentId = cindyAdams.Id
-                };
-                _db.Guardians.Add(cindyAdamsGuardian);
+                _db.Guardians.Add(
+                    new Guardian
+                    {
+                        FirstName = "Tom",
+                        LastName = "Adams",
+                        Relationship = "Father",
+                        StudentId = cindyAdams.Id
+                    }
+                );
                 saveChanges = true;
             }
             if (saveChanges)
@@ -123,55 +129,32 @@ namespace DataAccess.Repository
 
             //TODO filter based on application status? or leave as future students will still have ratings
             //if(student.Status != Role.Status_Pending)
+
+            bool saveChanges = false;
             if (!_db.Ratings.Any(r => r.StudentId == student.Id))
             {
                 _db.Ratings.AddRange(
-                new Rating
-                {
-                    Age = 16,
-                    SchoolLevel = 10,
-                    Academics = 3,
-                    FoodAssistance = 1,
-                    AnnualIncome = 200,
-                    Determination = 5,
-                    FamilySupport = 1,
-                    StudentId = student.Id
-                }
+                    new Rating
+                    {
+                        Age = 16,
+                        SchoolLevel = 10,
+                        Academics = 3,
+                        FoodAssistance = 1,
+                        AnnualIncome = 200,
+                        Determination = 5,
+                        FamilySupport = 1,
+                        StudentId = student.Id
+                    }
                 );
-                _db.SaveChanges();
+                saveChanges = true;
             }
-        }
-        private void SeedCourses()
-        {
-            Instructor cindyReed;
-            Instructor samPrice;
-            Instructor alicePeterson;
-            (cindyReed, samPrice, alicePeterson) = GetInstructors();
-            School publicSchool;
-            School boanne;
-            (publicSchool, boanne) = GetSchools();
-            Term fall22 = GetTerm();
-            Subject english1;
-            Subject computers1;
-            (english1, computers1) = GetSubjects();
-
-            if (!_db.Courses.Any())
-            {
-                _db.Courses.AddRange(
-                        new Course
-                        {
-                            Name = "Computers 1",
-                            InstructorId = cindyReed.Id,
-                            SchoolId = boanne.Id,
-                            TermId = fall22.Id,
-                            SubjectId = computers1.Id
-                        }
-                        ); ;
+            if (saveChanges)
                 _db.SaveChanges();
-            }
         }
+       
         private (Course, Course) GetCourses()
         {
+            bool saveChanges = false;
             Instructor cindyReed;
             Instructor samPrice;
             Instructor alicePeterson;
@@ -183,147 +166,186 @@ namespace DataAccess.Repository
             Subject english;
             Subject computers;
             (english, computers) = GetSubjects();
-            Course? computers1 = _db.Courses.FirstOrDefault(g => g.Subject == computers);
-            Course? english1 = _db.Courses.FirstOrDefault(g => g.Subject == english);
+            Course? computers1 = _db.Courses.FirstOrDefault(c => c.Name == english1CourseName);
+            Course? english1 = _db.Courses.FirstOrDefault(c => c.Name == computers1CourseName);
             if (computers1 is null)
             {
                 _db.Courses.Add(
-                        computers1 = new Course
-                        {
-                            InstructorId = cindyReed.Id,
-                            SchoolId = boanne.Id,
-                            TermId = fall22.Id,
-                            SubjectId = computers.Id
-                        }
+                    computers1 = new Course
+                    {
+                        Name = english1CourseName,
+                        InstructorId = cindyReed.Id,
+                        TermId = fall22.Id,
+                        SchoolId = boanne.Id,
+                        SubjectId = computers.Id
+                    }
                 );
-                _db.SaveChanges();
+                saveChanges = true;
             }
             if (english1 is null)
             {
                 _db.Courses.Add(
-                        english1 = new Course
-                        {
-                            InstructorId = alicePeterson.Id,
-                            SchoolId = publicSchool.Id,
-                            TermId = fall22.Id,
-                            SubjectId = english.Id
-                        }
+                    english1 = new Course
+                    {
+                        Name = computers1CourseName,
+                        InstructorId = alicePeterson.Id,
+                        SchoolId = publicSchool.Id,
+                        TermId = fall22.Id,
+                        SubjectId = english.Id
+                    }
                 );
-                _db.SaveChanges();
+                saveChanges = true;
             }
+            if(saveChanges)
+                _db.SaveChanges();
+
             return (english1, computers1);
         }
         private (CourseSession, CourseSession) GetCourseSessions()
         {
-            Course course1;
-            Course course2;
-            (course1, course2) = GetCourses();
-            CourseSession? session1 = _db.CourseSessions.FirstOrDefault(g => g.Course == course1);
-            CourseSession? session2 = _db.CourseSessions.FirstOrDefault(g => g.Course == course2);
-            if (session1 is null)
+            bool saveChanges = false;
+            Course courseEnglish1;
+            Course courseComputers1;
+            (courseEnglish1, courseComputers1) = GetCourses();
+            CourseSession? sessionEnglish1 = _db.CourseSessions.FirstOrDefault(g => g.Course == courseEnglish1);
+            CourseSession? sessionComputers1 = _db.CourseSessions.FirstOrDefault(g => g.Course == courseComputers1);
+            if (sessionEnglish1 is null)
             {
                 _db.CourseSessions.Add(
-                        session1 = new CourseSession
-                        {
-                            CourseId = course1.Id,
-                            Course = course1,
-                            CourseName = course1.Name,
-                            Day = "Monday"
-                        }
+                    sessionEnglish1 = new CourseSession
+                    {
+                        CourseId = courseEnglish1.Id,
+                        Course = courseEnglish1,
+                        CourseName = courseEnglish1.Name,
+                        Day = "Monday"
+                    }
                 );
-                _db.SaveChanges();
+                saveChanges = true;
             }
-            if (session2 is null)
+            if (sessionComputers1 is null)
             {
                 _db.CourseSessions.Add(
-                        session2 = new CourseSession
-                        {
-                            CourseId = course2.Id,
-                            Course = course2,
-                            CourseName = course2.Name,
-                            Day = "Tuesday"
-                        }
+                    sessionComputers1 = new CourseSession
+                    {
+                        CourseId = courseComputers1.Id,
+                        Course = courseComputers1,
+                        CourseName = courseComputers1.Name,
+                        Day = "Tuesday"
+                    }
                 );
-                _db.SaveChanges();
+                saveChanges = true;
             }
-            return (session1, session2);
+            if(saveChanges)
+                _db.SaveChanges();
+
+            return (sessionEnglish1, sessionComputers1);
         }
         private void SeedCourseEnrollment()
         {
-            Student student1;
-            Student student2;
-            (student1, student2) = GetStudents();
-            CourseSession course1;
-            CourseSession course2;
-            (course1, course2) = GetCourseSessions();
-            if (!_db.CourseEnrollments.Any())
+            bool saveChanges = false;
+            Student saraBlue;
+            Student cindyAdams;
+            (saraBlue, cindyAdams) = GetStudents();
+            CourseSession sessionEnglish1;
+            CourseSession sessionComputers1;
+            (sessionEnglish1, sessionComputers1) = GetCourseSessions();
+            CourseEnrollment? saraBlueEnrollment = _db.CourseEnrollments.FirstOrDefault(
+                    e => ((e.CourseSessionId == sessionEnglish1.Id) && (e.StudentId == saraBlue.Id)));
+            CourseEnrollment? cindyAdamEnrollment = _db.CourseEnrollments.FirstOrDefault(
+                e => ((e.CourseSessionId == sessionComputers1.Id) && (e.StudentId == cindyAdams.Id)));
+            if (saraBlueEnrollment is null)
             {
-                _db.CourseEnrollments.AddRange(
-                new CourseEnrollment
-                {
-                    CourseSessionId = course1.CourseId,
-                    StudentId = student1.Id,
-                    CourseSession = course1,
-                    Student = student1
+                _db.CourseEnrollments.Add(
+                    new CourseEnrollment
+                    {
+                        CourseSessionId = sessionEnglish1.CourseId,
+                        StudentId = saraBlue.Id,
+                        CourseSession = sessionEnglish1,
+                        Student = saraBlue
 
-                },
-                new CourseEnrollment
-                {
-                    CourseSessionId = course2.CourseId,
-                    StudentId = student2.Id,
-                    CourseSession = course2,
-                    Student = student2
-                }
-                ); ;
-                _db.SaveChanges();
+                    }
+                );
+                saveChanges = true;
             }
+            if (cindyAdamEnrollment is null)
+            {
+                _db.CourseEnrollments.Add(
+                    new CourseEnrollment
+                    {
+                        CourseSessionId = sessionComputers1.CourseId,
+                        StudentId = cindyAdams.Id,
+                        CourseSession = sessionComputers1,
+                        Student = cindyAdams
+                    }
+                );
+                saveChanges = true;
+            }
+            if(saveChanges)
+                _db.SaveChanges();
         }
+        
+       
         private void SeedCourseSession()
         {
-            Course course1;
-            Course course2;
-            (course1, course2) = GetCourses();
-            Subject english1;
-            Subject computers1;
-            (english1, computers1) = GetSubjects();
-
-            if (!_db.CourseSessions.Any())
+            bool saveChanges = false;
+            Course courseEnglish1;
+            Course courseComputers1;
+            (courseEnglish1, courseComputers1) = GetCourses();
+            Subject subjectEnglish1;
+            Subject subjectComputers1;
+            (subjectEnglish1, subjectComputers1) = GetSubjects();
+            CourseSession? sessionEnglish1 = _db.CourseSessions.FirstOrDefault(s => s.CourseName == english1CourseName);
+            CourseSession? sessionComputers1 = _db.CourseSessions.FirstOrDefault(s => s.CourseName == computers1CourseName);
+            if (sessionComputers1 is null)
             {
-                _db.CourseSessions.AddRange(
-                        new CourseSession
-                        {
-                            CourseId = course1.Id,
-                            Course = course1,
-                            CourseName = computers1.Name,
-                            Day = "Monday"
-                        },
-                        new CourseSession
-                        {
-                            CourseId = course2.Id,
-                            Course = course2,
-                            CourseName = english1.Name,
-                            Day = "Tuesday"
-                        }
-                        ); ;
-                _db.SaveChanges();
+                _db.Add(
+                    new CourseSession
+                    {
+                        CourseId = courseComputers1.Id,
+                        Course = courseComputers1,
+                        CourseName = computers1CourseName,
+                        Day = "Monday"
+                    }
+                );
+                saveChanges = true;
             }
+            if (sessionEnglish1 is null)
+            {
+                _db.Add(
+                    new CourseSession
+                    {
+                        CourseId = courseEnglish1.Id,
+                        Course = courseEnglish1,
+                        CourseName = english1CourseName,
+                        Day = "Tuesday"
+                    }
+                );
+                saveChanges = true;
+            }
+            if(saveChanges)
+                _db.SaveChanges();
         }
+        
         private Term GetTerm()
         {
+            bool saveChanges = false;
             Term? fall2022 = _db.Terms.FirstOrDefault(g => g.Name == "Fall 2022");
             if (fall2022 is null)
             {
                 _db.Terms.Add(
-                        fall2022 = new Term
-                        {
-                            Name = "Fall 2022",
-                            StartDate = DateTime.Now.AddMonths(1),
-                            EndDate = DateTime.Now.AddMonths(4),
-                            IsActive = true
-                        }
+                    fall2022 = new Term
+                    {
+                        Name = "Fall 2022",
+                        StartDate = DateTime.Now.AddMonths(1),
+                        EndDate = DateTime.Now.AddMonths(4),
+                        IsActive = true
+                    }
                 );
-                _db.SaveChanges();
+                saveChanges = true;
             }
+            if (saveChanges)
+                _db.SaveChanges();
+
             return fall2022;
         }
 
@@ -336,38 +358,41 @@ namespace DataAccess.Repository
 
             if (cindyReed is null)
             {
-                cindyReed = new Instructor
-                {
-                    FirstName = "Cindy",
-                    LastName = "Reed",
-                    Email = "CindyR@gmail.com",
-                    Role = "Social Worker"
-                };
-                _db.Add(cindyReed);
+                _db.Add(
+                    cindyReed = new Instructor
+                    {
+                        FirstName = "Cindy",
+                        LastName = "Reed",
+                        Email = "CindyR@gmail.com",
+                        Role = "Social Worker"
+                    }
+                );
                 saveChanges = true;
             }
             if (samPrice is null)
             {
-                samPrice = new Instructor
-                {
-                    FirstName = "Sam",
-                    LastName = "Price",
-                    Email = "SamP@gmail.com",
-                    Role = "Admin"
-                };
-                _db.Add(samPrice);
+                _db.Add(
+                    samPrice = new Instructor
+                    {
+                        FirstName = "Sam",
+                        LastName = "Price",
+                        Email = "SamP@gmail.com",
+                        Role = "Admin"
+                    }
+                );
                 saveChanges = true;
             }
             if (alicePeterson is null)
             {
-                alicePeterson = new Instructor
-                {
-                    FirstName = "Alice",
-                    LastName = "Peterson",
-                    Email = "AliceP@gmail.com",
-                    Role = "Instructor"
-                };
-                _db.Add(alicePeterson);
+                _db.Add(
+                    alicePeterson = new Instructor
+                    {
+                        FirstName = "Alice",
+                        LastName = "Peterson",
+                        Email = "AliceP@gmail.com",
+                        Role = "Instructor"
+                    }
+                );
                 saveChanges = true;
             }
             if (saveChanges)
@@ -378,30 +403,32 @@ namespace DataAccess.Repository
         private (Subject, Subject) GetSubjects()
         {
             bool saveChanges = false;
-            Subject? english1 = _db.Subjects.FirstOrDefault(s => s.Name == "English 1");
-            Subject? computers1 = _db.Subjects.FirstOrDefault(s => s.Name == "English 1");
-            if (english1 is null)
+            Subject? subjectEnglish1 = _db.Subjects.FirstOrDefault(s => s.Name == "English 1");
+            Subject? subjectComputers1 = _db.Subjects.FirstOrDefault(s => s.Name == "Computers 1");
+            if (subjectEnglish1 is null)
             {
-                english1 = new Subject
-                {
-                    Name = "English 1"
-                };
-                _db.Add(english1);
+                _db.Add(
+                   subjectEnglish1 = new Subject
+                    {
+                        Name = "English 1"
+                    }
+                );
                 saveChanges = true;
             }
-            if (computers1 is null)
+            if (subjectComputers1 is null)
             {
-                computers1 = new Subject
-                {
-                    Name = "Computers 1"
-                };
-                _db.Add(computers1);
+                _db.Add(
+                    subjectComputers1 = new Subject
+                    {
+                        Name = "Computers 1"
+                    }
+                );
                 saveChanges = true;
             }
             if (saveChanges)
                 _db.SaveChanges();
 
-            return (english1, computers1);
+            return (subjectEnglish1, subjectComputers1);
         }
 
         private (School, School) GetSchools()
@@ -411,20 +438,22 @@ namespace DataAccess.Repository
             School? boanne = _db.Schools.FirstOrDefault(s => s.Name == "Boanne");
             if (publicSchool is null)
             {
-                publicSchool = new School
-                {
-                    Name = "Public School"
-                };
-                _db.Add(publicSchool);
+                _db.Add(
+                    publicSchool = new School
+                    {
+                        Name = "Public School"
+                    }
+                );
                 saveChanges = true;
             }
             if (boanne is null)
             {
-                boanne = new School
-                {
-                    Name = "Boanne"
-                };
-                _db.Add(boanne);
+                _db.Add(
+                    boanne = new School
+                    {
+                        Name = "Boanne"
+                    }
+                );
                 saveChanges = true;
             }
             if (saveChanges)
