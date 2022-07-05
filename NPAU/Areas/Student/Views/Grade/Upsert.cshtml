@@ -19,7 +19,7 @@
                 <div class="mb-3 col-6">
                     <label asp-for="Grade.Assessment.Name"></label>
                     <select asp-for="Grade.Assessment.Name" asp-items="@Model.AssessmentList" class="form-select">
-                        <option disabled selected>--Select Course--</option>
+                        <option disabled selected>--Select Assessment--</option>
                     </select>
                 </div>
                 <div class="mb-3 col-6">
@@ -29,7 +29,7 @@
                 <div class="mb-3 col-6">
                     <label asp-for="Grade.CourseEnrollment.StudentId"></label>
                     <select asp-for="Grade.CourseEnrollment.StudentId" asp-items="@Model.CourseEnrollmentList" class="form-select">
-                        <option disabled selected>--Select Course--</option>
+                        <option disabled selected>--Select Student--</option>
                     </select>
                 </div>
                 
