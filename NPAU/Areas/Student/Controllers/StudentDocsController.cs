@@ -27,16 +27,16 @@ namespace NPAU.Controllers
         [HttpGet]
         public ViewResult CreateDoc(int id)
         {
-            //StudentDocVM studentDocVm = new()
-            //{
-            //    StudentDoc = new(),
-            //    StudentDocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem  //Projection
-            //    {
-            //        Text = i.Type,
-            //        Value = i.Id.ToString()
-            //    })
-            //};
-            return View();
+            StudentDocVM studentDocVm = new()
+            {
+                StudentDoc = new(),
+                StudentDocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem  //Projection
+                {
+                    Text = i.Type,
+                    Value = i.Id.ToString()
+                })
+            };
+            return View(studentDocVm);
         }
 
         [HttpPost]

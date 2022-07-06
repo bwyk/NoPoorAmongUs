@@ -1,6 +1,8 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models.Academic;
+using Models.Academic.ViewModel;
 
 namespace NPAU.Controllers
 {
@@ -20,56 +22,65 @@ namespace NPAU.Controllers
             return View(objStudentNoteList);
         }
 
-        [HttpGet]
-        public ViewResult CreateNote(int id)
+        public IActionResult Upsert(int? id)
         {
-            return View(id);
+            NotesVM notesVM = new()
+            {
+                StudentNote = new(),
+                StudentList = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
+                {
+                    Text = i.FirstName + i.LastName,
+                    Value = i.Id.ToString()
+                }),
+                NoteTypeList = _unitOfWork.NoteType.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Type,
+                    Value = i.Id.ToString()
+                })
+            };
+
+            if (id == null || id == 0)
+            {
+                return View(notesVM);
+            }
+            else 
+            {
+                notesVM.StudentNote = _unitOfWork.StudentNote.GetFirstOrDefault(u => u.Id == id);
+                return View(notesVM);
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateNote(StudentNote obj, int id)
+        public IActionResult Upsert(NotesVM obj)
         {
             if (ModelState.IsValid)
             {
-                obj.StudentId = id;
-                _unitOfWork.StudentNote.Add(obj);
+                if (obj.StudentNote.Id == 0)
+                {
+                    _unitOfWork.StudentNote.Add(obj.StudentNote);
+                }
+                else
+                {
+                    _unitOfWork.StudentNote.Update(obj.StudentNote);
+                }
                 _unitOfWork.Save();
-                TempData["success"] = "New note has been created.";
+                TempData["success"] = "A new note has been created.";
                 return RedirectToAction("Index");
             }
-            return View(obj);
-        }
 
-        [HttpGet]
-        public IActionResult EditNote(int? id)
-        {
-            if(id == null || id == 0)
+            obj.StudentList = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
             {
-                return NotFound();
-            }
+                Text = i.FirstName + i.LastName,
+                Value = i.Id.ToString()
+            });
 
-            var studentNoteFromDb = _unitOfWork.StudentNote.GetFirstOrDefault(s => s.Id == id);
-
-            if(studentNoteFromDb == null)
+            obj.NoteTypeList = _unitOfWork.NoteType.GetAll().Select(i => new SelectListItem
             {
-                return NotFound();
-            }
+                Text = i.Type,
+                Value = i.Id.ToString()
+            });
 
-            return View(studentNoteFromDb);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditNote(StudentNote obj)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.StudentNote.Update(obj);
-                _unitOfWork.Save();
-                TempData["success"] = "Note has been updated.";
-                return RedirectToAction("Index");
-            }
             return View(obj);
         }
 
