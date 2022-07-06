@@ -46,14 +46,17 @@ namespace NPAU.Areas.Student.Controllers
                 gradeVM.Grade= _unitOfWork.Grade.GetFirstOrDefault(g => g.Id == id);
                 return View(gradeVM);
             }
-
-            return View(gradeVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(GradeVM obj)
         {
+            obj.Grade.Assessment = _unitOfWork.Assessment.GetFirstOrDefault(a => a.Id == obj.Grade.AssessmentId, includeProperties: "Course");
+            obj.Grade.CourseEnrollment = _unitOfWork.CourseEnrollment.GetFirstOrDefault(a => a.Id == obj.Grade.CourseEnrollmentId, includeProperties: "Student,CourseSession");
+            ModelState.Clear();
+            TryValidateModel(obj);
+            
             if (ModelState.IsValid)
             {
                 if (obj.Grade.Id == 0)

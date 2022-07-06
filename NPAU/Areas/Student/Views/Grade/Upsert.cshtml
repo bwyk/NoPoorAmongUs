@@ -2,6 +2,7 @@
 @model GradeVM
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
     <input asp-for="Grade.Id" hidden />
+
     <div class="row">
         <div class="col-10">
             <div class="border p-3 mt-4 row">
@@ -17,8 +18,8 @@
                     <hr />
                 </div>
                 <div class="mb-3 col-6">
-                    <label asp-for="Grade.Assessment.Name"></label>
-                    <select asp-for="Grade.Assessment.Name" asp-items="@Model.AssessmentList" class="form-select">
+                    <label asp-for="Grade.AssessmentId"></label>
+                    <select asp-for="Grade.AssessmentId" asp-items="@Model.AssessmentList" class="form-select">
                         <option disabled selected>--Select Assessment--</option>
                     </select>
                 </div>
@@ -27,8 +28,8 @@
                     <input asp-for="Grade.Score" class="form-control" />
                 </div>
                 <div class="mb-3 col-6">
-                    <label asp-for="Grade.CourseEnrollment.StudentId"></label>
-                    <select asp-for="Grade.CourseEnrollment.StudentId" asp-items="@Model.CourseEnrollmentList" class="form-select">
+                    <label asp-for="Grade.CourseEnrollmentId"></label>
+                    <select asp-for="Grade.CourseEnrollmentId" asp-items="@Model.CourseEnrollmentList" class="form-select">
                         <option disabled selected>--Select Student--</option>
                     </select>
                 </div>

@@ -21,7 +21,7 @@ function loadDataTable() {
                 "data": "score", "width": "15%"
             },
             {
-                "data": "courseenrollment.studentid", "width": "15%"
+                "data": "courseEnrollment.studentId", "width": "15%"
             },
             {
                 "data": "id",
