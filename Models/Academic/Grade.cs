@@ -17,9 +17,9 @@ namespace Models.Academic
         [ForeignKey("AssessmentId")]
         public Assessment Assessment { get; set; }
 
-        public int ClassEnrollmentId { get; set; }
-        [ForeignKey("ClassEnrollmentId")]
-        public CourseEnrollment ClassEnrollment { get; set; }
+        public int CourseEnrollmentId { get; set; }
+        [ForeignKey("CourseEnrollmentId")]
+        public CourseEnrollment CourseEnrollment { get; set; }
         
 
     }
