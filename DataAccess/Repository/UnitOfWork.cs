@@ -24,6 +24,7 @@ namespace DataAccess.Repository
             StudentNote = new StudentNoteRepository(_db);
             StudentDoc = new StudentDocRepository(_db);
             DocType = new DocTypeRepository(_db);
+            NoteType = new NoteTypeRepository(_db);
         }
 
         public IClassesRepository Class { get; private set; }
