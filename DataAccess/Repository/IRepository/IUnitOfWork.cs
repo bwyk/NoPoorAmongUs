@@ -8,23 +8,24 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork
     {
-        IClassesRepository Class { get; }
+        
         ICoursesRepository Course { get; }
-        IInstructorRepository Employee { get; }
+        IInstructorRepository Instructor { get; }
         IGuardiansRepository Guardian { get; }
         IRatingsRepository Rating { get; }
         IStudentsRepository Student { get; }
         ITermsRepository Term { get; }
         IAssessmentsRepository Assessment { get; }
         IAttendanceRepository Attendance { get; }
-        ICourseEnrollmentsRepository ClassEnrollment { get; }
-        ICourseSessionsRepository ClassSession { get; }
+        ICourseEnrollmentsRepository CourseEnrollment { get; }
+        ICourseSessionsRepository CourseSession { get; }
         IDocTypeRepository DocType { get; }
         IGradeRepository Grade { get; }
         INoteTypeRepository NoteType { get; }
         ISchoolRepository School { get; }
         IStudentDocRepository StudentDoc { get; }
         IStudentNoteRepository StudentNote { get; }
+        ISubjectRepository Subject { get; }
         void Save();
     }
 }

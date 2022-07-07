@@ -20,7 +20,7 @@ namespace DataAccess.Repository
         }
         public void Update(Attendance obj)
         {
-            _db.Attendances.Add(obj);
+            _db.Attendances.Update(obj);
         }
     }
 }

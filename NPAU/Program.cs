@@ -12,6 +12,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString)); ;
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -32,12 +33,20 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication(); ;
-
+SeedDatabase();
+app.UseAuthentication();;
 app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Employee}/{controller=Home}/{action=Index}/{id?}");
 //SeedData.EnsurePopulated(app);
+
 app.Run();
+
+void SeedDatabase()
+{
+    using var scope = app.Services.CreateScope();
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+    dbInitializer.Initialize();
+}

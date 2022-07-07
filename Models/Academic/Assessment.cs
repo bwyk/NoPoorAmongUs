@@ -7,17 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Academic
+namespace Models
 {
     public  class Assessment
     {
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int ClassId { get; set; }
+        public string Description { get; set; }
+        public int MaxScore { get; set; }
+        public int CourseId { get; set; }
         [ValidateNever]
-        [ForeignKey("ClassId")]
-        public Course Class { get; set; }
+        [ForeignKey("CourseId")]
+        public Course Course { get; set; }
         
 
     }

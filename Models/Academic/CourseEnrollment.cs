@@ -12,13 +12,13 @@ namespace Models.Academic
     {
         [Key]
         public int Id{ get; set; }
-        public int ClassSessionId { get; set; }
-        [ForeignKey("ClassSessionId")]
-        public CourseSession ClassSession { get; set; }
+        public int CourseSessionId { get; set; }
+        [ForeignKey("CourseSessionId")]
+        public CourseSession? CourseSession { get; set; }
 
         public int StudentId { get; set; }
         [ForeignKey("StudentId")]
-        public Student Student { get; set; }
+        public Student? Student { get; set; }
         
     }
 }

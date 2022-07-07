@@ -20,7 +20,7 @@ namespace DataAccess.Repository
         }
         public void Update(CourseEnrollment obj)
         {
-            _db.ClassEnrollments.Add(obj);
+            _db.CourseEnrollments.Update(obj);
         }
     }
 }

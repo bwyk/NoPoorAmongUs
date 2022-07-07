@@ -9,8 +9,10 @@ namespace Models
     {
         [Key]
         public int Id { get; set; }
-        [DisplayName("Full Name")]
-        public string Name { get; set; }
+        [DisplayName("First Name")]
+        public string FirstName { get; set; }
+        [DisplayName("Last Name")]
+        public string LastName { get; set; }
         public string Relationship { get; set; }
 
         [DisplayName("Student ID")]

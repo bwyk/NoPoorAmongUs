@@ -1,0 +1,69 @@
+﻿@using Models.ViewModels
+@model CourseVM
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <input asp-for="Course.Id" hidden />
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    @if (Model.Course.Id != 0)
+                    {
+                        <h2 class="text-primary">Update Course</h2>
+                    }
+                    else
+                    {
+                        <h2 class="text-primary">Create Course</h2>
+                    }
+                    <hr />
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Course.Name"></label>
+                    <input asp-for="Course.Name" class="form-control" />
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Course.SchoolId"></label>
+                    <select asp-for="Course.SchoolId" asp-items="@Model.SchoolList" class="form-select">
+                        <option disabled selected>--Select School--</option>
+                    </select>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Course.InstructorId"></label>
+                    <select asp-for="Course.InstructorId" asp-items="@Model.InstructorList" class="form-select">
+                        <option disabled selected>--Select Instructor--</option>
+                    </select>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Course.SubjectId"></label>
+                    <select asp-for="Course.SubjectId" asp-items="@Model.SubjectList" class="form-select">
+                        <option disabled selected>--Select Subject--</option>
+                    </select>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Course.TermId"></label>
+                    <select asp-for="Course.TermId" asp-items="@Model.TermList" class="form-select">
+                        <option disabled selected>--Select Term--</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    @if (Model.Course.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+                    }
+                    <a asp-controller="Course" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

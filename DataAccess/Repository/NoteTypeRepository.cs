@@ -20,7 +20,7 @@ namespace DataAccess.Repository
         }
         public void Update(NoteType obj)
         {
-            _db.NoteTypes.Add(obj);
+            _db.NoteTypes.Update(obj);
         }
     }
 }

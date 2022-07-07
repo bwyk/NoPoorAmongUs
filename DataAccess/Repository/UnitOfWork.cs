@@ -18,32 +18,41 @@ namespace DataAccess.Repository
             Course = new CoursesRepository(_db);
             Student = new StudentsRepository(_db);
             Guardian = new GuardiansRepository(_db);
+            Rating = new RatingsRepository(_db);
+            Term = new TermsRepository(_db);
             Assessment = new AssessmentsRepository(_db);
-            Grade = new GradeRepository(_db);
-            ClassEnrollment = new CourseEnrollmentRepository(_db);
-            StudentNote = new StudentNoteRepository(_db);
-            StudentDoc = new StudentDocRepository(_db);
+            Attendance = new AttendanceRepository(_db);
+            CourseEnrollment = new CourseEnrollmentRepository(_db);
+            CourseSession = new ClassSessionsRepository(_db);
             DocType = new DocTypeRepository(_db);
+            Grade = new GradeRepository(_db);
             NoteType = new NoteTypeRepository(_db);
+            School = new SchoolRepository(_db);
+            StudentDoc = new StudentDocRepository(_db);
+            StudentNote = new StudentNoteRepository(_db);
+            Subject = new SubjectRepository(_db);
+            Instructor = new InstructorRepository(_db);
+
         }
 
-        public IClassesRepository Class { get; private set; }
+        
         public ICoursesRepository Course { get; private set; }
-        public IInstructorRepository Employee { get; private set; }
+        public IInstructorRepository Instructor { get; private set; }
         public IGuardiansRepository Guardian { get; private set; }
         public IRatingsRepository Rating { get; private set; }
         public IStudentsRepository Student { get; private set; }
         public ITermsRepository Term { get; private set; }
         public IAssessmentsRepository Assessment { get; private set; }
         public IAttendanceRepository Attendance { get; private set; }
-        public ICourseEnrollmentsRepository ClassEnrollment { get; private set; }
-        public ICourseSessionsRepository ClassSession { get; private set; }
+        public ICourseEnrollmentsRepository CourseEnrollment { get; private set; }
+        public ICourseSessionsRepository CourseSession { get; private set; }
         public IDocTypeRepository DocType { get; private set; }
         public IGradeRepository Grade { get; private set; }
         public INoteTypeRepository NoteType { get; private set; }
         public ISchoolRepository School { get; private set; }
         public IStudentDocRepository StudentDoc { get; private set; }
         public IStudentNoteRepository StudentNote { get; private set; }
+        public ISubjectRepository Subject { get; private set; }
 
         public void Save()
         {
