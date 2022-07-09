@@ -1,12 +1,17 @@
 ﻿@using Models.Academic.ViewModel
-@model Models.Academic.ViewModel.StudentDocVM
+@model StudentDocVM
 
-<form method="post">
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
     <input asp-for="StudentDoc.Id" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Create Document</h2>
+            <h2 class="text-primary">Upload Document</h2>
             <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="StudentDoc.Title"></label>
+            <input asp-for="StudentDoc.Title" class="form-control"/>
+            <span asp-validation-for="StudentDoc.Title" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="StudentDoc.DocUrl"></label>
@@ -19,10 +24,19 @@
             </select>
             <span asp-validation-for="StudentDoc.DocTypeId"></span>
         </div>
-        <div>
-            <button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px">Create</button>
-            <a asp-controller="StudentDocsController" asp-action="Index" class="btn btn-secondary" style="width:150px">
-                Back to Documents
+        <div class="col-12">
+
+            @if (Model.StudentDoc.Id != 0)
+            {
+                <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+            }
+            else
+            {
+                <button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px">Upload</button>
+            }
+
+            <a asp-controller="StudentDocs" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                Back to List
             </a>
         </div>
     </div>

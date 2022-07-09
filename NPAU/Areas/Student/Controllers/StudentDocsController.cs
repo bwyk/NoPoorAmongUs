@@ -24,89 +24,49 @@ namespace NPAU.Controllers
             return View(objStudentDocList);
         }
 
-        [HttpGet]
-        public ViewResult CreateDoc(int id)
+        public IActionResult Upsert(int? id)
         {
             StudentDocVM studentDocVm = new()
             {
                 StudentDoc = new(),
                 StudentDocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem  //Projection
                 {
-                    Text = i.Type,
+                    Text = i.TypeName,
                     Value = i.Id.ToString()
                 })
             };
+
             return View(studentDocVm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateDoc(StudentDocVM obj, int id, IFormFile? file)
+        public IActionResult Upsert(StudentDocVM obj)
         {
+            obj.StudentDoc.DocType = _unitOfWork.DocType.GetFirstOrDefault(d => d.Id == obj.StudentDoc.DocTypeId);
+            ModelState.Clear();
+            TryValidateModel(obj);
             if (ModelState.IsValid)
             {
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                if (file != null)
+                if (obj.StudentDoc.Id == 0)
                 {
-                    string fileName = Guid.NewGuid().ToString();
-                    //Don't forget to physically create these folders in wwwroot
-                    var uploads = Path.Combine(wwwRootPath, @"images\docs");
-                    var extension = Path.GetExtension(file.FileName);
-
-                    if (obj.StudentDoc.DocUrl != null)
-                    {
-                        var oldImagePath = Path.Combine(wwwRootPath, obj.StudentDoc.DocUrl.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-
-                    using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
-                    {
-                        file.CopyTo(fileStreams);
-                    }
-                    obj.StudentDoc.DocUrl = @"\images\docs\" + fileName + extension;
-
+                    _unitOfWork.StudentDoc.Add(obj.StudentDoc);
                 }
-                obj.StudentDoc.StudentId = id;
-                _unitOfWork.StudentDoc.Add(obj.StudentDoc);
+                else
+                {
+                    _unitOfWork.StudentDoc.Update(obj.StudentDoc);
+                }
                 _unitOfWork.Save();
-                TempData["success"] = "New Document has been added.";
+                TempData["success"] = "You have successfully added a new document.";
                 return RedirectToAction("Index");
             }
-            return View(obj);
-        }
 
-        [HttpGet]
-        public IActionResult EditDoc(int? id)
-        {
-            if (id == null || id == 0)
+            obj.StudentDocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem  //Projection
             {
-                return NotFound();
-            }
+                Text = i.TypeName,
+                Value = i.Id.ToString()
+            });
 
-            var studentNoteFromDb = _unitOfWork.StudentNote.GetFirstOrDefault(s => s.Id == id);
-
-            if (studentNoteFromDb == null)
-            {
-                return NotFound();
-            }
-
-            return View(studentNoteFromDb);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditDoc(StudentDoc obj)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.StudentDoc.Update(obj);
-                _unitOfWork.Save();
-                TempData["success"] = "Note has been updated.";
-                return RedirectToAction("Index");
-            }
             return View(obj);
         }
 
@@ -118,31 +78,37 @@ namespace NPAU.Controllers
                 return NotFound();
             }
 
-            var studentNoteFromDb = _unitOfWork.StudentNote.GetFirstOrDefault(s => s.Id == id);
+            var studentDocFromDb = _unitOfWork.StudentDoc.GetFirstOrDefault(s => s.Id == id);
 
-            if (studentNoteFromDb == null)
+            if (studentDocFromDb == null)
             {
                 return NotFound();
             }
 
-            return View(studentNoteFromDb);
+            return View(studentDocFromDb);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteNote(int? id)
+        public IActionResult DeleteDoc(int? id)
         {
-            var obj = _unitOfWork.StudentNote.GetFirstOrDefault(s => s.Id == id);
+            var obj = _unitOfWork.StudentDoc.GetFirstOrDefault(s => s.Id == id);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.StudentNote.Remove(obj);
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.DocUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.StudentDoc.Remove(obj);
 
             _unitOfWork.Save();
 
-            TempData["success"] = "Note has been deleted.";
+            TempData["success"] = "Document has been deleted.";
             return RedirectToAction("Index");
         }
     }

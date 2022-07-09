@@ -17,7 +17,8 @@ namespace NPAU.Controllers
         }
         public IActionResult Index(int id)
         {
-            IEnumerable<StudentNote> objStudentNoteList = _unitOfWork.StudentNote.GetAll().Where(u => u.StudentId == id);
+            //IEnumerable<StudentNote> objStudentNoteList = _unitOfWork.StudentNote.GetAll().Where(u => u.StudentId == id);
+            IEnumerable<StudentNote> objStudentNoteList = _unitOfWork.StudentNote.GetAll();
 
             return View(objStudentNoteList);
         }
@@ -54,6 +55,10 @@ namespace NPAU.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(NotesVM obj)
         {
+            obj.StudentNote.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(n => n.Id == obj.StudentNote.NoteTypeId);
+            obj.StudentNote.Student = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == obj.StudentNote.StudentId);
+            ModelState.Clear();
+            TryValidateModel(obj);
             if (ModelState.IsValid)
             {
                 if (obj.StudentNote.Id == 0)

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Models.Academic;
 
-namespace NPAU.Areas.Student.Controllers
+namespace NPAU.Areas.Admin.Controllers
 {
     [Area("Student")]
     public class StudentNoteTypeController : Controller
@@ -22,14 +22,14 @@ namespace NPAU.Areas.Student.Controllers
         [HttpGet]
         public ViewResult Create()
         {
-            return View();  
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(NoteType obj)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _unitOfWork.NoteType.Add(obj);
                 _unitOfWork.Save();
