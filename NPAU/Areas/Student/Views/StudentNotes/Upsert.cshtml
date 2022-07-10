@@ -1,0 +1,54 @@
+﻿@using Models.ViewModels
+@model NotesVM
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <input asp-for="StudentNote.Id" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Create Note</h2>
+            <hr />
+        </div> 
+        <div class="mb-3">
+            <label asp-for="StudentNote.Text"></label>
+            <textarea asp-for="StudentNote.Text" rows="5" class="form-control"></textarea>
+            <span asp-validation-for="StudentNote.Text" class="text-danger"></span>
+        </div>
+        <div class="mb-3 col-6">
+            <label asp-for="StudentNote.StudentId"></label>
+            <select asp-for="StudentNote.StudentId" asp-items="@Model.StudentList" class="form-select">
+                <option disabled selected>--Select Student--</option>
+            </select>
+            <span asp-validation-for="StudentNote.StudentId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 col-6">
+            <label asp-for="StudentNote.NoteTypeId"></label>
+            <select asp-for="StudentNote.NoteTypeId" asp-items="@Model.NoteTypeList" class="form-select">
+                <option disabled selected>--Select Type--</option>
+            </select>
+            <span asp-validation-for="StudentNote.NoteTypeId" class="text-danger"></span>
+        </div>
+        <div class="col-12">
+
+            @if (Model.StudentNote.Id != 0)
+            {
+                <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+            }
+
+            <a asp-controller="StudentNote" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                Back to List
+            </a>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    }

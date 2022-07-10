@@ -1,6 +1,6 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Models.Academic;
+using Models;
 using Models.ViewModels;
 using Utilities;
 

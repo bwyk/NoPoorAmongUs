@@ -1,5 +1,35 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Student Documents";
+}
+
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Student Documents</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="StudentDocs" asp-action="Upsert" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> &nbsp; Add Document to Student
+            </a>
+        </div>
+    </div>
+    <br /><br />
+
+<table  id="tblData"  class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Document Type</th>
+            <th>Document Title</th>
+            <th>Actions</th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+</div>
+
+@section Scripts{
+    <script src="~/js/student-documents.js"></script>
 }
