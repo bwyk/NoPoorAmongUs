@@ -1,48 +1,35 @@
 ﻿@{
     ViewData["Title"] = "Student Documents";
 }
+
 <div class="container">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Documents</h2>
+            <h2 class="text-primary">Student Documents</h2>
         </div>
         <div class="col-6 text-end">
             <a asp-controller="StudentDocs" asp-action="Upsert" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> &nbsp; Create Note
+                <i class="bi bi-plus-circle"></i> &nbsp; Add Document to Student
             </a>
         </div>
     </div>
     <br /><br />
 
-    <table class="table table-bordered" style="width:100%">
-        <thead>
-            <th>
-                Note
-            </th>
-            <th>
-                Text
-            </th>
-        </thead>
-        <tbody>
-            @foreach(var obj in Model)
-        {
-            <tr>
-                <td width="15%">
-                    @obj.Id
-                </td>
-                <td width="55%">
-                    @obj.Title
-                </td>
-                <td>
-                    <div class="w-75 btn-group" role="group">
-                        <a asp-controller="StudentDocs" asp-action="Upsert" asp-route-id="@obj.Id"
-                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                        <a asp-controller="StudentDocs" asp-action="Delete" asp-route-id="@obj.Id"
-                        class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
-                    </div>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+<table  id="tblData"  class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Document Type</th>
+            <th>Document Title</th>
+            <th>Student ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Actions</th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
 </div>
+
+@section Scripts{
+    <script src="~/js/student-documents.js"></script>
+}

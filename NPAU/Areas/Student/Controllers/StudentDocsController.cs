@@ -1,8 +1,9 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Models.Academic;
-using Models.Academic.ViewModel;
+using Models;
+using Models.ViewModels;
+using System.Diagnostics;
 
 namespace NPAU.Controllers
 {
@@ -17,37 +18,69 @@ namespace NPAU.Controllers
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
         }
-        public IActionResult Index(int id)
+        public IActionResult Index()
         {
-            IEnumerable<StudentDoc> objStudentDocList = _unitOfWork.StudentDoc.GetAll().Where(u => u.StudentId == id);
-
-            return View(objStudentDocList);
+           return View();
         }
 
+        [HttpGet]
         public IActionResult Upsert(int? id)
         {
             StudentDocVM studentDocVm = new()
             {
                 StudentDoc = new(),
-                StudentDocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem  //Projection
+                Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.FirstName,
+                    Value = i.Id.ToString()
+                }),
+                DocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.TypeName,
                     Value = i.Id.ToString()
-                })
+                }),
             };
 
-            return View(studentDocVm);
+            if (id == null || id == 0)
+            {
+                return View(studentDocVm);
+            }
+            else
+            {
+                studentDocVm.StudentDoc = _unitOfWork.StudentDoc.GetFirstOrDefault(s => s.Id == id);
+                return View(studentDocVm);
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(StudentDocVM obj)
+        public IActionResult Upsert(StudentDocVM obj, IFormFile? file)
         {
-            obj.StudentDoc.DocType = _unitOfWork.DocType.GetFirstOrDefault(d => d.Id == obj.StudentDoc.DocTypeId);
-            ModelState.Clear();
-            TryValidateModel(obj);
             if (ModelState.IsValid)
             {
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(wwwRootPath, @"documents\students");
+                    var extension = Path.GetExtension(file.FileName);
+
+                    if (obj.StudentDoc.DocUrl != null)
+                    {
+                        var oldFilePath = Path.Combine(wwwRootPath, obj.StudentDoc.DocUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldFilePath))
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
+                    }
+
+                    using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        file.CopyTo(fileStreams);
+                    }
+                    obj.StudentDoc.DocUrl = @"\documents\students\" + fileName + extension;
+                }
+            
                 if (obj.StudentDoc.Id == 0)
                 {
                     _unitOfWork.StudentDoc.Add(obj.StudentDoc);
@@ -57,45 +90,44 @@ namespace NPAU.Controllers
                     _unitOfWork.StudentDoc.Update(obj.StudentDoc);
                 }
                 _unitOfWork.Save();
-                TempData["success"] = "You have successfully added a new document.";
+                TempData["success"] = "Student Document added successfully";
                 return RedirectToAction("Index");
             }
-
-            obj.StudentDocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem  //Projection
+            else
             {
-                Text = i.TypeName,
-                Value = i.Id.ToString()
-            });
+                obj.Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.FirstName,
+                    Value = i.Id.ToString()
+                });
 
-            return View(obj);
+                obj.DocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.TypeName,
+                    Value = i.Id.ToString()
+                });
+
+                return View(obj);
+            }
+
         }
+
+        #region API CALLS 
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public IActionResult GetAll()
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
-            var studentDocFromDb = _unitOfWork.StudentDoc.GetFirstOrDefault(s => s.Id == id);
-
-            if (studentDocFromDb == null)
-            {
-                return NotFound();
-            }
-
-            return View(studentDocFromDb);
+            var studentDocList = _unitOfWork.StudentDoc.GetAll(includeProperties: "Student,DocType");
+            return Json(new { data = studentDocList });
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteDoc(int? id)
+        [HttpDelete]
+        public IActionResult Delete(int? id)
         {
             var obj = _unitOfWork.StudentDoc.GetFirstOrDefault(s => s.Id == id);
             if (obj == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Error while deleting" });
             }
 
             var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.DocUrl.TrimStart('\\'));
@@ -105,11 +137,11 @@ namespace NPAU.Controllers
             }
 
             _unitOfWork.StudentDoc.Remove(obj);
-
             _unitOfWork.Save();
+            return Json(new { success = true, message = "Delete Successful" });
 
-            TempData["success"] = "Document has been deleted.";
-            return RedirectToAction("Index");
         }
+
+        #endregion
     }
 }

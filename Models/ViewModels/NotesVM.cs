@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Models.Academic;
 
-namespace Models.Academic.ViewModel
+namespace Models.ViewModels
 {
     public class NotesVM
     {

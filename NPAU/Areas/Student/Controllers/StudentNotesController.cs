@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Models.Academic;
-using Models.Academic.ViewModel;
+using Models.ViewModels;
 
 namespace NPAU.Controllers
 {

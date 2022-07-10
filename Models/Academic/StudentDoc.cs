@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Academic
+namespace Models
 {
     public class StudentDoc
     {
@@ -16,12 +16,19 @@ namespace Models.Academic
         [Required]
         public string Title { get; set; }
         [ValidateNever]
+        [Display(Name = "Document")]
         public string DocUrl { get; set; } = string.Empty;
+
+        [Required]
+        [Display(Name = "Student")]
         public int StudentId { get; set; }
+
         [ForeignKey("StudentId")]
+        [ValidateNever]
         public Student Student { get; set; }
         public int DocTypeId { get; set; }
         [ForeignKey("DocTypeId")]
+        [ValidateNever]
         public DocType DocType { get; set; }
         
     }

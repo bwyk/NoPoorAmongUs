@@ -1,31 +1,125 @@
-﻿@using Models.Academic.ViewModel
+﻿@using Models.ViewModels
 @model StudentDocVM
 
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
     <input asp-for="StudentDoc.Id" hidden />
+
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">Create Student Document</h2>
+                    <hr />
+                </div>
+
+                <div class="mb-3 col-6">
+                    <label asp-for="StudentDoc.StudentId"></label>
+                    <select asp-for="StudentDoc.StudentId" asp-items="@Model.Students" class="form-select">
+                        <option disabled selected>--Select Student--</option>
+                    </select>
+                    <span asp-validation-for="StudentDoc.StudentId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 col-6">
+                    <label asp-for="StudentDoc.DocTypeId"></label>
+                    <select asp-for="StudentDoc.DocTypeId" asp-items="@Model.DocTypeList" class="form-select">
+                        <option disabled selected>--Select Document Type--</option>
+                    </select>
+                    <span asp-validation-for="StudentDoc.DocTypeId" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3 col-6">
+                    <label asp-for="StudentDoc.Title"></label>
+                    <input asp-for="StudentDoc.Title" class="form-control" />
+                    <span asp-validation-for="StudentDoc.Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="StudentDoc.DocUrl"></label>
+                    <input type="file" id="uploadBox" name="file" class="form-control" />  
+                </div>
+
+                <div class="col-12">
+                    @if (Model.StudentDoc.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px">Create</button>
+                    }
+                
+                    <a asp-controller="StudentDocs" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+
+<script>
+ 
+    function ValidateInput(){
+        if(document.getElementById("uploadBox").value==""){
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Please upload a URL!',
+            });
+            return false;
+        }
+        return true;
+    }
+</script>
+}
+
+    
+
+@*@model Models.ViewModels.StudentDocVM
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <input asp-for="StudentDoc.Id" hidden />
+
+
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Upload Document</h2>
             <hr />
         </div>
+
+        <div class="mb-3 col-6">
+            <label asp-for="StudentDoc.Student.Id"></label>
+            <select asp-for="StudentDoc.Student" asp-items="@Model.Students" class="form-control">
+                <option disabled selected>--Select Student--</option>
+            </select>
+        </div>
+
+        <div class="mb-3 col-6">
+            <label asp-for="StudentDoc.DocType.Id"></label>
+            <select asp-for="StudentDoc.DocType" asp-items="@Model.DocTypeList" class="form-control">
+                <option disabled selected>--Select Document Type--</option>
+            </select>
+        </div>
+
+
         <div class="mb-3">
             <label asp-for="StudentDoc.Title"></label>
             <input asp-for="StudentDoc.Title" class="form-control"/>
-            <span asp-validation-for="StudentDoc.Title" class="text-danger"></span>
         </div>
+
         <div class="mb-3">
             <label asp-for="StudentDoc.DocUrl"></label>
-            <input type="file" id="uploadBox" name="file" class="form-control" />
+            <input asp-for="StudentDoc.DocUrl" class="form-control"/>
         </div>
-        <div class="mb-3 col-6">
-            <label asp-for="StudentDoc.DocTypeId"></label>
-            <select asp-for="StudentDoc.DocTypeId" class="form-control">
-                <option disabled selected>--Select Document Type--</option>
-            </select>
-            <span asp-validation-for="StudentDoc.DocTypeId"></span>
-        </div>
-        <div class="col-12">
 
+
+        <div class="col-12">
             @if (Model.StudentDoc.Id != 0)
             {
                 <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
@@ -40,25 +134,4 @@
             </a>
         </div>
     </div>
-</form>
-
-@section Scripts{
-    @{
-        <partial name="_ValidationScriptsPartial" />
-    }
-
-    <script>
-
-        function ValidateInput() {
-            if (document.getElementById("uploadBox").value == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Please upload an Image!',
-                });
-                return false;
-            }
-            return true;
-        }
-    </script>
-}
+</form>*@
