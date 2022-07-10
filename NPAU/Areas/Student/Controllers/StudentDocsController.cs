@@ -31,7 +31,7 @@ namespace NPAU.Controllers
                 StudentDoc = new(),
                 Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem
                 {
-                    Text = i.FirstName,
+                    Text = i.FullName,
                     Value = i.Id.ToString()
                 }),
                 DocTypeList = _unitOfWork.DocType.GetAll().Select(i => new SelectListItem

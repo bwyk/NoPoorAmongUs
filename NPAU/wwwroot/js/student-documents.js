@@ -11,11 +11,11 @@ function loadDataTable() {
             "url": "/Student/StudentDocs/GetAll"
         },
         "columns": [
-            { "data": "docType.typeName", "width": "15%" },
-            { "data": "title", "width": "15%" },
             { "data": "student.id", "width": "15%" },
             { "data": "student.firstName", "width": "15%" },
             { "data": "student.lastName", "width": "15%" },
+            { "data": "docType.typeName", "width": "15%" },
+            { "data": "title", "width": "15%" },
             {
                 "data": { id: "id", docUrl: "docUrl"},
                 "render": function (data) {

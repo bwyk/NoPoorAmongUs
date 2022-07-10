@@ -12,7 +12,7 @@ namespace Models
     {
         [Key]
         public int Id { get; set; }
-        [DisplayName("Document Type Name")]
+        [DisplayName("Document Type")]
         public string TypeName { get; set; }
         
     }
