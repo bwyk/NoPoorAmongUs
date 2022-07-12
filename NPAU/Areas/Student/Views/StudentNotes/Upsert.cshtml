@@ -14,15 +14,15 @@
             <span asp-validation-for="StudentNote.Text" class="text-danger"></span>
         </div>
         <div class="mb-3 col-6">
-            <label asp-for="StudentNote.StudentId"></label>
-            <select asp-for="StudentNote.StudentId" asp-items="@Model.StudentList" class="form-select">
+            <label asp-for="StudentNote.Student"></label>
+            <select asp-for="StudentNote.StudentId" asp-items="@Model.Students" class="form-select">
                 <option disabled selected>--Select Student--</option>
             </select>
             <span asp-validation-for="StudentNote.StudentId" class="text-danger"></span>
         </div>
 
         <div class="mb-3 col-6">
-            <label asp-for="StudentNote.NoteTypeId"></label>
+            <label asp-for="StudentNote.NoteType"></label>
             <select asp-for="StudentNote.NoteTypeId" asp-items="@Model.NoteTypeList" class="form-select">
                 <option disabled selected>--Select Type--</option>
             </select>
@@ -39,7 +39,7 @@
                 <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
             }
 
-            <a asp-controller="StudentNote" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            <a asp-controller="StudentNotes" asp-action="Index" class="btn btn-secondary" style="width:150px">
                 Back to List
             </a>
         </div>

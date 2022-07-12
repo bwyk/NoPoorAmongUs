@@ -13,8 +13,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.6" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Academic\ViewModel\" />
-  </ItemGroup>
-
 </Project>
