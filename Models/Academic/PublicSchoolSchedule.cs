@@ -23,19 +23,19 @@ namespace Models.Academic
         public School School { get; set; }
 
         [DisplayName("Monday")]
-        public bool Monday { get; set; }
+        public bool Monday { get; set; } = false;
 
         [DisplayName("Tuesday")]
-        public bool Tuesday { get; set; }
+        public bool Tuesday { get; set; } = false;
 
         [DisplayName("Wednesday")]
-        public bool Wednesday { get; set; }
+        public bool Wednesday { get; set; } = false;
 
         [DisplayName("Thursday")]
-        public bool Thursday { get; set; }
+        public bool Thursday { get; set; } = false;
 
         [DisplayName("Friday")]
-        public bool Friday { get; set; }
+        public bool Friday { get; set; } = false;
 
         [DisplayName("Start Time")]
         public DateTime StartTime { get; set; }

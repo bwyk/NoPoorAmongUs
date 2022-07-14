@@ -128,9 +128,9 @@ namespace DataAccess.Repository
             //TODO make it randomly pick from list of ratings
 
             //TODO filter based on application status? or leave as future students will still have ratings
-            //if(student.Status != Role.Status_Pending)
+            //if (student.Status != Role.Status_Pending)
 
-            //bool saveChanges = false;
+            //    bool saveChanges = false;
             //if (!_db.Ratings.Any(r => r.StudentId == student.Id))
             //{
             //    _db.Ratings.AddRange(
