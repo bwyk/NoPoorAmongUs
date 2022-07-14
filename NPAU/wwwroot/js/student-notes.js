@@ -38,17 +38,33 @@ function loadDataTable() {
 
 function viewNoteText(url) {
     var text;
+    var id;
     $.getJSON(url, function (data) {
         console.log(data);
         $.each(data, function (key, val) {
             text = val.text;
+            id = val.id;
         });
 
-        Swal.fire
+/*        Swal.fire
         (
             'Student Note',
             text
-        )
+        )  */
+        Swal.fire({
+            title: 'Student Note',
+            html: text,
+            showDenyButton: true,
+            confirmButtonText: 'Close',
+            denyButtonText: 'Update Note',
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isDenied)
+            {
+                window.location.href = '/Student/StudentNotes/Upsert?id=' + id;
+/*/Student/StudentNotes/Upsert?id=${data}*/
+            }
+        })
     });
 }
 
