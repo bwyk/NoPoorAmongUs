@@ -28,5 +28,8 @@ namespace Utilities
         private static SelectListItem all = new SelectListItem(SD.StudentStatusPending, SD.StudentStatusPending);
         private static SelectListItem instructor = new SelectListItem(SD.StudentStatusAccepted, SD.StudentStatusAccepted);
         public static IEnumerable<SelectListItem> DocTypeList = new List<SelectListItem>() { all, instructor};
+
+        public const string PublicSchool = "Public School";
+
     }
 }

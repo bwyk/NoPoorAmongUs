@@ -13,9 +13,5 @@ namespace Models.ViewModels
     {
         public PublicSchoolSchedule PublicSchoolSchedules { get; set; }
 
-        [ValidateNever]
-        public IEnumerable<SelectListItem> SchoolList { get; set; }
-
-
     }
 }

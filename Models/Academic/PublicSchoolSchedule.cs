@@ -23,22 +23,24 @@ namespace Models.Academic
         public School School { get; set; }
 
         [DisplayName("Monday")]
-        public bool Monday { get; set; } = false;
+        public bool Monday { get; set; }
 
         [DisplayName("Tuesday")]
-        public bool Tuesday { get; set; } = false;
+        public bool Tuesday { get; set; }
 
         [DisplayName("Wednesday")]
-        public bool Wednesday { get; set; } = false;
+        public bool Wednesday { get; set; }
 
         [DisplayName("Thursday")]
-        public bool Thursday { get; set; } = false;
+        public bool Thursday { get; set; }
 
         [DisplayName("Friday")]
-        public bool Friday { get; set; } = false;
+        public bool Friday { get; set; }
 
+        [DisplayName("Start Time")]
         public DateTime StartTime { get; set; }
 
+        [DisplayName("End Time")]
         public DateTime EndTime { get; set; }
 
         [DisplayName("Students")]
