@@ -31,36 +31,43 @@ function loadDataTable(status) {
             "url": "/Applicant/Manage/GetAll?status=" + status
         },
         "columns": [
-            { "data": "status", "width": "%14" },
-            { "data": "fullName", "width": "14%" },
+            { "data": "status", "width": "%10" },
+            { "data": "fullName", "width": "20%" },
             {
                 "data": "birthday", "width": "14%",
                 "render": DataTable.render.date()
             },
             { "data": "address", "width": "14%" },
-            { "data": "englishLevel", "width": "14%" },
-            { "data": "computerLevel", "width": "14%" },
+            { "data": "englishLevel", "width": "10%" },
+            { "data": "computerLevel", "width": "10%" },
             {
                 "data": "id",
                 "render": function (data) {
                     return `
+                        <div class="btn-group mb-1" role="group">
+                            <div class="btn-group" role="group">
+                                <a href="/Applicant/PublicSchoolSchedule/Index?id=${data}"
+                                class="btn btn-primary"> <i class="bi bi-plus-circle"></i>&nbsp; Add Public School Schedule</a>
+                            </div>
+                        </div>
+                        <hr/>
                         <div class="btn-group" role="group">
-                            <div class="w-75 btn-group" role="group">
+                            <div class="btn-group mx-1" role="group">
                             <a href="/Applicant/Manage/Details?id=${data}"
-                            class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Details</a>
+                            class="btn btn-primary"> <i class="bi bi-pencil-square"></i>Details</a>
                             </div>
-                            <div class="w-75 btn-group" role="group">
+                            <div class="btn-group mx-1" role="group">
                             <a href="/Applicant/Manage/Edit?id=${data}"
-                            class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
+                            class="btn btn-primary"> <i class="bi bi-pencil-square"></i>Edit</a>
                             </div>
-                            <div class="w-75 btn-group" role="group">
+                            <div class="btn-group mx-1" role="group">
                             <a href="/Applicant/Manage/Delete?id=${data}"
-                            class="btn btn-danger mx-2"> <i class="bi bi-pencil-square"></i>Delete</a>
-                            </div>
+                            class="btn btn-danger"> <i class="bi bi-pencil-square"></i>Delete</a>
+                            </div>                       
                         </div>
                         `
                 },
-                "width": "14%"
+                "width": "22%"
             }
         ]
     });

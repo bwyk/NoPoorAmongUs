@@ -24,6 +24,7 @@ namespace NPAU.Controllers
 
             return View();
         }
+
         [HttpGet]
         public ViewResult Create()
         {

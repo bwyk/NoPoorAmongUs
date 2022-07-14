@@ -31,5 +31,6 @@ namespace DataAccess.Data
         public DbSet<School> Schools => Set<School>();
         public DbSet<StudentDoc> StudentDocs => Set<StudentDoc>();
         public DbSet<StudentNote> StudentNotes => Set<StudentNote>();
+        public DbSet<PublicSchoolSchedule> PublicSchoolSchedules => Set<PublicSchoolSchedule>();
     }
 }

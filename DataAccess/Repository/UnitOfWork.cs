@@ -1,5 +1,6 @@
 ﻿using DataAccess.Data;
 using DataAccess.Repository.IRepository;
+using Models.Academic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,11 @@ namespace DataAccess.Repository
             StudentNote = new StudentNoteRepository(_db);
             Subject = new SubjectRepository(_db);
             Instructor = new InstructorRepository(_db);
+            PublicSchoolSchedules = new PublicSchoolScheduleRepository(_db);
 
         }
 
-        
+        public IPublicSchoolScheduleRepository PublicSchoolSchedules { get; private set; }
         public ICoursesRepository Course { get; private set; }
         public IInstructorRepository Instructor { get; private set; }
         public IGuardiansRepository Guardian { get; private set; }

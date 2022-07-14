@@ -1,0 +1,37 @@
+﻿@using Models.ViewModels
+@model PublicSchoolScheduleVM
+@{
+    ViewData["Title"] = "Public School Schedule";
+}
+<div class="container p-3">
+    <div class="d-flex justify-content-between pt-4 row-cols-2">
+        <div class="p-2">
+            <h2 class="text-primary text-start">Public School Schedule</h2>
+        </div>
+    </div>
+</div>
+<form method="post" asp-action="#" enctype="multipart/form-data">
+    <input asp-for="PublicSchoolSchedules.Id" hidden />
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="mb-3 col-6">
+                    <label asp-for="PublicSchoolSchedules.SchoolId"></label>
+                    <select asp-for="PublicSchoolSchedules.SchoolId" asp-items="@Model.SchoolList" class="form-select">
+                        <option disabled selected>--Select School--</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <script src="~/js/publicSchoolSchedule.js"></script>
+}
