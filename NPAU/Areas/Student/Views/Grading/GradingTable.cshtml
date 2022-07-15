@@ -1,0 +1,31 @@
+﻿@using Models.ViewModels
+@model GradingVM
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Grading</h2>
+        </div>
+
+    </div>
+    <br /><br />
+    <select>
+        <option disabled>--- Select an Assessment ---</option>
+    </select>
+    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Assessment</th>
+                <th>Student</th>
+                <th>Earned Points</th>
+                <th>Maximum Points</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+
+</div>
+
+        @section Scripts{
+    <script src="~/js/Grading.js"></script>
+}
