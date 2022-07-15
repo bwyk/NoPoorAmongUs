@@ -23,7 +23,7 @@ namespace DataAccess.Repository
             Assessment = new AssessmentsRepository(_db);
             Attendance = new AttendanceRepository(_db);
             CourseEnrollment = new CourseEnrollmentRepository(_db);
-            CourseSession = new ClassSessionsRepository(_db);
+            CourseSession = new CourseSessionsRepository(_db);
             DocType = new DocTypeRepository(_db);
             Grade = new GradeRepository(_db);
             NoteType = new NoteTypeRepository(_db);

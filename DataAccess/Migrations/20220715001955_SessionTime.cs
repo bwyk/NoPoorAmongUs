@@ -4,20 +4,20 @@
 
 namespace DataAccess.Migrations
 {
-    public partial class CourseAssessmentPropertyUpdates : Migration
+    public partial class SessionTime : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Name",
-                table: "Courses",
+                name: "EndTime",
+                table: "CourseSessions",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
-                name: "Description",
-                table: "Assessments",
+                name: "StartTime",
+                table: "CourseSessions",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
@@ -26,12 +26,12 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Name",
-                table: "Courses");
+                name: "EndTime",
+                table: "CourseSessions");
 
             migrationBuilder.DropColumn(
-                name: "Description",
-                table: "Assessments");
+                name: "StartTime",
+                table: "CourseSessions");
         }
     }
 }

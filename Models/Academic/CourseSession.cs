@@ -18,6 +18,8 @@ namespace Models.Academic
         [ForeignKey("CourseId")]
         public Course? Course { get; set; }
         public string CourseName { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         
     }
 }

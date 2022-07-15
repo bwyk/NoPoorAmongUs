@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public class ClassSessionsRepository : Repository<CourseSession>, ICourseSessionsRepository
+    public class CourseSessionsRepository : Repository<CourseSession>, ICourseSessionsRepository
     {
         private readonly ApplicationDbContext _db;
-        public ClassSessionsRepository(ApplicationDbContext db) : base(db)
+        public CourseSessionsRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }

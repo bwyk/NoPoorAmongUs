@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220704210453_ClassEnrollment")]
-    partial class ClassEnrollment
+    [Migration("20220715001955_SessionTime")]
+    partial class SessionTime
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -260,7 +260,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("ClassEnrollments");
+                    b.ToTable("CourseEnrollments");
                 });
 
             modelBuilder.Entity("Models.Academic.CourseSession", b =>
@@ -282,24 +282,19 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EndTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StartTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("ClassSessions");
-                });
-
-            modelBuilder.Entity("Models.Academic.DocType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DocTypes");
+                    b.ToTable("CourseSessions");
                 });
 
             modelBuilder.Entity("Models.Academic.Grade", b =>
@@ -313,7 +308,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AssessmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ClassEnrollmentId")
+                    b.Property<int>("CourseEnrollmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("Score")
@@ -323,7 +318,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("AssessmentId");
 
-                    b.HasIndex("ClassEnrollmentId");
+                    b.HasIndex("CourseEnrollmentId");
 
                     b.ToTable("Grades");
                 });
@@ -343,28 +338,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NoteTypes");
-                });
-
-            modelBuilder.Entity("Models.Academic.StudentDoc", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DocTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocTypeId");
-
-                    b.ToTable("StudentDocs");
                 });
 
             modelBuilder.Entity("Models.Academic.StudentNote", b =>
@@ -408,6 +381,9 @@ namespace DataAccess.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaxScore")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -455,6 +431,23 @@ namespace DataAccess.Migrations
                     b.HasIndex("TermId");
 
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("Models.DocType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("TypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocTypes");
                 });
 
             modelBuilder.Entity("Models.Guardian", b =>
@@ -618,6 +611,37 @@ namespace DataAccess.Migrations
                     b.ToTable("Students");
                 });
 
+            modelBuilder.Entity("Models.StudentDoc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DocTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DocUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocTypeId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentDocs");
+                });
+
             modelBuilder.Entity("Models.Subject", b =>
                 {
                     b.Property<int>("Id")
@@ -761,26 +785,15 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Academic.CourseEnrollment", "ClassEnrollment")
+                    b.HasOne("Models.Academic.CourseEnrollment", "CourseEnrollment")
                         .WithMany()
-                        .HasForeignKey("ClassEnrollmentId")
+                        .HasForeignKey("CourseEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Assessment");
 
-                    b.Navigation("ClassEnrollment");
-                });
-
-            modelBuilder.Entity("Models.Academic.StudentDoc", b =>
-                {
-                    b.HasOne("Models.Academic.DocType", "DocType")
-                        .WithMany()
-                        .HasForeignKey("DocTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DocType");
+                    b.Navigation("CourseEnrollment");
                 });
 
             modelBuilder.Entity("Models.Academic.StudentNote", b =>
@@ -866,6 +879,25 @@ namespace DataAccess.Migrations
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Models.StudentDoc", b =>
+                {
+                    b.HasOne("Models.DocType", "DocType")
+                        .WithMany()
+                        .HasForeignKey("DocTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DocType");
 
                     b.Navigation("Student");
                 });

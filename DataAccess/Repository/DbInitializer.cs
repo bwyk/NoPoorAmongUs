@@ -304,7 +304,9 @@ namespace DataAccess.Repository
                         CourseId = courseComputers1.Id,
                         Course = courseComputers1,
                         CourseName = computers1CourseName,
-                        Day = "Monday"
+                        Day = "Monday",
+                        StartTime = DateTime.Now.ToShortTimeString(),
+                        EndTime = DateTime.Now.ToShortTimeString()
                     }
                 );
                 saveChanges = true;
