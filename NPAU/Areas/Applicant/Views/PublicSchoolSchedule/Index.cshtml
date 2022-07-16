@@ -8,7 +8,7 @@
     </div>
 </div>
 <form method="post">
-<input asp-for="Student.Id" hidden readonly />
+    <input asp-for="Student.Id" hidden readonly />
     <input asp-for="Student.Address" hidden readonly />
     <input asp-for="Student.Birthday" hidden readonly />
     <input asp-for="Student.ComputerLevel " hidden readonly />
@@ -56,19 +56,3 @@
         </div>
     </div>
 </form>
-<br />
-<h2 class="text-primary">Student Public School Schedule</h2>
-<hr />
-<table id="tblData" class="table table-bordered table-striped" style="width:100%">
-    <thead>
-        <tr>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th></th>
-        </tr>
-    </thead>
-</table>
-
-@section Scripts{
-    <script src="~/js/publicSchoolSchedule.js"></script>
-}

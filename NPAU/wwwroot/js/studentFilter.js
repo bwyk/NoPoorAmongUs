@@ -16,7 +16,7 @@ $(document).ready(function () {
             }
             else {
                 loadDataTable("all");
-                
+
             }
         }
     }
@@ -48,6 +48,12 @@ function loadDataTable(status) {
                             <div class="btn-group" role="group">
                                 <a href="/Applicant/PublicSchoolSchedule/Index?id=${data}"
                                 class="btn btn-primary"> <i class="bi bi-plus-circle"></i>&nbsp; Add Public School Schedule</a>
+                            </div>
+                        </div>
+                        <div class="btn-group mb-1" role="group">
+                            <div class="btn-group" role="group">
+                                <a href="/Applicant/PublicSchoolSchedule/Schedule?id=${data}"
+                                class="btn btn-primary"> <i class="bi bi-plus-circle"></i>&nbsp; View Public School Schedule</a>
                             </div>
                         </div>
                         <hr/>

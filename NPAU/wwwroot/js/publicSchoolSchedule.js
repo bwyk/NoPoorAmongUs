@@ -4,10 +4,10 @@ $(document).ready(function () {
     loadDataTable();
 });
 
-function loadDataTable() {
+function loadDataTable(id) {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Applicant/PublicSchoolSchedule/GetAll"
+            "url": "/Applicant/PublicSchoolSchedule/Schedule?id=" + id
         },
         "columns": [
             { "data": "startTime", "width": "25%" },
@@ -17,9 +17,9 @@ function loadDataTable() {
                 "render": function (data) {
                     return `
                         <div class="w-75 btn-group" role="group">
-                        <a href="/Admin/PublicSchoolSchedule/Edit?id=${data}"
+                        <a href="/Applicant/PublicSchoolSchedule/Edit?id=${data}"
                         class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                        <a onClick=Delete('/Admin/PublicSchoolSchedule/Delete/${data}')
+                        <a onClick=Delete('/Applicant/PublicSchoolSchedule/Delete/${data}')
                         class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                     </div>
                         `

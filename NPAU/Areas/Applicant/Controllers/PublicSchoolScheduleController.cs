@@ -29,16 +29,11 @@ namespace NPAU.Controllers
         {
             if(ModelState.IsValid)
             {
-                obj.PublicSchoolSchedules.Id = obj.Student.Id;
-                obj.PublicSchoolSchedules.SchoolId = 1;
+                obj.PublicSchoolSchedules.StudentId = obj.Student.Id;
                 _unitOfWork.PublicSchoolSchedules.Add(obj.PublicSchoolSchedules);
                 _unitOfWork.Save();
-                TempData["success"] = "Course Created Successfully";
-                return RedirectToAction("Index");
-            }
-            else { var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList(); 
-                Debug.WriteLine("*************************************");
-                Debug.WriteLine(errors);
+                TempData["success"] = "Public School Schedule Created Successfully";
+                return RedirectToAction("Schedule", new {id = obj.Student.Id});
             }
 
             return View(obj);
@@ -61,9 +56,9 @@ namespace NPAU.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult Schedule(int id)
         {
-            var publicschoolList = _unitOfWork.PublicSchoolSchedules.GetAll();
+            var publicschoolList = _unitOfWork.PublicSchoolSchedules.GetAll(s => s.Id == id);
             return Json(new { data = publicschoolList });
         }
 
