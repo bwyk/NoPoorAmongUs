@@ -32,7 +32,7 @@ namespace DataAccess.Repository
             StudentNote = new StudentNoteRepository(_db);
             Subject = new SubjectRepository(_db);
             Instructor = new InstructorRepository(_db);
-
+            ApplicationUser = new ApplicationUserRepository(_db);
         }
 
         
@@ -53,6 +53,7 @@ namespace DataAccess.Repository
         public IStudentDocRepository StudentDoc { get; private set; }
         public IStudentNoteRepository StudentNote { get; private set; }
         public ISubjectRepository Subject { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
 
         public void Save()
         {
