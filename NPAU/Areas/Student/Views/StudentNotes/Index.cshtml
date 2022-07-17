@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Notes</h2>
+            <h2 class="text-primary">Student Notes</h2>
         </div>
         <div class="col-6 text-end">
             <a asp-controller="StudentNotes" asp-action="Upsert" class="btn btn-primary">
@@ -14,35 +14,18 @@
     </div>
     <br /><br />
 
-    <table class="table table-bordered" style="width:100%">
+    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
         <thead>
-            <th>
-                Note
-            </th>
-            <th>
-                Text
-            </th>
-        </thead>
-        <tbody>
-            @foreach(var obj in Model)
-        {
             <tr>
-                <td width="15%">
-                    @obj.Id
-                </td>
-                <td width="55%">
-                    @obj.Text
-                </td>
-                <td>
-                    <div class="w-75 btn-group" role="group">
-                        <a asp-controller="StudentNotes" asp-action="Upsert" asp-route-id="@obj.Id"
-                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                        <a asp-controller="StudentNotes" asp-action="Delete" asp-route-id="@obj.Id"
-                        class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
-                    </div>
-                </td>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Note Type</th>
+                <th>Actions</th>
             </tr>
-        }
-        </tbody>
+        </thead>
     </table>
 </div>
+
+@section Scripts{
+    <script src="~/js/student-notes.js"></script>
+}

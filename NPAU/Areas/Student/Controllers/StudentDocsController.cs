@@ -141,7 +141,6 @@ namespace NPAU.Controllers
             return Json(new { success = true, message = "Delete Successful" });
 
         }
-
         #endregion
     }
 }

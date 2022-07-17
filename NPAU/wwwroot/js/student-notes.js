@@ -8,32 +8,55 @@ $(document).ready(function () {
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Student/StudentDocs/GetAll"
+            "url": "/Student/StudentNotes/GetAll"
         },
         "columns": [
-            { "data": "student.firstName", "width": "20%" },
-            { "data": "student.lastName", "width": "20%" },
-            { "data": "docType.typeName", "width": "20%" },
-            { "data": "title", "width": "20%" },
-            {
-                "data": { id: "id", docUrl: "docUrl"},
+            { "data": "student.firstName", "width": "25%" },
+            { "data": "student.lastName", "width": "25%" },
+            { "data": "noteType.type", "width": "25%" },
+            { "data": "id",
                 "render": function (data) {
                     return `
                     <div class= text-center>
                         <div class="w-100 btn-group" role="group">
-                        <a href="${data.docUrl}" target="_blank"
+                        <a onClick=viewNoteText('/Student/StudentNotes/GetNoteText/${data}')
                         class="btn btn-secondary mx-2"> <i class="bi bi-binoculars-fill"></i>View</a>
-                        <a href="/Student/StudentDocs/Upsert?id=${data.id}"
+                        <a href="/Student/StudentNotes/Upsert?id=${data}"
                         class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
-                        <a onClick=Delete('/Student/StudentDocs/Delete/${data.id}')
-                        class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                        <a onClick=Delete('/Student/StudentNotes/Delete/${data}')
+                        class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i>Delete</a>
                         </div>
                     </div>
                     `
                 },
-                "width": "20%"
+                "width": "25%"
             }
         ]
+    });
+}
+
+function viewNoteText(url) {
+    var text;
+    var id;
+    $.getJSON(url, function (data) {
+        console.log(data);
+        $.each(data, function (key, val) {
+            text = val.text;
+            id = val.id;
+        });
+
+        Swal.fire({
+            title: 'Student Note',
+            html: text,
+            showDenyButton: true,
+            confirmButtonText: 'Close',
+            denyButtonText: 'Update Note',
+        }).then((result) => {
+            if (result.isDenied)
+            {
+                window.location.href = '/Student/StudentNotes/Upsert?id=' + id;
+            }
+        })
     });
 }
 

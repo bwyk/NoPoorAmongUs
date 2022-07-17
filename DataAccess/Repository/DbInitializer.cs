@@ -38,6 +38,26 @@ namespace DataAccess.Repository
             //SeedCourses();
             SeedCourseSession();
             SeedCourseEnrollment();
+
+            //Create roles
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Social)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Rater)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_User_Indi)).GetAwaiter().GetResult();
+
+            //Create "Super Admins"
+            _userManager.CreateAsync(new ApplicationUser
+            {
+                UserName = "kevinmclennan@mail.weber.edu",
+                Email = "kevinmclennan@mail.weber.edu",
+                FirstName = "Kevin",
+                LastName = "McLennan"
+            }, "Test12345!").GetAwaiter().GetResult();
+
+            ApplicationUser user = _db.ApplicationUser.FirstOrDefault(u => u.Email == "kevinmclennan@mail.weber.edu");
+
+            _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
         }
 
         private (Student, Student) GetStudents()

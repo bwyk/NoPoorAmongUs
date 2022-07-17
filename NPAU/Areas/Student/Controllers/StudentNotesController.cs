@@ -15,12 +15,9 @@ namespace NPAU.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        public IActionResult Index(int id)
+        public IActionResult Index()
         {
-            //IEnumerable<StudentNote> objStudentNoteList = _unitOfWork.StudentNote.GetAll().Where(u => u.StudentId == id);
-            IEnumerable<StudentNote> objStudentNoteList = _unitOfWork.StudentNote.GetAll();
-
-            return View(objStudentNoteList);
+            return View();
         }
 
         public IActionResult Upsert(int? id)
@@ -28,9 +25,9 @@ namespace NPAU.Controllers
             NotesVM notesVM = new()
             {
                 StudentNote = new(),
-                StudentList = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
+                Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
                 {
-                    Text = i.FirstName + i.LastName,
+                    Text = i.FullName,
                     Value = i.Id.ToString()
                 }),
                 NoteTypeList = _unitOfWork.NoteType.GetAll().Select(i => new SelectListItem
@@ -74,9 +71,9 @@ namespace NPAU.Controllers
                 return RedirectToAction("Index");
             }
 
-            obj.StudentList = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
+            obj.Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
             {
-                Text = i.FirstName + i.LastName,
+                Text = i.FullName,
                 Value = i.Id.ToString()
             });
 
@@ -89,40 +86,36 @@ namespace NPAU.Controllers
             return View(obj);
         }
 
+        #region API CALLS 
+
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public IActionResult GetAll()
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
-            var studentNoteFromDb = _unitOfWork.StudentNote.GetFirstOrDefault(s => s.Id == id);
-
-            if (studentNoteFromDb == null)
-            {
-                return NotFound();
-            }
-
-            return View(studentNoteFromDb);
+            var studentNoteList = _unitOfWork.StudentNote.GetAll(includeProperties: "Student,NoteType");
+            return Json(new { data = studentNoteList });
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteNote(int? id)
+        [HttpGet]
+        public IActionResult GetNoteText(int? id)
+        {
+            var noteText = _unitOfWork.StudentNote.GetFirstOrDefault(note => note.Id == id);
+            return Json(new { data = noteText });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int? id)
         {
             var obj = _unitOfWork.StudentNote.GetFirstOrDefault(s => s.Id == id);
-            if(obj == null)
+            if (obj == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Error while deleting" });
             }
 
             _unitOfWork.StudentNote.Remove(obj);
-
             _unitOfWork.Save();
-
-            TempData["success"] = "Note has been deleted.";
-            return RedirectToAction("Index");
+            return Json(new { success = true, message = "Delete Successful" });
         }
+
+        #endregion
     }
 }

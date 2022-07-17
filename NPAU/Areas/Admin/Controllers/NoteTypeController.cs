@@ -44,13 +44,13 @@ namespace NPAU.Areas.Admin.Controllers
                 if (obj.Id == 0)
                 {
                     _unitOfWork.NoteType.Add(obj);
-                    TempData["success"] = "Doctype Created Successfully";
+                    TempData["success"] = "Note Type Created Successfully";
 
                 }
                 else
                 {
                     _unitOfWork.NoteType.Update(obj);
-                    TempData["success"] = "Doctype Updated Successfully";
+                    TempData["success"] = "Note Type Updated Successfully";
 
                 }
                 _unitOfWork.Save();
@@ -79,7 +79,7 @@ namespace NPAU.Areas.Admin.Controllers
 
             _unitOfWork.NoteType.Remove(obj);
             _unitOfWork.Save();
-            return Json(new { success = true, message = "Doctype Deleted Successfully" });
+            return Json(new { success = true, message = "Note Type Deleted Successfully" });
 
         }
 

@@ -21,15 +21,17 @@ namespace Utilities
         private static SelectListItem rejected = new SelectListItem(SD.StudentStatusRejected, SD.StudentStatusRejected);
         public static IEnumerable<SelectListItem> StudentStatusList = new List<SelectListItem>() { pending, accepted, rejected };
 
-
-        public const string DocType_All = "All";
-        public const string DocType_Instructor = "Instructor";
-
         private static SelectListItem all = new SelectListItem(SD.StudentStatusPending, SD.StudentStatusPending);
         private static SelectListItem instructor = new SelectListItem(SD.StudentStatusAccepted, SD.StudentStatusAccepted);
         public static IEnumerable<SelectListItem> DocTypeList = new List<SelectListItem>() { all, instructor};
 
         public const string PublicSchool = "Public School";
 
+        //Roles
+        public const string Role_Admin = "Admin";
+        public const string Role_Social = "Social Worker";
+        public const string Role_Instructor = "Instructor";
+        public const string Role_Rater = "Rater";
+        public const string Role_User_Indi = "Individual";
     }
 }

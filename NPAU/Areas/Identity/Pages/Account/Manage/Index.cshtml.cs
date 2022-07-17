@@ -72,7 +72,7 @@ namespace NPAU.Areas.Identity.Pages.Account.Manage
                 PhoneNumber = phoneNumber
             };
         }
-
+        //.ChangeTracker.Clear()
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
