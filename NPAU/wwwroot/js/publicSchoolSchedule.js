@@ -4,10 +4,10 @@ $(document).ready(function () {
     loadDataTable();
 });
 
-function loadDataTable(id) {
+function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Applicant/PublicSchoolSchedule/Schedule?id=" + id
+            "url": "/Applicant/PublicSchoolSchedule/GetAll"
         },
         "columns": [
             { "data": "startTime", "width": "25%" },

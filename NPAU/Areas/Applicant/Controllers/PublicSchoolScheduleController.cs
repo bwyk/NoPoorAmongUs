@@ -33,7 +33,8 @@ namespace NPAU.Controllers
                 _unitOfWork.PublicSchoolSchedules.Add(obj.PublicSchoolSchedules);
                 _unitOfWork.Save();
                 TempData["success"] = "Public School Schedule Created Successfully";
-                return RedirectToAction("Schedule", new {id = obj.Student.Id});
+                //return RedirectToAction("Schedule", new {id = obj.Student.Id});
+                return RedirectToAction("Index", new { id = obj.Student.Id });
             }
 
             return View(obj);
@@ -56,9 +57,9 @@ namespace NPAU.Controllers
         }
 
         [HttpGet]
-        public IActionResult Schedule(int id)
+        public IActionResult GetAll()
         {
-            var publicschoolList = _unitOfWork.PublicSchoolSchedules.GetAll(s => s.Id == id);
+            var publicschoolList = _unitOfWork.PublicSchoolSchedules.GetAll();
             return Json(new { data = publicschoolList });
         }
 
