@@ -6,10 +6,10 @@
 }
 <div class="container">
 
-
     <form class=form method="post">
         @if (Model.IsUpdate)
         {
+            <h2>Update Role Information</h2>
             <div class="row">
                 <input type="hidden" asp-for="@Model.CurrentRole.Id" />
                 <input type="hidden" asp-for="@Model.CurrentRole.ConcurrencyStamp" />
@@ -22,17 +22,16 @@
         }
         else
         {
+            <h2>Create New Role</h2>
             <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6" style="margin-bottom: 25px">
                     <label asp-for="@Model.CurrentRole.Name">Role</label>
                     <input class="form-control" asp-for="@Model.CurrentRole.Name" value="@Model.CurrentRole.Name" />
                     <input type="hidden" asp-for="@Model.IsUpdate" value="false" />
-
                 </div>
             </div>
         }
-        <button type="submit" class="btn btn-success">@(Model.IsUpdate ? "Update" : "Create")</button>
-
+        <button type="submit" class="btn btn-success" asp-route-id="@(Model.IsUpdate ? @Model.CurrentRole.Id : null)">@(Model.IsUpdate ? "Update" : "Create")</button>
+        <a class="btn btn-secondary" asp-area="Admin" asp-page="/Roles/Index">Back to List</a>
     </form>
-
 </div>

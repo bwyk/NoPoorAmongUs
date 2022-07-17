@@ -7,7 +7,7 @@ namespace NPAU.Areas.Admin.Pages.Roles
     public class UpdateModel : PageModel
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-                public UpdateModel(RoleManager<IdentityRole> roleManager)
+         public UpdateModel(RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
         }
@@ -31,24 +31,37 @@ namespace NPAU.Areas.Admin.Pages.Roles
             }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string? id)
         {
-
-            if (!IsUpdate)
+            if (ModelState.IsValid)
             {
-                CurrentRole.NormalizedName = CurrentRole.Name.ToUpper();
+                try
+                {
+                    if (!IsUpdate)
+                    {
+                        CurrentRole.NormalizedName = CurrentRole.Name.ToUpper();
 
-                await _roleManager.CreateAsync(CurrentRole);
-                return RedirectToPage("./Index", new { success = true, message = "Successfully Added" });
+                        await _roleManager.CreateAsync(CurrentRole);
+                        return RedirectToPage("./Index", new { success = true, message = "Role Successfully Added" });
+                    }
+                    else
+                    {
+                        CurrentRole.NormalizedName = CurrentRole.Name.ToUpper();
+                        var result = await _roleManager.UpdateAsync(CurrentRole);
+                        if (!result.Succeeded)
+                        {
+                            ModelState.AddModelError("", result.Errors.First().ToString());
+                            return NotFound();
+                        }
+                        return RedirectToPage("./Index", new { message = "Role Successfully Updated" });
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
-            else
-            {
-                CurrentRole.NormalizedName = CurrentRole.Name.ToUpper();
-
-                await _roleManager.UpdateAsync(CurrentRole);
-                return RedirectToPage("./Index", new { message = "Successfully Updated" });
-            }
-
+            return Page();
         }
     }
 }

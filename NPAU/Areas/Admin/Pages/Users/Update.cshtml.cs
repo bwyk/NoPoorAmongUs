@@ -60,7 +60,7 @@ namespace NPAU.Areas.Admin.Pages.Users
             user.FirstName = AppUser.FirstName;
             user.LastName = AppUser.LastName;
             user.Email = AppUser.Email;
-            user.PhoneNumber = AppUser.PhoneNumber;
+
             _unitOfWork.ApplicationUser.Update(user);
             _unitOfWork.Save();
 

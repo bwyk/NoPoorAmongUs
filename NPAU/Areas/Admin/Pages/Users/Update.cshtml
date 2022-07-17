@@ -6,6 +6,7 @@
 }
 <div class="container">
     <form class="form" method="post">
+        <h2>Update User Details</h2>
         <div class="row">
             <input type="hidden" value="@Model.AppUser.Id" asp-for="@Model.AppUser.Id" />
             <input type="hidden" value="@Model.OldRoles.ToList()" asp-for="@Model.OldRoles" />
@@ -44,6 +45,7 @@
                 </div>
             }
         }
-        <button type="submit">Update</button>
+        <button type="submit" class="btn btn-success">Update</button>
+        <a class="btn btn-secondary" asp-area="Admin" asp-page="/Users/Index">Back to List</a>
     </form>
 </div>
