@@ -37,13 +37,25 @@ namespace NPAU.Controllers
         }
         public IActionResult Add(int studentId, int sessionID)
         {
+            IEnumerable<CourseEnrollment> objSessionList = _unitOfWork.CourseEnrollment.GetAll();
+
             CourseEnrollment courseEnrollment = new CourseEnrollment();
+            courseEnrollment.StudentId = studentId;
+            courseEnrollment.CourseSessionId = sessionID;
+            foreach(var enrollment in objSessionList)
+            {
+                if(enrollment.CourseSessionId == sessionID && enrollment.StudentId == studentId)
+                {
+                    TempData["error"] = "Student is already enrolled in this session";
+                    return RedirectToAction("Index");
+                }
+            }
             if (ModelState.IsValid)
             {
                 _unitOfWork.CourseEnrollment.Add(courseEnrollment);
                 _unitOfWork.Save();
                 TempData["success"] = "Student enrollement added successfully";
-                return RedirectToAction("Enroll");
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Enroll");
         }
