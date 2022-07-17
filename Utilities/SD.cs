@@ -23,5 +23,12 @@ namespace Utilities
 
         private static SelectListItem all = new SelectListItem(SD.StudentStatusPending, SD.StudentStatusPending);
         private static SelectListItem instructor = new SelectListItem(SD.StudentStatusAccepted, SD.StudentStatusAccepted);
+
+        //Roles
+        public const string Role_Admin = "Admin";
+        public const string Role_Social = "Social Worker";
+        public const string Role_Instructor = "Instructor";
+        public const string Role_Rater = "Rater";
+        public const string Role_User_Indi = "Individual";
     }
 }
