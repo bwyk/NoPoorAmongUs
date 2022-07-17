@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Utilities
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -67,7 +68,14 @@
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="CourseEnrollment" asp-action="Index">Course Enrollment</a>
                                 <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index">Student</a>
                                 <a class="dropdown-item" asp-area="Student" asp-controller="Guardian" asp-action="Index">Guardian</a>
-                                
+
+                                @if (User.IsInRole(SD.Role_Admin))
+                                {
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-page="/Users/Index">Manage Users</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-page="/Roles/Index">Manage Roles</a>  
+                                }
+                                                             
                             </div>
                         </li>
                     </ul>
