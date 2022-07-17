@@ -8,9 +8,7 @@
             <h2 class="text-primary">Course Session List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="CourseSession" asp-action="Create" class="btn btn-primary">
-               <i class="bi bi-plus-circle"></i> &nbsp; Add New Course Session
-            </a>
+
         </div>
     </div>
     <br /><br />
@@ -62,10 +60,8 @@
                 </td>
                 <td width="10%">
                     <div class="d-flex justify-content-center" role="group">
-                        <a asp-controller="CourseSession" asp-action="Edit" asp-route-id="@obj.Id"
-                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                        <a asp-controller="CourseSession" asp-action="Delete" asp-route-id="@obj.Id"
-                        class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                        <a href="@Url.Action("Enroll", "StudentEnrollment", new { sessionID = @obj.Id})"
+                        class="btn btn-success"> <i class="bi bi-plus-circle"></i> Enroll Students</a>
                     </div>
                 </td>
             </tr>
