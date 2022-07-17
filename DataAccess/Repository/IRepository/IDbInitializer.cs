@@ -10,4 +10,5 @@ namespace DataAccess.Repository.IRepository
 		{
 				void Initialize();
 		}
+
 }

@@ -148,28 +148,28 @@ namespace DataAccess.Repository
             //TODO make it randomly pick from list of ratings
 
             //TODO filter based on application status? or leave as future students will still have ratings
-            //if(student.Status != Role.Status_Pending)
+            //if (student.Status != Role.Status_Pending)
 
-            bool saveChanges = false;
-            if (!_db.Ratings.Any(r => r.StudentId == student.Id))
-            {
-                _db.Ratings.AddRange(
-                    new Rating
-                    {
-                        Age = 16,
-                        SchoolLevel = 10,
-                        Academics = 3,
-                        FoodAssistance = 1,
-                        AnnualIncome = 200,
-                        Determination = 5,
-                        FamilySupport = 1,
-                        StudentId = student.Id
-                    }
-                );
-                saveChanges = true;
-            }
-            if (saveChanges)
-                _db.SaveChanges();
+            //    bool saveChanges = false;
+            //if (!_db.Ratings.Any(r => r.StudentId == student.Id))
+            //{
+            //    _db.Ratings.AddRange(
+            //        new Rating
+            //        {
+            //            Age = 16,
+            //            SchoolLevel = 10,
+            //            Academics = 3,
+            //            FoodAssistance = 1,
+            //            AnnualIncome = 200,
+            //            Determination = 5,
+            //            FamilySupport = 1,
+            //            StudentId = student.Id
+            //        }
+            //    );
+            //    saveChanges = true;
+            //}
+            //if (saveChanges)
+            //    _db.SaveChanges();
         }
        
         private (Course, Course) GetCourses()

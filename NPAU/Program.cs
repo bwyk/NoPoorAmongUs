@@ -4,6 +4,7 @@ using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+ChangeCulture();
 SeedDatabase();
 app.UseAuthentication();;
 app.UseAuthorization();
@@ -44,9 +46,19 @@ app.MapControllerRoute(
 
 app.Run();
 
+
 void SeedDatabase()
 {
     using var scope = app.Services.CreateScope();
     var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
     dbInitializer.Initialize();
+}
+
+string ChangeCulture()
+{
+    using var scope = app.Services.CreateScope();
+    var culture = "en-ZW";
+    Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(culture);
+    //Console.WriteLine(culture + " ---> " + DateTime.Now);
+    return culture; //+ " ---> " + DateTime.Now;
 }
