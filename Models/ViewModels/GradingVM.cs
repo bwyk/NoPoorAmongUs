@@ -14,8 +14,13 @@ namespace Models.ViewModels
     {
 
         public Grade Grade { get; set; }
+        
+        public Assessment Assessment { get; set; }
+        
         [ValidateNever]
-        public IEnumerable<Student> StudentList { get; set; }
+        public IEnumerable<CourseEnrollment> CourseEnrollmentList { get; set; }
+
+        public IEnumerable<Grade> AlreadyGradedList { get; set; }
         
         
     }

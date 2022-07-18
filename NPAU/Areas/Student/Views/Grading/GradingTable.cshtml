@@ -8,24 +8,41 @@
 
     </div>
     <br /><br />
-    <select>
-        <option disabled>--- Select an Assessment ---</option>
-    </select>
-    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
+    <h4>Grading Table for @(Model.Assessment.Name)</h4>
+    <table class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
-                <th>Course</th>
-                <th>Assessment</th>
+                
                 <th>Student</th>
                 <th>Earned Points</th>
                 <th>Maximum Points</th>
                 <th></th>
             </tr>
         </thead>
-    </table>
 
+        <form method="post" asp-action="SaveGrades" enctype="multipart/form-data">
+        @foreach (var obj in Model.CourseEnrollmentList)
+        {
+            <tr>
+                <td>@(obj.Student.FirstName + " " + obj.Student.LastName)</td>
+                <!-- if the grade is already in the DB, load the score into the value-->
+                <td><input type="number" asp-for="Grade.Score" value="0" class="form-control" />
+            <span asp-validation-for="Grade.Score" class="text-danger"></span></td>
+                <td>@Model.Assessment.MaxScore</td>
+            </tr>
+        }
+        </form>
+
+    </table>
+    <button type="submit" class="btn btn-primary mx-2"></i> Save All Changes</button>
+
+               <a asp-controller="Grading" asp-action="CourseSelect" 
+               class="btn btn-primary mx-2"> </i>Back to Course Select</a>
 </div>
 
-        @section Scripts{
-    <script src="~/js/Grading.js"></script>
+@section Scripts {
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
 }
+

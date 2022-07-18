@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.Academic;
 using Models.ViewModels;
+using System.Collections.Generic;
 
 namespace NPAU.Areas.Student.Controllers
 {
@@ -30,19 +31,65 @@ namespace NPAU.Areas.Student.Controllers
             return View(assessmentList);
         }
 
+        [HttpGet]
         public IActionResult GradingTable(int assessmentId)
         {
+            //original attempt; KEEP OR NO?
+            //Assessment targetAssessment = _unitOfWork.Assessment.GetFirstOrDefault(a => a.Id == assessmentId);
+            //GradingVM gradingVM = new GradingVM();           
+
+            //IEnumerable<CourseEnrollment> ceList = _unitOfWork.CourseEnrollment.GetAll((cE => cE.CourseSession.CourseId == targetAssessment.CourseId), includeProperties: "Student");
+            //foreach(CourseEnrollment cE in ceList)
+            //{
+            //    if (!gradingVM.StudentList.Contains(cE.Student)) {
+            //        gradingVM.StudentList.Append(cE.Student);
+            //    }
+            //}
+            //return View(gradingVM);
+
             Assessment targetAssessment = _unitOfWork.Assessment.GetFirstOrDefault(a => a.Id == assessmentId);
-            GradingVM gradingVM = new GradingVM();           
-            
             IEnumerable<CourseEnrollment> ceList = _unitOfWork.CourseEnrollment.GetAll((cE => cE.CourseSession.CourseId == targetAssessment.CourseId), includeProperties: "Student");
+            
+            GradingVM gradingVM = new GradingVM();
+            gradingVM.Assessment = targetAssessment;
+            gradingVM.CourseEnrollmentList = ceList;
+            IEnumerable<Grade> alreadyGradedList = new List<Grade>();
             foreach(CourseEnrollment cE in ceList)
             {
-                if (!gradingVM.StudentList.Contains(cE.Student)) {
-                    gradingVM.StudentList.Append(cE.Student);
+                Grade oldGrade = _unitOfWork.Grade.GetFirstOrDefault(g => g.CourseEnrollmentId == cE.Id );
+                alreadyGradedList.Append(oldGrade);
+            }
+            gradingVM.AlreadyGradedList = alreadyGradedList;
+            
+            return View(gradingVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SaveGrades(List<Grade> gradeList)
+        {
+            foreach(Grade g in gradeList)
+            {
+                Grade changedGrade = _unitOfWork.Grade.GetFirstOrDefault(gr => (gr.AssessmentId == g.AssessmentId) && (gr.CourseEnrollmentId == g.CourseEnrollmentId));
+
+                if (changedGrade == null) //if the grade isn't in the list...
+                {
+                    Grade newGrade = new Grade();
+                    newGrade.Score = g.Score;
+                    newGrade.Assessment = g.Assessment;
+                    newGrade.AssessmentId = g.AssessmentId;
+                    newGrade.CourseEnrollmentId = g.CourseEnrollmentId;
+                    newGrade.CourseEnrollment = g.CourseEnrollment;
+                    _unitOfWork.Grade.Add(newGrade);
+                    _unitOfWork.Save();
+                } else //if the grade IS in the list
+                {
+                    changedGrade.Score = g.Score;
+                    _unitOfWork.Grade.Update(changedGrade);
+                    _unitOfWork.Save();
                 }
             }
-            return View(gradingVM);
+            return RedirectToAction("CourseSelect");
         }
 
         #region API CALLS
