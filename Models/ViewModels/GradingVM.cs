@@ -14,14 +14,14 @@ namespace Models.ViewModels
     public class GradingVM
     {
 
-        public Grade Grade { get; set; }
+        public List<Grade> Grades { get; set; }
         
         public Assessment Assessment { get; set; }
         
         [ValidateNever]
-        public IEnumerable<CourseEnrollment> CourseEnrollmentList { get; set; }
+        public List<CourseEnrollment> CourseEnrollmentList { get; set; }
 
-        public IEnumerable<Grade> AlreadyGradedList { get; set; }
+        public List<Grade> AlreadyGradedList { get; set; }
         
         public List<StudentGradeVM> StudentGrades { get; set; }
     }
