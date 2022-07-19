@@ -146,32 +146,28 @@ namespace DataAccess.Repository
         private void SeedRatings(Student student)
         {
             //TODO make it randomly pick from list of ratings
-
             //TODO filter based on application status? or leave as future students will still have ratings
-            //if (student.Status != Role.Status_Pending)
-
-            //    bool saveChanges = false;
-            //if (!_db.Ratings.Any(r => r.StudentId == student.Id))
-            //{
-            //    _db.Ratings.AddRange(
-            //        new Rating
-            //        {
-            //            Age = 16,
-            //            SchoolLevel = 10,
-            //            Academics = 3,
-            //            FoodAssistance = 1,
-            //            AnnualIncome = 200,
-            //            Determination = 5,
-            //            FamilySupport = 1,
-            //            StudentId = student.Id
-            //        }
-            //    );
-            //    saveChanges = true;
-            //}
-            //if (saveChanges)
-            //    _db.SaveChanges();
+            //if(student.Status != Role.Status_Pending)
+            bool saveChanges = false;
+            if (!_db.Ratings.Any(r => r.StudentId == student.Id))
+            {
+                _db.Ratings.AddRange(
+                    new Rating
+                    {
+                        Age = 16,
+                        Academics = 3,
+                        AnnualIncome = 200,
+                        FamilySupport = 1,
+                        Distance = 5,
+                        StudentId = student.Id
+                    }
+                );
+                saveChanges = true;
+            }
+            if (saveChanges)
+                _db.SaveChanges();
         }
-       
+
         private (Course, Course) GetCourses()
         {
             bool saveChanges = false;
@@ -237,7 +233,9 @@ namespace DataAccess.Repository
                         CourseId = courseEnglish1.Id,
                         Course = courseEnglish1,
                         CourseName = courseEnglish1.Name,
-                        Day = "Monday"
+                        Day = "Monday",
+                        EndTime = "11:30",
+                        StartTime = "1:30"
                     }
                 );
                 saveChanges = true;
@@ -250,7 +248,10 @@ namespace DataAccess.Repository
                         CourseId = courseComputers1.Id,
                         Course = courseComputers1,
                         CourseName = courseComputers1.Name,
-                        Day = "Tuesday"
+                        Day = "Tuesday",
+                        EndTime = "11:30",
+                        StartTime = "1:30"
+
                     }
                 );
                 saveChanges = true;
@@ -260,6 +261,7 @@ namespace DataAccess.Repository
 
             return (sessionEnglish1, sessionComputers1);
         }
+
         private void SeedCourseEnrollment()
         {
             bool saveChanges = false;
