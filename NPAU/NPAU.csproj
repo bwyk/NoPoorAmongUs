@@ -11,25 +11,21 @@
     <Compile Remove="Controllers\**" />
     <Compile Remove="Data\**" />
     <Compile Remove="Models\**" />
-    <Compile Remove="wwwroot\documents\**" />
     <Compile Remove="wwwroot\images\**" />
     <Content Remove="Areas\Student\Views\Student\**" />
     <Content Remove="Controllers\**" />
     <Content Remove="Data\**" />
     <Content Remove="Models\**" />
-    <Content Remove="wwwroot\documents\**" />
     <Content Remove="wwwroot\images\**" />
     <EmbeddedResource Remove="Areas\Student\Views\Student\**" />
     <EmbeddedResource Remove="Controllers\**" />
     <EmbeddedResource Remove="Data\**" />
     <EmbeddedResource Remove="Models\**" />
-    <EmbeddedResource Remove="wwwroot\documents\**" />
     <EmbeddedResource Remove="wwwroot\images\**" />
     <None Remove="Areas\Student\Views\Student\**" />
     <None Remove="Controllers\**" />
     <None Remove="Data\**" />
     <None Remove="Models\**" />
-    <None Remove="wwwroot\documents\**" />
     <None Remove="wwwroot\images\**" />
   </ItemGroup>
 
@@ -55,6 +51,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\documents\students\" />
     <Folder Include="wwwroot\lib\bootstrap\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\js\" />
     <Folder Include="wwwroot\lib\jquery-validation-unobtrusive\" />
