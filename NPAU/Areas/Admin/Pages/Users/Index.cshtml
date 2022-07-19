@@ -32,9 +32,9 @@
                 foreach (var user in Model.AppUsers)
                 {
                     <tr>
-                        <td>@user.FullName</td>
-                        <td>@user.Email</td>
-                        <td>
+                        <td width="20%">@user.FullName</td>
+                        <td width="25%">@user.Email</td>
+                        <td width="15%">
                             @{
                                 if (Model.UserRoles[user.Id].Count() == 1)
                                 {
@@ -56,7 +56,7 @@
                             }
 
                         </td>
-                        <td>
+                        <td width="10%">
                             <form method="post">
                                 @{
                                     if (user.LockoutEnd > DateTime.Now)
@@ -70,9 +70,8 @@
                                 }
                             </form>
                         </td>
-                        <td>
+                        <td width="10%">
                             <a class="btn btn-outline-success" asp-page="/Users/Update" asp-route-id="@user.Id">Update</a>
-                           
                         </td>
                     </tr>
                 }
