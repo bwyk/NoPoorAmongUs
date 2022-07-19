@@ -38,6 +38,26 @@ namespace DataAccess.Repository
             //SeedCourses();
             SeedCourseSession();
             SeedCourseEnrollment();
+
+            //Create roles
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Social)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Rater)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_User_Indi)).GetAwaiter().GetResult();
+
+            //Create "Super Admins"
+            _userManager.CreateAsync(new ApplicationUser
+            {
+                UserName = "kevinmclennan@mail.weber.edu",
+                Email = "kevinmclennan@mail.weber.edu",
+                FirstName = "Kevin",
+                LastName = "McLennan"
+            }, "Test12345!").GetAwaiter().GetResult();
+
+            ApplicationUser user = _db.ApplicationUser.FirstOrDefault(u => u.Email == "kevinmclennan@mail.weber.edu");
+
+            _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
         }
 
         private (Student, Student) GetStudents()
@@ -126,10 +146,8 @@ namespace DataAccess.Repository
         private void SeedRatings(Student student)
         {
             //TODO make it randomly pick from list of ratings
-
             //TODO filter based on application status? or leave as future students will still have ratings
             //if(student.Status != Role.Status_Pending)
-
             bool saveChanges = false;
             if (!_db.Ratings.Any(r => r.StudentId == student.Id))
             {
@@ -137,12 +155,10 @@ namespace DataAccess.Repository
                     new Rating
                     {
                         Age = 16,
-                        SchoolLevel = 10,
                         Academics = 3,
-                        FoodAssistance = 1,
                         AnnualIncome = 200,
-                        Determination = 5,
                         FamilySupport = 1,
+                        Distance = 5,
                         StudentId = student.Id
                     }
                 );
@@ -151,7 +167,7 @@ namespace DataAccess.Repository
             if (saveChanges)
                 _db.SaveChanges();
         }
-       
+
         private (Course, Course) GetCourses()
         {
             bool saveChanges = false;
@@ -217,7 +233,9 @@ namespace DataAccess.Repository
                         CourseId = courseEnglish1.Id,
                         Course = courseEnglish1,
                         CourseName = courseEnglish1.Name,
-                        Day = "Monday"
+                        Day = "Monday",
+                        EndTime = "11:30",
+                        StartTime = "1:30"
                     }
                 );
                 saveChanges = true;
@@ -230,7 +248,10 @@ namespace DataAccess.Repository
                         CourseId = courseComputers1.Id,
                         Course = courseComputers1,
                         CourseName = courseComputers1.Name,
-                        Day = "Tuesday"
+                        Day = "Tuesday",
+                        EndTime = "11:30",
+                        StartTime = "1:30"
+
                     }
                 );
                 saveChanges = true;
@@ -240,6 +261,7 @@ namespace DataAccess.Repository
 
             return (sessionEnglish1, sessionComputers1);
         }
+
         private void SeedCourseEnrollment()
         {
             bool saveChanges = false;
@@ -304,7 +326,9 @@ namespace DataAccess.Repository
                         CourseId = courseComputers1.Id,
                         Course = courseComputers1,
                         CourseName = computers1CourseName,
-                        Day = "Monday"
+                        Day = "Monday",
+                        StartTime = DateTime.Now.ToShortTimeString(),
+                        EndTime = DateTime.Now.ToShortTimeString()
                     }
                 );
                 saveChanges = true;
@@ -317,7 +341,9 @@ namespace DataAccess.Repository
                         CourseId = courseEnglish1.Id,
                         Course = courseEnglish1,
                         CourseName = english1CourseName,
-                        Day = "Tuesday"
+                        Day = "Tuesday",
+                        StartTime = DateTime.Now.ToShortTimeString(),
+                        EndTime = DateTime.Now.ToShortTimeString()
                     }
                 );
                 saveChanges = true;

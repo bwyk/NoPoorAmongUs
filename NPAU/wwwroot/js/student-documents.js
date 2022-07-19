@@ -11,17 +11,16 @@ function loadDataTable() {
             "url": "/Student/StudentDocs/GetAll"
         },
         "columns": [
-            { "data": "student.id", "width": "15%" },
-            { "data": "student.firstName", "width": "15%" },
-            { "data": "student.lastName", "width": "15%" },
-            { "data": "docType.typeName", "width": "15%" },
-            { "data": "title", "width": "15%" },
+            { "data": "student.firstName", "width": "20%" },
+            { "data": "student.lastName", "width": "20%" },
+            { "data": "docType.typeName", "width": "20%" },
+            { "data": "title", "width": "20%" },
             {
                 "data": { id: "id", docUrl: "docUrl"},
                 "render": function (data) {
                     return `
                     <div class= text-center>
-                        <div class="w-75 btn-group" role="group">
+                        <div class="w-100 btn-group" role="group">
                         <a href="${data.docUrl}" target="_blank"
                         class="btn btn-secondary mx-2"> <i class="bi bi-binoculars-fill"></i>View</a>
                         <a href="/Student/StudentDocs/Upsert?id=${data.id}"
@@ -32,7 +31,7 @@ function loadDataTable() {
                     </div>
                     `
                 },
-                "width": "25%"
+                "width": "20%"
             }
         ]
     });

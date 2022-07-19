@@ -24,6 +24,7 @@ namespace NPAU.Controllers
 
             return View();
         }
+
         [HttpGet]
         public ViewResult Create()
         {
@@ -81,7 +82,21 @@ namespace NPAU.Controllers
 
             return View(StudentVM);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details(StudentVM obj)
+        {
+            if (ModelState.IsValid)
+            {
+                obj.Rating.StudentId = obj.Student.Id;
+                _unitOfWork.Rating.Add(obj.Rating);
+                _unitOfWork.Save();
 
+                TempData["success"] = "Ratings added successfully";
+                return RedirectToAction("Index");
+            }
+            return View(obj);
+        }
         [HttpGet]
         public IActionResult Edit(int? id)
         {

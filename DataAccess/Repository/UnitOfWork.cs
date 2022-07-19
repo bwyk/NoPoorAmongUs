@@ -1,5 +1,6 @@
 ﻿using DataAccess.Data;
 using DataAccess.Repository.IRepository;
+using Models.Academic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace DataAccess.Repository
             Assessment = new AssessmentsRepository(_db);
             Attendance = new AttendanceRepository(_db);
             CourseEnrollment = new CourseEnrollmentRepository(_db);
-            CourseSession = new ClassSessionsRepository(_db);
+            CourseSession = new CourseSessionsRepository(_db);
             DocType = new DocTypeRepository(_db);
             Grade = new GradeRepository(_db);
             NoteType = new NoteTypeRepository(_db);
@@ -32,10 +33,11 @@ namespace DataAccess.Repository
             StudentNote = new StudentNoteRepository(_db);
             Subject = new SubjectRepository(_db);
             Instructor = new InstructorRepository(_db);
-
+            PublicSchoolSchedules = new PublicSchoolScheduleRepository(_db);
+            ApplicationUser = new ApplicationUserRepository(_db);
         }
 
-        
+        public IPublicSchoolScheduleRepository PublicSchoolSchedules { get; private set; }
         public ICoursesRepository Course { get; private set; }
         public IInstructorRepository Instructor { get; private set; }
         public IGuardiansRepository Guardian { get; private set; }
@@ -53,6 +55,7 @@ namespace DataAccess.Repository
         public IStudentDocRepository StudentDoc { get; private set; }
         public IStudentNoteRepository StudentNote { get; private set; }
         public ISubjectRepository Subject { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
 
         public void Save()
         {

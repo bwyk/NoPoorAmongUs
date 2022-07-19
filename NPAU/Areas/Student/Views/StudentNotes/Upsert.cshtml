@@ -5,7 +5,15 @@
     <input asp-for="StudentNote.Id" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Create Note</h2>
+
+            @if (Model.StudentNote.Id != 0)
+            {
+                <h2 class="text-primary">Update Note</h2>
+            }
+            else
+            {
+                <h2 class="text-primary">Create Note</h2>
+            }
             <hr />
         </div> 
         <div class="mb-3">
@@ -46,9 +54,17 @@
     </div>
 </form>
 
-@section Scripts{
+@section Scripts
+{
     @{
         <partial name="_ValidationScriptsPartial" />
     }
 
-    }
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
+      toolbar_mode: 'floating',
+    });
+</script>
+}

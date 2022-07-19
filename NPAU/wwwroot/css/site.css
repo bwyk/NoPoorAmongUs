@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+.RatingLabel {
+    float: left;
+    padding: 0 .5em;
+    text-align: center;
+}

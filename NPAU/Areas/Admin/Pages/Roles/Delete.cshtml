@@ -1,0 +1,21 @@
+﻿@page
+@model NPAU.Areas.Admin.Pages.Roles.DeleteModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <form class=form method="post">
+        <h2>Delete Role Confirmation</h2>
+        <div class="row">
+            <input type="hidden" asp-for="@Model.CurrentRole.Id" />
+            <div class="form-group col-md-6" style="margin-bottom: 25px">
+                <label asp-for="@Model.CurrentRole.Name">Role</label>
+                <input class="form-control" asp-for="@Model.CurrentRole.Name" readonly value="@Model.CurrentRole.Name" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success" asp-route-id="@Model.CurrentRole.Id">Delete</button>
+        <a class="btn btn-secondary" asp-area="Admin" asp-page="/Roles/Index">Back to List</a>
+    </form>
+</div>

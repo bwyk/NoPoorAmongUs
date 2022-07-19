@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Utilities
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -58,18 +59,28 @@
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="Course" asp-action="Index">Course</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="CourseEnrollment" asp-action="Index">Course Enrollment</a>
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="Ratings" asp-action="Index">Rating</a>
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="School" asp-action="Index">School</a>
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="Term" asp-action="Index">Term</a>
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="Subject" asp-action="Index">Subject</a>
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="DocType" asp-action="Index">Document Type</a>
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="NoteType" asp-action="Index">Note Type</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="CourseEnrollment" asp-action="Index">Course Enrollment</a>
                                 <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index">Student</a>
                                 <a class="dropdown-item" asp-area="Student" asp-controller="Guardian" asp-action="Index">Guardian</a>
-                                
+
+                                @if (User.IsInRole(SD.Role_Admin))
+                                {
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-page="/Users/Index">Manage Users</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-page="/Roles/Index">Manage Roles</a>  
+                                }
+                                                             
                             </div>
+                        </li>
+                         <li class="nav-item dropdown">
+                             <a class="nav-link" asp-area="Course" asp-controller="StudentEnrollment" asp-action="Index">Student Enrollment</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -94,6 +105,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.tiny.cloud/1/aber8j5jdqwvnwcxwncfljmen7ztnab5ac5m96q2vgq6362j/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

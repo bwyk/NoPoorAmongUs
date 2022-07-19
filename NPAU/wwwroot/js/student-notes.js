@@ -11,10 +11,9 @@ function loadDataTable() {
             "url": "/Student/StudentNotes/GetAll"
         },
         "columns": [
-            { "data": "student.id", "width": "20%" },
-            { "data": "student.firstName", "width": "20%" },
-            { "data": "student.lastName", "width": "20%" },
-            { "data": "noteType.type", "width": "20%" },
+            { "data": "student.firstName", "width": "25%" },
+            { "data": "student.lastName", "width": "25%" },
+            { "data": "noteType.type", "width": "25%" },
             { "data": "id",
                 "render": function (data) {
                     return `
@@ -30,7 +29,7 @@ function loadDataTable() {
                     </div>
                     `
                 },
-                "width": "20%"
+                "width": "25%"
             }
         ]
     });
@@ -38,17 +37,26 @@ function loadDataTable() {
 
 function viewNoteText(url) {
     var text;
+    var id;
     $.getJSON(url, function (data) {
         console.log(data);
         $.each(data, function (key, val) {
             text = val.text;
+            id = val.id;
         });
 
-        Swal.fire
-        (
-            'Student Note',
-            text
-        )
+        Swal.fire({
+            title: 'Student Note',
+            html: text,
+            showDenyButton: true,
+            confirmButtonText: 'Close',
+            denyButtonText: 'Update Note',
+        }).then((result) => {
+            if (result.isDenied)
+            {
+                window.location.href = '/Student/StudentNotes/Upsert?id=' + id;
+            }
+        })
     });
 }
 

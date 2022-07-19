@@ -8,7 +8,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork
     {
-        
+        IPublicSchoolScheduleRepository PublicSchoolSchedules { get; }
         ICoursesRepository Course { get; }
         IInstructorRepository Instructor { get; }
         IGuardiansRepository Guardian { get; }
@@ -26,6 +26,7 @@ namespace DataAccess.Repository.IRepository
         IStudentDocRepository StudentDoc { get; }
         IStudentNoteRepository StudentNote { get; }
         ISubjectRepository Subject { get; }
+        IApplicationUserRepository ApplicationUser { get; }
         void Save();
     }
 }
