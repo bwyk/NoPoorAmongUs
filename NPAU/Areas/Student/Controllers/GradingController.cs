@@ -31,6 +31,7 @@ namespace NPAU.Areas.Student.Controllers
             return View(assessmentList);
         }
 
+
         [HttpGet]
         public IActionResult GradingTable(int assessmentId)
         {
@@ -53,14 +54,31 @@ namespace NPAU.Areas.Student.Controllers
             GradingVM gradingVM = new GradingVM();
             gradingVM.Assessment = targetAssessment;
             gradingVM.CourseEnrollmentList = ceList;
-            IEnumerable<Grade> alreadyGradedList = new List<Grade>();
+            IEnumerable<Grade> currentGrades = new List<Grade>();
+
+            List<StudentGradeVM> studentGrades = new List<StudentGradeVM>();
+
+            int maxScore = targetAssessment.MaxScore;
             foreach(CourseEnrollment cE in ceList)
             {
+                int score = 0;
+                int gradeId = -1;
+                Models.Student student = cE.Student;
+
                 Grade oldGrade = _unitOfWork.Grade.GetFirstOrDefault(g => g.CourseEnrollmentId == cE.Id );
-                alreadyGradedList.Append(oldGrade);
+
+                if(oldGrade != null)
+                {
+                    score = oldGrade.Score;
+                    gradeId = oldGrade.Id;
+                }
+
+                StudentGradeVM sg = new StudentGradeVM(student, score, maxScore, gradeId);
+                studentGrades.Add(sg);
+                currentGrades.Append(oldGrade);
             }
-            gradingVM.AlreadyGradedList = alreadyGradedList;
-            
+            gradingVM.AlreadyGradedList = currentGrades;
+            gradingVM.StudentGrades = studentGrades;
             return View(gradingVM);
         }
 
@@ -68,7 +86,8 @@ namespace NPAU.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SaveGrades(List<Grade> gradeList)
         {
-            foreach(Grade g in gradeList)
+            
+            foreach (Grade g in gradeList)
             {
                 Grade changedGrade = _unitOfWork.Grade.GetFirstOrDefault(gr => (gr.AssessmentId == g.AssessmentId) && (gr.CourseEnrollmentId == g.CourseEnrollmentId));
 

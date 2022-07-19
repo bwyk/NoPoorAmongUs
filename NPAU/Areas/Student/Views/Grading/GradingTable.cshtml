@@ -21,20 +21,33 @@
         </thead>
 
         <form method="post" asp-action="SaveGrades" enctype="multipart/form-data">
-        @foreach (var obj in Model.CourseEnrollmentList)
+        @*@foreach (var obj in Model.CourseEnrollmentList)
         {
             <tr>
                 <td>@(obj.Student.FirstName + " " + obj.Student.LastName)</td>
+                @if(Model.AlreadyGradedList.
                 <!-- if the grade is already in the DB, load the score into the value-->
                 <td><input type="number" asp-for="Grade.Score" value="0" class="form-control" />
-            <span asp-validation-for="Grade.Score" class="text-danger"></span></td>
+                <span asp-validation-for="Grade.Score" class="text-danger"></span></td>
                 <td>@Model.Assessment.MaxScore</td>
             </tr>
-        }
+        }*@
+            @for(int i = 0; i < Model.StudentGrades.Count(); i++)
+            {
+                <input asp-for="@Model.Grade.Id" value="@Model.StudentGrades[i].GradeId" hidden />
+                <tr>
+                <td>@(Model.StudentGrades[i].Student.FirstName + " " + Model.StudentGrades[i].Student.LastName)</td>
+                <!-- if the grade is already in the DB, load the score into the value-->
+                <td><input type="number" asp-for="Grade.Score" value="@(Model.StudentGrades[i].CurrentScore)" class="form-control" />
+                <span asp-validation-for="Grade.Score" class="text-danger"></span></td>
+                <td>@Model.StudentGrades[i].MaxScore</td>
+            </tr>
+            }
+             <button type="submit" class="btn btn-primary mx-2"></i> Save All Changes</button>
         </form>
 
     </table>
-    <button type="submit" class="btn btn-primary mx-2"></i> Save All Changes</button>
+   
 
                <a asp-controller="Grading" asp-action="CourseSelect" 
                class="btn btn-primary mx-2"> </i>Back to Course Select</a>

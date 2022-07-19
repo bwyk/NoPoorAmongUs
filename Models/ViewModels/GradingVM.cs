@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Models.ViewModels
 {
+
     public class GradingVM
     {
 
@@ -22,6 +23,6 @@ namespace Models.ViewModels
 
         public IEnumerable<Grade> AlreadyGradedList { get; set; }
         
-        
+        public List<StudentGradeVM> StudentGrades { get; set; }
     }
 }
