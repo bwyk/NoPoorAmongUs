@@ -1,0 +1,47 @@
+﻿@using Models.Academic
+@{
+    ViewData["Title"] = "Add New Course Session";
+}
+
+@model CourseSession
+
+<form method="post">
+    <div class="border p-3 mt-4" style="width:50%">
+        <div class="row pb-2">
+            <h2 class="text-primary">Add New Course Session</h2>
+            <hr />
+        </div>
+        <div>
+            <div class="mb-3">
+                <label asp-for="Day"></label>
+                <input asp-for="Day" class="form-control"/>
+                <span asp-validation-for="Day" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="StartTime"></label>
+                <input type="time" asp-for="StartTime" class="form-control"/>
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EndTime"></label>
+                <input type="time" asp-for="EndTime" class="form-control"/>
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="CourseName"></label>
+                <input asp-for="CourseName" class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="CourseId"></label>
+                <input asp-for="CourseId" class="form-control"/>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+            
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:150px">Add Course Session</button>
+        <a asp-controller="CourseSession" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back to List
+        </a>
+    </div>
+</form>

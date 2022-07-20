@@ -1,5 +1,65 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+	ViewData["Title"] = "Ratings";
 }
+@using System.Data
+@model DataTable
+<form method="post">
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Ratings</h2>            
+        </div>        
+    </div>
+    <br /><br />
+
+
+<table class="table table-bordered table-striped" style="width:100%">     
+    <thead>
+        <tr>
+            <th>
+                 Student Name
+            </th>
+            <th>
+                Age
+            </th>           
+            <th>
+                Academics
+            </th>            
+            <th>
+                Finances
+            </th>             
+            <th>
+                Family Support
+            </th> 
+            <th>
+                Distance
+            </th> 
+            <th>
+                Average Score
+            </th>
+        </tr>
+    </thead>
+
+     <tbody>  
+         @foreach (DataRow row in Model.Rows)
+                {
+
+                        <tr>
+
+                            <td>@row["Name"]</td>
+                            <td>@row["Age"]</td>
+                            <td>@row["Academics"]</td>
+                            <td>@row["Finances"]</td>
+                            <td>@row["Support"]</td>
+                            <td>@row["Distance"]</td>
+                            <td>@row["Average"]</td>
+
+                        </tr>
+
+
+                }
+    </tbody>
+</table>
+</div>
+</form>

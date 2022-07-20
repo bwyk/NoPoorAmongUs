@@ -1,0 +1,22 @@
+﻿@model StudentDoc
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Delete Doc</h2>
+            <hr />
+        </div>
+        <input asp-for="Id" hidden/>
+        <div class="mb-3">
+            <label asp-for="Title"></label>
+            <textarea asp-for="Title" rows="5" disabled class="form-control"></textarea>
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary" style="width:150px">Delete</button>
+            <a asp-controller="StudentNotes" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                Back to Notes
+            </a>
+        </div>
+    </div>
+</form>

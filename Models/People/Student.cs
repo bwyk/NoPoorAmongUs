@@ -9,16 +9,32 @@ namespace Models
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Birthday { get; set; }
+        public string Status { get; set; }
+        [Required]
+        [DisplayName("First Name")]
+        public string FirstName { get; set; }
+        [Required]
+        [DisplayName("Last Name")]
+        public string LastName { get; set; }
+
+        [NotMapped]
+        public string FullName { get { return FirstName + " " + LastName; } }
+
+        [Required]
+        [DisplayName("Date of Birth")]
+        [DataType(DataType.Date)]
+        public DateTime Birthday { get; set; }
+        [Required]
         public string Village { get; set; }
+        [Required]
         public string Address { get; set; }
+        [Required]
         public string Phone { get; set; }
+        [Required]
+        [DisplayName("English Level")]
         public int EnglishLevel { get; set; }
+        [Required]
+        [DisplayName("Computer Level")]
         public int ComputerLevel { get; set; }
-        [ValidateNever]
-        [ForeignKey("ApplicantId")]
-        public Applicant Applicant { get; set; }
-        public int ApplicantId { get; set; }
     }
 }

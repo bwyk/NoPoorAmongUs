@@ -20,7 +20,7 @@ namespace DataAccess.Repository
         }
         public void Update(DocType obj)
         {
-            _db.DocTypes.Add(obj);
+            _db.DocTypes.Update(obj);
         }
     }
 }

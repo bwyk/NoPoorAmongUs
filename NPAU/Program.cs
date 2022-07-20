@@ -4,6 +4,7 @@ using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString)); ;
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -32,12 +34,31 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+ChangeCulture();
+SeedDatabase();
 app.UseAuthentication();;
-
 app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Employee}/{controller=Home}/{action=Index}/{id?}");
-SeedData.EnsurePopulated(app);
+//SeedData.EnsurePopulated(app);
+
 app.Run();
+
+
+void SeedDatabase()
+{
+    using var scope = app.Services.CreateScope();
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+    dbInitializer.Initialize();
+}
+
+string ChangeCulture()
+{
+    using var scope = app.Services.CreateScope();
+    var culture = "en-ZW";
+    Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(culture);
+    //Console.WriteLine(culture + " ---> " + DateTime.Now);
+    return culture; //+ " ---> " + DateTime.Now;
+}
