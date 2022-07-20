@@ -13,12 +13,23 @@ namespace Models
         [Required]
         [DisplayName("First Name")]
         public string FirstName { get; set; }
+
+        public string? MiddleName { get; set; }
         [Required]
         [DisplayName("Last Name")]
         public string LastName { get; set; }
-
         [NotMapped]
-        public string FullName { get { return FirstName + " " + LastName; } }
+        public string FullName
+        {
+            get
+            {
+                if (MiddleName != null)
+                    return FirstName + " " + MiddleName + " " + LastName;
+                else
+                    return FirstName + " " + LastName;
+            }
+
+        }
 
         [Required]
         [DisplayName("Date of Birth")]
@@ -28,8 +39,7 @@ namespace Models
         public string Village { get; set; }
         [Required]
         public string Address { get; set; }
-        [Required]
-        public string Phone { get; set; }
+
         [Required]
         [DisplayName("English Level")]
         public int EnglishLevel { get; set; }

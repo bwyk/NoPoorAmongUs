@@ -11,14 +11,25 @@ namespace Models
         public int Id { get; set; }
         [DisplayName("First Name")]
         public string FirstName { get; set; }
+        [DisplayName("Middle Name")]
+        public string? MiddleName { get; set; }
         [DisplayName("Last Name")]
         public string LastName { get; set; }
-        public string Relationship { get; set; }
+        [NotMapped]
+        public string FullName
+        {
+            get
+            {
+                if (MiddleName != null)
+                    return FirstName + " " + MiddleName + " " + LastName;
+                else
+                    return FirstName + " " + LastName;
+            }
 
-        [DisplayName("Student ID")]
-        public int StudentId { get; set; }
-        [ValidateNever]
-        [ForeignKey("StudentId")]
-        public Student Student { get; set; }
+        }
+        [NotMapped]
+        public string? Relationship { get; set; }
+        [DisplayName("Phone Number")]
+        public string? PhoneNumber { get; set; }
     }
 }
