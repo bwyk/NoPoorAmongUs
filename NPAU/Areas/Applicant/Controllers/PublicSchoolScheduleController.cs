@@ -28,9 +28,10 @@ namespace NPAU.Controllers
         {
             return View();
         }
-        public IActionResult Schedule()
+        public IActionResult Schedule(int? id)
         {
-            return View();
+            Student student = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == id);
+            return View(student);
         }
 
         [HttpPost]
@@ -49,7 +50,7 @@ namespace NPAU.Controllers
             return View(obj);
         }
 
-        //[HttpGet]
+        [HttpGet]
         public IActionResult Index(int? id)
         {
             if (id == 0)

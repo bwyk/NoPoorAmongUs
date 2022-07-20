@@ -1,14 +1,16 @@
 ﻿var dataTable;
+var studentId;
 $(document).ready(function () {
-    loadDataTable();
+    studentId = document.getElementById("studentId").value; 
+    loadDataTable(studentId);
 });
 
-function loadDataTable() {
+function loadDataTable(id) {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Applicant/PublicSchoolSchedule/GetAll?id=" + id
-            //"type": "GET",
-            //"datatype": "json"
+            "url": "/Applicant/PublicSchoolSchedule/GetAll?id=" + id,
+            "type": "GET",
+            "datatype": "json"
         },
         "columns": [
             { "data": "startTime", "width": "25%" },
