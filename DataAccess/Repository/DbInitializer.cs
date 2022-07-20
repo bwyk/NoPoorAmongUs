@@ -34,7 +34,7 @@ namespace DataAccess.Repository
             {
                 _db.Database.Migrate();
             }
-            SeedGuardians();
+            //SeedGuardians();
             //SeedCourses();
             SeedCourseSession();
             SeedCourseEnrollment();
@@ -104,44 +104,44 @@ namespace DataAccess.Repository
             return (saraBlue, cindyAdams);
         }
 
-        private void SeedGuardians()
-        {
-            bool saveChanges = false;
-            Student saraBlue;
-            Student cindyAdams;
-            (saraBlue, cindyAdams) = GetStudents();
-            SeedRatings(cindyAdams);
-            Guardian? saraBlueGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Blue");
-            Guardian? cindyAdamsGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Adams");
-            if (saraBlueGuardian is null)
-            {
-                _db.Guardians.Add(
-                    new Guardian
-                    {
-                        FirstName = "Jessica",
-                        LastName = "Blue",
-                        Relationship = "Mother",
-                        StudentId = saraBlue.Id
-                    }
-                );                
-                saveChanges = true;
-            }
-            if (cindyAdamsGuardian is null)
-            {
-                _db.Guardians.Add(
-                    new Guardian
-                    {
-                        FirstName = "Tom",
-                        LastName = "Adams",
-                        Relationship = "Father",
-                        StudentId = cindyAdams.Id
-                    }
-                );
-                saveChanges = true;
-            }
-            if (saveChanges)
-                _db.SaveChanges();
-        }
+        //private void SeedGuardians()
+        //{
+        //    bool saveChanges = false;
+        //    Student saraBlue;
+        //    Student cindyAdams;
+        //    (saraBlue, cindyAdams) = GetStudents();
+        //    SeedRatings(cindyAdams);
+        //    Guardian? saraBlueGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Blue");
+        //    Guardian? cindyAdamsGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Adams");
+        //    if (saraBlueGuardian is null)
+        //    {
+        //        _db.Guardians.Add(
+        //            new Guardian
+        //            {
+        //                FirstName = "Jessica",
+        //                LastName = "Blue",
+        //                Relationship = "Mother",
+        //                StudentId = saraBlue.Id
+        //            }
+        //        );
+        //        saveChanges = true;
+        //    }
+        //    if (cindyAdamsGuardian is null)
+        //    {
+        //        _db.Guardians.Add(
+        //            new Guardian
+        //            {
+        //                FirstName = "Tom",
+        //                LastName = "Adams",
+        //                Relationship = "Father",
+        //                StudentId = cindyAdams.Id
+        //            }
+        //        );
+        //        saveChanges = true;
+        //    }
+        //    if (saveChanges)
+        //        _db.SaveChanges();
+        //}
 
         private void SeedRatings(Student student)
         {
@@ -171,7 +171,7 @@ namespace DataAccess.Repository
             //if (saveChanges)
             //    _db.SaveChanges();
         }
-       
+
         private (Course, Course) GetCourses()
         {
             bool saveChanges = false;
@@ -216,7 +216,7 @@ namespace DataAccess.Repository
                 );
                 saveChanges = true;
             }
-            if(saveChanges)
+            if (saveChanges)
                 _db.SaveChanges();
 
             return (english1, computers1);
@@ -237,7 +237,9 @@ namespace DataAccess.Repository
                         CourseId = courseEnglish1.Id,
                         Course = courseEnglish1,
                         CourseName = courseEnglish1.Name,
-                        Day = "Monday"
+                        Day = "Monday",
+                        StartTime = DateTime.Now.ToShortTimeString(),
+                        EndTime = DateTime.Now.ToShortTimeString()
                     }
                 );
                 saveChanges = true;
@@ -250,12 +252,14 @@ namespace DataAccess.Repository
                         CourseId = courseComputers1.Id,
                         Course = courseComputers1,
                         CourseName = courseComputers1.Name,
-                        Day = "Tuesday"
+                        Day = "Tuesday",
+                        StartTime = DateTime.Now.ToShortTimeString(),
+                        EndTime = DateTime.Now.ToShortTimeString()
                     }
                 );
                 saveChanges = true;
             }
-            if(saveChanges)
+            if (saveChanges)
                 _db.SaveChanges();
 
             return (sessionEnglish1, sessionComputers1);
@@ -300,11 +304,11 @@ namespace DataAccess.Repository
                 );
                 saveChanges = true;
             }
-            if(saveChanges)
+            if (saveChanges)
                 _db.SaveChanges();
         }
-        
-       
+
+
         private void SeedCourseSession()
         {
             bool saveChanges = false;
@@ -339,15 +343,17 @@ namespace DataAccess.Repository
                         CourseId = courseEnglish1.Id,
                         Course = courseEnglish1,
                         CourseName = english1CourseName,
-                        Day = "Tuesday"
+                        Day = "Tuesday",
+                        StartTime= DateTime.Now.ToShortTimeString(),
+                        EndTime= DateTime.Now.ToShortTimeString()
                     }
                 );
                 saveChanges = true;
             }
-            if(saveChanges)
+            if (saveChanges)
                 _db.SaveChanges();
         }
-        
+
         private Term GetTerm()
         {
             bool saveChanges = false;
@@ -431,9 +437,9 @@ namespace DataAccess.Repository
             {
                 _db.Add(
                    subjectEnglish1 = new Subject
-                    {
-                        Name = "English 1"
-                    }
+                   {
+                       Name = "English 1"
+                   }
                 );
                 saveChanges = true;
             }

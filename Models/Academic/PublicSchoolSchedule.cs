@@ -15,31 +15,24 @@ namespace Models.Academic
         [Key]
         public int Id { get; set; }
 
-        [DisplayName("School")]
-        public int SchoolId { get; set; }
+        public Weekdays Weekday { get; set; }
 
-        [ValidateNever]
-        [ForeignKey("SchoolId")]
-        public School School { get; set; }
+        public enum Weekdays
+        {
+            Monday = 0,
+            Tuesday = 1,
+            Wednesday = 2,
+            Thursday = 3,
+            Friday = 4,
+        }
 
-        [DisplayName("Monday")]
-        public bool Monday { get; set; } = false;
-
-        [DisplayName("Tuesday")]
-        public bool Tuesday { get; set; } = false;
-
-        [DisplayName("Wednesday")]
-        public bool Wednesday { get; set; } = false;
-
-        [DisplayName("Thursday")]
-        public bool Thursday { get; set; } = false;
-
-        [DisplayName("Friday")]
-        public bool Friday { get; set; } = false;
-
+        [Required]
+        [DataType(DataType.Time)]
         [DisplayName("Start Time")]
         public DateTime StartTime { get; set; }
 
+        [Required]
+        [DataType(DataType.Time)]
         [DisplayName("End Time")]
         public DateTime EndTime { get; set; }
 
@@ -50,4 +43,5 @@ namespace Models.Academic
         [ForeignKey("StudentId")]
         public Student Student { get; set; }
     }
+
 }

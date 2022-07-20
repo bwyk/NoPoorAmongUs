@@ -4,6 +4,7 @@ using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220719190516_PublicScheduleNoSchoolId")]
+    partial class PublicScheduleNoSchoolId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -355,14 +357,26 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("Friday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Monday")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Weekday")
-                        .HasColumnType("int");
+                    b.Property<bool>("Thursday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Tuesday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Wednesday")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

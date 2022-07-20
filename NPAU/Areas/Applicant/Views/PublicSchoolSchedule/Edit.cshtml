@@ -1,14 +1,9 @@
 ﻿@using static Models.Academic.PublicSchoolSchedule
 @model Models.ViewModels.PublicSchoolScheduleVM
-@{
-    ViewData["Title"] = "Public School Schedule";
-}
-<div class="container p-3">
-    <div class="d-flex justify-content-between pt-4 row-cols-2">
-        <h2 class="text-primary">Add Public School Schedule</h2>
-    </div>
-</div>
-<form method="post">
+
+<h2 class="text-primary">Update Public School Session</h2>
+
+<form>
     <input asp-for="Student.Id" hidden readonly />
     <input asp-for="Student.Address" hidden readonly />
     <input asp-for="Student.Birthday" hidden readonly />
@@ -40,13 +35,12 @@
                     @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, Weekdays.Friday)@Html.Label("Friday")<br />
                 </div>
                 <div class="d-flex justify-content-start" role="group">
-                    <input type="submit" name="Weekday" value="Create Schedule" class="btn btn-primary">
-                    <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary mx-1" style="width:150px">
+                    <input type="submit" name="Weekday" value="Update Schedule" class="btn btn-primary">
+                    <a asp-controller="PublicSchoolSchedule" asp-action="Schedule" class="btn btn-secondary" style="width:150px">
                         Back to List
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
 </form>

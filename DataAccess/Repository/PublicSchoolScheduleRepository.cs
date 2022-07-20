@@ -16,6 +16,7 @@ namespace DataAccess.Repository
         {
             _db = db;
         }
+
         public void Update(PublicSchoolSchedule obj)
         {
             _db.PublicSchoolSchedules.Update(obj);
