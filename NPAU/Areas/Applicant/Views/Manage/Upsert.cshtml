@@ -138,8 +138,11 @@
 
                 <h2 class="text-primary">
                     <span class="col-10">Applicant Rating</span>
-                    <button type="button" class="btn btn-secondary float-end rating-edit-hide" onclick="ratingToggleEditable()">Edit</button>
-                    <button type="button" class="btn btn-secondary float-end rating-edit-show" onclick="ratingCancelEdit()">Cancel Edit</button>
+                    @if (Model.Student.Id != 0)
+                    {
+                        <button type="button" class="btn btn-secondary float-end rating-edit-hide" onclick="ratingToggleEditable()">Edit</button>
+                        <button type="button" class="btn btn-secondary float-end rating-edit-show" onclick="ratingCancelEdit()">Cancel Edit</button>
+                    }
                 </h2>
 
                 <hr />
