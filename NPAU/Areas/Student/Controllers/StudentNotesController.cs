@@ -54,24 +54,25 @@ namespace NPAU.Controllers
         {
             obj.StudentNote.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(n => n.Id == obj.StudentNote.NoteTypeId);
             obj.StudentNote.Student = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == obj.StudentNote.StudentId);
-            ModelState.Clear();
-            TryValidateModel(obj);
+
             if (ModelState.IsValid)
             {
                 if (obj.StudentNote.Id == 0)
                 {
+                    obj.StudentNote.CreatedDate = DateTime.Now;
                     _unitOfWork.StudentNote.Add(obj.StudentNote);
+                    TempData["success"] = "A new note has been created.";
                 }
                 else
                 {
                     _unitOfWork.StudentNote.Update(obj.StudentNote);
+                    TempData["success"] = "A note has been modified.";
                 }
                 _unitOfWork.Save();
-                TempData["success"] = "A new note has been created.";
                 return RedirectToAction("Index");
             }
 
-            obj.Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
+            obj.Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem
             {
                 Text = i.FullName,
                 Value = i.Id.ToString()

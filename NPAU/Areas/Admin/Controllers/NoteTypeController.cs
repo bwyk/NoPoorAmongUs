@@ -1,7 +1,10 @@
 ﻿using DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models.Academic;
 using Models.ViewModels;
+using System.Diagnostics;
 using Utilities;
 
 namespace NPAU.Areas.Admin.Controllers
@@ -10,10 +13,12 @@ namespace NPAU.Areas.Admin.Controllers
     public class NoteTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public NoteTypeController(IUnitOfWork unitOfWork)
+        public NoteTypeController(IUnitOfWork unitOfWork, RoleManager<IdentityRole> roleManager)
         {
             _unitOfWork = unitOfWork;
+            _roleManager = roleManager;
         }
         public IActionResult Index()
         {
@@ -21,41 +26,53 @@ namespace NPAU.Areas.Admin.Controllers
         }
         public IActionResult Upsert(int? id)
         {
-            NoteType noteType = new();
+            NoteTypeVM noteTypeVM = new NoteTypeVM()
+            {
+                NoteType = new(),
+                AllRoles = _roleManager.Roles.ToList().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
+            };
 
             if (id == null || id == 0)
             {
-                return View(noteType);
+                return View(noteTypeVM);
             }
             else
             {
-                noteType= _unitOfWork.NoteType.GetFirstOrDefault(u => u.Id == id);
-                return View(noteType);
-
+                noteTypeVM.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(u => u.Id == id);
+                return View(noteTypeVM);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(NoteType obj)
+        public IActionResult Upsert(NoteTypeVM obj)
         {
             if (ModelState.IsValid)
-            {
-                if (obj.Id == 0)
+            {  
+                if (obj.NoteType.Id == 0)
                 {
-                    _unitOfWork.NoteType.Add(obj);
+                    _unitOfWork.NoteType.Add(obj.NoteType);
                     TempData["success"] = "Note Type Created Successfully";
 
                 }
                 else
                 {
-                    _unitOfWork.NoteType.Update(obj);
+                    _unitOfWork.NoteType.Update(obj.NoteType);
                     TempData["success"] = "Note Type Updated Successfully";
 
                 }
                 _unitOfWork.Save();
                 return RedirectToAction("Index");
             }
+            obj.AllRoles = _roleManager.Roles.ToList().Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            });
 
             return View(obj);
         }

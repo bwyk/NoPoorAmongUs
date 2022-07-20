@@ -14,6 +14,7 @@ namespace Models.Academic
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
+        public DateTime CreatedDate { get; set; }
         public int StudentId { get; set; }
         [ForeignKey("StudentId")]
         [ValidateNever]

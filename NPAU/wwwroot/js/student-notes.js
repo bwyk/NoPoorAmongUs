@@ -11,7 +11,8 @@ function loadDataTable() {
             "url": "/Student/StudentNotes/GetAll"
         },
         "columns": [
-            { "data": "student.firstName", "width": "25%" },
+            { "data": "createdDate", "width": "10%" },
+            { "data": "student.firstName", "width": "15%" },
             { "data": "student.lastName", "width": "25%" },
             { "data": "noteType.type", "width": "25%" },
             { "data": "id",

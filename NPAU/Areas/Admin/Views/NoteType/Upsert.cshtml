@@ -1,12 +1,12 @@
-﻿@using Models
-@model Models.Academic.NoteType
+﻿@using Models.ViewModels
+@model NoteTypeVM
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
-    <input asp-for="Id" hidden />
+    <input asp-for="NoteType.Id" hidden />
     <div class="row">
         <div class="col-10">
             <div class="border p-3 mt-4 row">
                 <div class="col-12 pb-2">
-                    @if (Model.Id != 0)
+                    @if (Model.NoteType.Id != 0)
                     {
                         <h2 class="text-primary">Update Note Type</h2>
                     }
@@ -17,11 +17,20 @@
                     <hr />
                 </div>
                 <div class="mb-3 col-6">
-                    <label asp-for="Type"></label>
-                    <input asp-for="Type" class="form-control" />
+                    <label asp-for="NoteType.Type"></label>
+                    <input asp-for="NoteType.Type" class="form-control" />
                 </div>
+
+                <div class="mb-3 col-6">
+                    <label asp-for="NoteType.Role"></label>
+                    <select asp-for="NoteType.RoleId" asp-items="@Model.AllRoles" class="form-select">
+                        <option disabled selected>--Select Role--</option>
+                    </select>
+                    <span asp-validation-for="NoteType.RoleId" class="text-danger"></span>
+                </div>
+
                 <div class="col-12">
-                    @if (Model.Id != 0)
+                    @if (Model.NoteType.Id != 0)
                     {
                         <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
                     }
@@ -42,4 +51,4 @@
     @{
         <partial name="_ValidationScriptsPartial" />
     }
-}
+    }
