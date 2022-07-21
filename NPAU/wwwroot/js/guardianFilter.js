@@ -12,11 +12,14 @@ $(document).ready(function () {
         //Serialize the form datas.   
         var valdata = $("#form-rating").serialize();
         $.ajax({
-            url: "/Applicant/Manage/SaveRatings",
+            url: "/Applicant/Manage/SaveRatings?studentId=" + studentId,
             type: "POST",
             dataType: 'json',
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: valdata
+            data: valdata,
+            success: function () {
+                location.reload();
+            }
         });
     });  
 
@@ -219,4 +222,13 @@ $('#save').click(function () {                              // If saved process 
     dataTableCurrent.row.add(selectedRow.data());           // Adds it to the current guardians table
     selectedRow.remove();                                   // Removes the row from its current table
     redrawTables();                                         // Redraw the tables
+});
+
+
+$('#distance-slider').mdbRange({
+    single: {
+        active: true,
+        counting: true,
+        countingTarget: '#distance'
+    }
 });
