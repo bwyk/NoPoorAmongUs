@@ -18,6 +18,7 @@ namespace Utilities
             Thursday = 3,
             Friday = 4
         }
+
         // Student status
         public const string StudentStatusApplicant = "Applicant";
         public const string StudentStatusRejected = "Rejected";
