@@ -19,15 +19,31 @@
                 <div class="mb-3 col-6">
                     <label asp-for="NoteType.Type"></label>
                     <input asp-for="NoteType.Type" class="form-control" />
+                    @{
+                        foreach (var r in Model.RoleList)
+                        {
+                            <div class="form-check">
+                                @{
+                                    //<input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r">
+                                    //<label class="form-check-label">@r</label>
+
+                                    if (Model.NoteType.Role.Name == @r)
+                                    {
+                                        <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r" checked>
+                                        <label class="form-check-label">@r</label>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r">
+                                        <label class="form-check-label">@r</label>
+                                    }
+                                }
+                            </div>
+                        }
+                    }
                 </div>
 
-                <div class="mb-3 col-6">
-                    <label asp-for="NoteType.Role"></label>
-                    <select asp-for="NoteType.RoleId" asp-items="@Model.AllRoles" class="form-select">
-                        <option disabled selected>--Select Role--</option>
-                    </select>
-                    <span asp-validation-for="NoteType.RoleId" class="text-danger"></span>
-                </div>
+
 
                 <div class="col-12">
                     @if (Model.NoteType.Id != 0)

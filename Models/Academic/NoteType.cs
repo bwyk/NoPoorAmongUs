@@ -16,9 +16,12 @@ namespace Models.Academic
         public int Id { get; set; }
         [Required]
         public string Type { get; set; } = string.Empty;
+
+        [Required]
+        [Display(Name = "Roles")]
         public string RoleId { get; set; }
-        [ValidateNever]
         [ForeignKey("RoleId")]
+        [ValidateNever]
         public IdentityRole Role { get; set; }
     }
 }

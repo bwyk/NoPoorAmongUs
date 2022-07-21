@@ -11,6 +11,7 @@ function loadDataTable() {
         },
         "columns": [
             { "data": "type", "width": "20%" },
+            { "data": "role.name", "width": "20%" },
             {
                 "data": "id",
                 "render": function (data) {
@@ -25,7 +26,7 @@ function loadDataTable() {
                     </div>
                         `
                 },
-                "width": "80%"
+                "width": "60%"
             }
         ]
     });

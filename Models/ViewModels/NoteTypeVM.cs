@@ -10,6 +10,6 @@ namespace Models.ViewModels
         public NoteType NoteType { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> AllRoles { get; set; }
+        public List<string> RoleList { get; set; }
     }
 }

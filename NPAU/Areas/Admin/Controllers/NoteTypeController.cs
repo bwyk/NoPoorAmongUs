@@ -24,16 +24,13 @@ namespace NPAU.Areas.Admin.Controllers
         {
             return View();
         }
+
         public IActionResult Upsert(int? id)
         {
             NoteTypeVM noteTypeVM = new NoteTypeVM()
             {
                 NoteType = new(),
-                AllRoles = _roleManager.Roles.ToList().Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.Id.ToString()
-                }),
+                RoleList = _roleManager.Roles.Select(r => r.Name).ToList()
             };
 
             if (id == null || id == 0)
@@ -42,7 +39,9 @@ namespace NPAU.Areas.Admin.Controllers
             }
             else
             {
-                noteTypeVM.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(u => u.Id == id);
+                noteTypeVM.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(u => u.Id == id, includeProperties: "Role");
+                noteTypeVM.RoleList = _roleManager.Roles.Select(r => r.Name).ToList();
+
                 return View(noteTypeVM);
             }
         }
@@ -68,11 +67,7 @@ namespace NPAU.Areas.Admin.Controllers
                 _unitOfWork.Save();
                 return RedirectToAction("Index");
             }
-            obj.AllRoles = _roleManager.Roles.ToList().Select(i => new SelectListItem
-            {
-                Text = i.Name,
-                Value = i.Id.ToString()
-            });
+            obj.RoleList = _roleManager.Roles.Select(r => r.Name).ToList();
 
             return View(obj);
         }
@@ -81,7 +76,7 @@ namespace NPAU.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var noteTypeList = _unitOfWork.NoteType.GetAll();
+            var noteTypeList = _unitOfWork.NoteType.GetAll(includeProperties: "Role");
             return Json(new { data = noteTypeList });
         }
 
