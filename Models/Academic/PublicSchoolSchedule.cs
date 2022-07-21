@@ -15,16 +15,9 @@ namespace Models.Academic
         [Key]
         public int Id { get; set; }
 
-        public Weekdays Weekday { get; set; }
+        //public Weekdays Weekday { get; set; }
 
-        public enum Weekdays
-        {
-            Monday = 0,
-            Tuesday = 1,
-            Wednesday = 2,
-            Thursday = 3,
-            Friday = 4,
-        }
+        public string Weekday { get; set; }
 
         [Required]
         [DataType(DataType.Time)]

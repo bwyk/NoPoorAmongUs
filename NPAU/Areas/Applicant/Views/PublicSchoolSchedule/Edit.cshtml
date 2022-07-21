@@ -1,9 +1,9 @@
-﻿@using static Models.Academic.PublicSchoolSchedule
+﻿@using Utilities;
 @model Models.ViewModels.PublicSchoolScheduleVM
 
 <h2 class="text-primary">Update Public School Session</h2>
 
-<form>
+<form method="post">
     <input asp-for="Student.Id" hidden readonly />
     <input asp-for="Student.Address" hidden readonly />
     <input asp-for="Student.Birthday" hidden readonly />
@@ -21,21 +21,27 @@
             <div class="border p-3 mt-2 row">
                 <div class="mb-3 col-4">
                     <label asp-for="PublicSchoolSchedules.StartTime"></label>
-                    <input asp-for="PublicSchoolSchedules.StartTime" asp-format="H:mm" class="form-control" />
+                    <input asp-for="PublicSchoolSchedules.StartTime" class="form-control" />
                 </div>
                 <div class="mb-3 col-4">
                     <label asp-for="PublicSchoolSchedules.EndTime"></label>
-                    <input asp-for="PublicSchoolSchedules.EndTime" asp-format="H:mm" class="form-control" />
+                    <input asp-for="PublicSchoolSchedules.EndTime" class="form-control" />
                 </div>
                 <div class="mb-3 form-check-inline">
-                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, Weekdays.Monday)@Html.Label("Monday")<br />
-                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, Weekdays.Tuesday)@Html.Label("Tuesday")<br />
-                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, Weekdays.Wednesday)@Html.Label("Wednesday")<br />
-                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, Weekdays.Thursday)@Html.Label("Thursday")<br />
-                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, Weekdays.Friday)@Html.Label("Friday")<br />
+                    @foreach (var weekday in Enum.GetValues(typeof(SD.Weekdays)))  
+                    {
+                        if (Model.PublicSchoolSchedules.Weekday == weekday)
+                        {
+                            <input type="radio" name="weekday" asp-for="PublicSchoolSchedules.Weekday" checked="checked" value="@weekday">@weekday<br />
+                        }
+                        else
+                        {
+                            <input type="radio" name="weekday" asp-for="PublicSchoolSchedules.Weekday" value="@weekday">@weekday<br />                            
+                        }
+                    } 
                 </div>
                 <div class="d-flex justify-content-start" role="group">
-                    <input type="submit" name="Weekday" value="Update Schedule" class="btn btn-primary">
+                    <input type="submit" class="btn btn-primary">
                     <a asp-controller="PublicSchoolSchedule" asp-action="Schedule" asp-route-id="@Model.Student.Id" class="btn btn-secondary" style="width:150px">
                         Back to List
                     </a>
