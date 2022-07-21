@@ -20,7 +20,5 @@ namespace Models
         [ValidateNever]
         [ForeignKey("CourseId")]
         public Course Course { get; set; }
-        
-
     }
 }

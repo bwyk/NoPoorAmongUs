@@ -8,6 +8,8 @@
     var pending = "text-primary";
     var student = "text-primary";
     var rejected = "text-primary";
+    var rating_incomplete = "text-primary";
+    var rating_complete = "text-primary";
     var all = "text-primary";
 
     switch (status)
@@ -21,6 +23,12 @@
         case "rejected":
             rejected = "active text-white";
             break;
+        case "rating_incomplete":
+            rating_incomplete = "active text-white";
+            break;
+        case "rating_completed":
+            rating_complete = "active text-white";
+            break;
         default:
             all = "active text-white";
             break;
@@ -31,15 +39,15 @@
     <div class="d-flex justify-content-between pt-4 row-cols-2">
         <div class="p-2">
             <h2 class="text-primary text-start">Student List</h2>
-        </div>       
+        </div>
         <div class="p-2 col-6 text-end">
             <a asp-area="Applicant" asp-controller="Manage" asp-action="Create" class="btn btn-primary">
-               <i class="bi bi-plus-circle"></i> &nbsp; New Applicant
+                <i class="bi bi-plus-circle"></i> &nbsp; New Applicant
             </a>
         </div>
     </div>
-        <br />
-        <div class="d-flex justify-content-between pt-4 row-cols-2">
+    <br />
+    <div class="d-flex justify-content-between pt-4 row-cols-2">
         <div class="p-2">
             <ul class="list-group list-group-horizontal-sm">
                 <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="student">
@@ -51,13 +59,19 @@
                 <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="rejected">
                 <li class="list-group-item @rejected">Rejected</li>
                 </a>
+                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="rating_incomplete">
+                <li class="list-group-item @rating_incomplete">Rating Pending</li>
+                </a>
+                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="rating_complete">
+                <li class="list-group-item @rating_complete">Rating Completed</li>
+                </a>
                 <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="all">
                 <li class="list-group-item @all">All</li>
                 </a>
             </ul>
         </div>
-        </div>
-    
+    </div>
+
     <br />
 
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">
@@ -75,5 +89,5 @@
     </table>
 </div>
 @section Scripts{
-<script src="~/js/studentFilter.js"></script>
+    <script src="~/js/studentFilter.js"></script>
 }

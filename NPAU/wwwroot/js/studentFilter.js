@@ -15,7 +15,16 @@ $(document).ready(function () {
                 loadDataTable("rejected");
             }
             else {
-                loadDataTable("all");
+                if (url.includes("rating_incomplete")) {
+                    loadDataTable("rating_incomplete");
+                } else {
+                    if (url.includes("rating_complete")) {
+                        loadDataTable("rating_complete");
+                    } else {
+                        loadDataTable("all");
+                    }
+                } 
+
 
             }
         }
