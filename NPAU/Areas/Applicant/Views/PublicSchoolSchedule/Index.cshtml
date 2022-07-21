@@ -1,4 +1,5 @@
-﻿@model Models.ViewModels.PublicSchoolScheduleVM
+﻿@using Utilities;
+@model Models.ViewModels.PublicSchoolScheduleVM
 @{
     ViewData["Title"] = "Public School Schedule";
 }
@@ -22,31 +23,23 @@
     <div class="row">
         <div class="col-10">
             <div class="border p-3 mt-2 row">
-                <div class="mb-3">
-                    <input asp-for="PublicSchoolSchedules.School.Name" readonly value=@Utilities.SD.PublicSchool class="text-muted" />
-                </div>
                 <div class="mb-3 col-4">
                     <label asp-for="PublicSchoolSchedules.StartTime"></label>
-                    <input asp-for="PublicSchoolSchedules.StartTime" class="form-control" />
+                    <input asp-for="PublicSchoolSchedules.StartTime" asp-format="H:mm" class="form-control" />
                 </div>
                 <div class="mb-3 col-4">
                     <label asp-for="PublicSchoolSchedules.EndTime"></label>
-                    <input asp-for="PublicSchoolSchedules.EndTime" class="form-control" />
+                    <input asp-for="PublicSchoolSchedules.EndTime" asp-format="H:mm" class="form-control" />
                 </div>
                 <div class="mb-3 form-check-inline">
-                    <input class="form-check-input" type="radio" asp-for="PublicSchoolSchedules.Monday" name="weekday" id="Monday" value="Monday">
-                    Monday
-                    <input class="form-check-input" type="radio" asp-for="PublicSchoolSchedules.Tuesday" name="weekday" id="Tuesday" value="Tuesday">
-                    Tuesday
-                    <input class="form-check-input" type="radio" asp-for="PublicSchoolSchedules.Wednesday" name="weekday" id="Wednesday" value="Wednesday">
-                    Wednesday
-                    <input class="form-check-input" type="radio" asp-for="PublicSchoolSchedules.Thursday" name="weekday" id="Thursday" value="Thursday">
-                    Thursday
-                    <input class="form-check-input" type="radio" asp-for="PublicSchoolSchedules.Friday" name="weekday" id="Friday" value="Friday">
-                    Friday
+                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, SD.Weekdays.Monday)@Html.Label("Monday")<br />
+                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, SD.Weekdays.Tuesday)@Html.Label("Tuesday")<br />
+                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, SD.Weekdays.Wednesday)@Html.Label("Wednesday")<br />
+                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, SD.Weekdays.Thursday)@Html.Label("Thursday")<br />
+                    @Html.RadioButtonFor(w => w.PublicSchoolSchedules.Weekday, SD.Weekdays.Friday)@Html.Label("Friday")<br />
                 </div>
                 <div class="d-flex justify-content-start" role="group">
-                    <button type="submit" class="btn btn-primary" style="width:150px">Create Schedule</button>
+                    <input type="submit" name="Weekday" value="Create Schedule" class="btn btn-primary">
                     <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary mx-1" style="width:150px">
                         Back to List
                     </a>
@@ -54,21 +47,5 @@
             </div>
         </div>
     </div>
-</form>
-<hr />
-<div>
-    <h2 class="text-primary"> Student Public School Schedule</h2>
-    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
-        <thead>
-            <tr>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
-</div>
 
-@section Scripts{
-<script src="~/js/publicSchoolSchedule.js"></script>
-}
+</form>

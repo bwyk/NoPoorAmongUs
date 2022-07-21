@@ -41,14 +41,14 @@ function loadDataTable(status) {
         },
         "columns": [
             { "data": "status", "width": "%10" },
-            { "data": "fullName", "width": "20%" },
+            { "data": "fullName", "width": "25%" },
             {
-                "data": "birthday", "width": "14%",
+                "data": "birthday", "width": "15%",
                 "render": DataTable.render.date()
             },
-            { "data": "address", "width": "14%" },
-            { "data": "englishLevel", "width": "10%" },
-            { "data": "computerLevel", "width": "10%" },
+            { "data": "address", "width": "15%" },
+            { "data": "englishLevel", "width": "5%" },
+            { "data": "computerLevel", "width": "5%" },
             {
                 "data": "id",
                 "render": function (data) {
@@ -59,10 +59,10 @@ function loadDataTable(status) {
                                 class="btn btn-primary"> <i class="bi bi-plus-circle"></i>&nbsp; Add Public School Schedule</a>
                             </div>
                         </div>
-                        <div class="btn-group mb-1" role="group">
+                        <div class="btn-group" role="group">
                             <div class="btn-group" role="group">
                                 <a href="/Applicant/PublicSchoolSchedule/Schedule?id=${data}"
-                                class="btn btn-primary"> <i class="bi bi-plus-circle"></i>&nbsp; View Public School Schedule</a>
+                                class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; View Public School Schedule</a>
                             </div>
                         </div>
                         <hr/>
@@ -78,7 +78,7 @@ function loadDataTable(status) {
                         </div>
                         `
                 },
-                "width": "22%"
+                "width": "25%"
             }
         ]
     });

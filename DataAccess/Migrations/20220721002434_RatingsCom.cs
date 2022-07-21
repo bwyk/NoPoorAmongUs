@@ -9,18 +9,18 @@ namespace DataAccess.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Determination",
-                table: "Ratings");
+            //migrationBuilder.DropColumn(
+            //    name: "Determination",
+            //    table: "Ratings");
 
-            migrationBuilder.DropColumn(
-                name: "FoodAssistance",
-                table: "Ratings");
+            //migrationBuilder.DropColumn(
+            //    name: "FoodAssistance",
+            //    table: "Ratings");
 
-            migrationBuilder.RenameColumn(
-                name: "SchoolLevel",
-                table: "Ratings",
-                newName: "Distance");      
+            //migrationBuilder.RenameColumn(
+            //    name: "SchoolLevel",
+            //    table: "Ratings",
+            //    newName: "Distance");      
 
 
         }
