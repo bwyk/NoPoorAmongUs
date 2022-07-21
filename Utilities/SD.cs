@@ -9,6 +9,15 @@ namespace Utilities
 {
     public static class SD
     {
+
+        public enum Weekdays
+        {
+            Monday = 0,
+            Tuesday = 1,
+            Wednesday = 2,
+            Thursday = 3,
+            Friday = 4
+        }
         // Student status
         public const string StudentStatusApplicant = "Applicant";
         public const string StudentStatusRejected = "Rejected";
