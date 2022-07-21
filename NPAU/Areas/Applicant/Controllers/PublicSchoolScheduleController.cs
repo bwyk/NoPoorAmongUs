@@ -31,7 +31,11 @@ namespace NPAU.Controllers
         public IActionResult Schedule(int? id)
         {
             Student student = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == id);
-            return View(student);
+            PublicSchoolScheduleVM = new PublicSchoolScheduleVM()
+            {
+                Student = student
+            };
+            return View(PublicSchoolScheduleVM);
         }
 
         [HttpPost]
