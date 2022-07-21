@@ -32,7 +32,7 @@ namespace NPAU.Controllers
             dt.Columns.Add("Average", typeof(double));
 
             IEnumerable<Rating> Ratings = _unitOfWork.Rating.GetAll();
-            IEnumerable<Student> Students = _unitOfWork.Student.GetAll();
+            IEnumerable<Student> Students = _unitOfWork.Student.GetAll(s => s.Status == "Pending");
 
             double counter = 0.0;
             //This number is for the amount of ratings we have can be scaled up or down.

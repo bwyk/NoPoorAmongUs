@@ -34,7 +34,7 @@ namespace DataAccess.Repository
             {
                 _db.Database.Migrate();
             }
-            SeedGuardians();
+            //SeedGuardians();
             //SeedCourses();
             SeedCourseSession();
             SeedCourseEnrollment();
@@ -104,44 +104,44 @@ namespace DataAccess.Repository
             return (saraBlue, cindyAdams);
         }
 
-        private void SeedGuardians()
-        {
-            bool saveChanges = false;
-            Student saraBlue;
-            Student cindyAdams;
-            (saraBlue, cindyAdams) = GetStudents();
-            SeedRatings(cindyAdams);
-            Guardian? saraBlueGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Blue");
-            Guardian? cindyAdamsGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Adams");
-            if (saraBlueGuardian is null)
-            {
-                _db.Guardians.Add(
-                    new Guardian
-                    {
-                        FirstName = "Jessica",
-                        LastName = "Blue",
-                        Relationship = "Mother",
-                        StudentId = saraBlue.Id
-                    }
-                );                
-                saveChanges = true;
-            }
-            if (cindyAdamsGuardian is null)
-            {
-                _db.Guardians.Add(
-                    new Guardian
-                    {
-                        FirstName = "Tom",
-                        LastName = "Adams",
-                        Relationship = "Father",
-                        StudentId = cindyAdams.Id
-                    }
-                );
-                saveChanges = true;
-            }
-            if (saveChanges)
-                _db.SaveChanges();
-        }
+        //private void SeedGuardians()
+        //{
+        //    bool saveChanges = false;
+        //    Student saraBlue;
+        //    Student cindyAdams;
+        //    (saraBlue, cindyAdams) = GetStudents();
+        //    SeedRatings(cindyAdams);
+        //    Guardian? saraBlueGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Blue");
+        //    Guardian? cindyAdamsGuardian = _db.Guardians.FirstOrDefault(g => g.LastName == "Adams");
+        //    if (saraBlueGuardian is null)
+        //    {
+        //        _db.Guardians.Add(
+        //            new Guardian
+        //            {
+        //                FirstName = "Jessica",
+        //                LastName = "Blue",
+        //                Relationship = "Mother",
+        //                StudentId = saraBlue.Id
+        //            }
+        //        );                
+        //        saveChanges = true;
+        //    }
+        //    if (cindyAdamsGuardian is null)
+        //    {
+        //        _db.Guardians.Add(
+        //            new Guardian
+        //            {
+        //                FirstName = "Tom",
+        //                LastName = "Adams",
+        //                Relationship = "Father",
+        //                StudentId = cindyAdams.Id
+        //            }
+        //        );
+        //        saveChanges = true;
+        //    }
+        //    if (saveChanges)
+        //        _db.SaveChanges();
+        //}
 
         private void SeedRatings(Student student)
         {
