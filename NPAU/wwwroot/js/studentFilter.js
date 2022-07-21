@@ -59,12 +59,8 @@ function loadDataTable(status) {
                         <hr/>
                         <div class="btn-group" role="group">
                             <div class="btn-group mx-1" role="group">
-                            <a href="/Applicant/Manage/Details?id=${data}"
+                            <a href="/Applicant/Manage/Upsert?id=${data}"
                             class="btn btn-primary"> <i class="bi bi-info-circle"></i>Details</a>
-                            </div>
-                            <div class="btn-group mx-1" role="group">
-                            <a href="/Applicant/Manage/Edit?id=${data}"
-                            class="btn btn-primary"> <i class="bi  bi-pencil-square"></i>Edit</a>
                             </div>
                             <div class="btn-group mx-1" role="group">
                             <a href="/Applicant/Manage/Delete?id=${data}"

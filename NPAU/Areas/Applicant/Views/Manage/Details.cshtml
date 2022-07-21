@@ -11,7 +11,6 @@
         </div>
         <input asp-for="Student.Id" hidden readonly />
         <input asp-for="Guardian.Id" hidden readonly/>
-        <input asp-for="Guardian.StudentId" hidden readonly/>
         <div>
             <div class="mb-3">
                 <label asp-for="Student.Status"></label>
@@ -36,10 +35,6 @@
             <div class="mb-3">
                 <label asp-for="Student.Village"></label>
                 <input asp-for="Student.Village" readonly class="form-control"/>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Student.Phone"></label>
-                <input asp-for="Student.Phone" readonly class="form-control"/>
             </div>
             <div class="mb-3">
                 <label asp-for="Student.EnglishLevel"></label>
