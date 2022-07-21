@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220712002335_CreatePublicSchoolSchedule")]
-    partial class CreatePublicSchoolSchedule
+    [Migration("20220720162526_Added Relationship model")]
+    partial class AddedRelationshipmodel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,6 +88,10 @@ namespace DataAccess.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -139,6 +143,8 @@ namespace DataAccess.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -279,6 +285,14 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Day")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EndTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StartTime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -502,16 +516,13 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Relationship")
-                        .IsRequired()
+                    b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Guardians");
                 });
@@ -545,6 +556,33 @@ namespace DataAccess.Migrations
                     b.ToTable("Instructors");
                 });
 
+            modelBuilder.Entity("Models.People.Relationship", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GuardianId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RelationshipType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuardianId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Relationships");
+                });
+
             modelBuilder.Entity("Models.Rating", b =>
                 {
                     b.Property<int>("Id")
@@ -562,16 +600,10 @@ namespace DataAccess.Migrations
                     b.Property<int>("AnnualIncome")
                         .HasColumnType("int");
 
-                    b.Property<int>("Determination")
+                    b.Property<int>("Distance")
                         .HasColumnType("int");
 
                     b.Property<int>("FamilySupport")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FoodAssistance")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SchoolLevel")
                         .HasColumnType("int");
 
                     b.Property<int>("StudentId")
@@ -630,8 +662,7 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
+                    b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -719,6 +750,21 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Terms");
+                });
+
+            modelBuilder.Entity("Models.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -916,13 +962,21 @@ namespace DataAccess.Migrations
                     b.Navigation("Term");
                 });
 
-            modelBuilder.Entity("Models.Guardian", b =>
+            modelBuilder.Entity("Models.People.Relationship", b =>
                 {
+                    b.HasOne("Models.Guardian", "Guardian")
+                        .WithMany()
+                        .HasForeignKey("GuardianId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Guardian");
 
                     b.Navigation("Student");
                 });

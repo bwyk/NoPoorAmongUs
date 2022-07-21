@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics;
 
 namespace NPAU.Areas.Admin.Pages.Roles
 {
@@ -46,14 +47,21 @@ namespace NPAU.Areas.Admin.Pages.Roles
                     }
                     else
                     {
-                        CurrentRole.NormalizedName = CurrentRole.Name.ToUpper();
-                        var result = await _roleManager.UpdateAsync(CurrentRole);
-                        if (!result.Succeeded)
+                        if(CurrentRole.NormalizedName != null)
                         {
-                            ModelState.AddModelError("", result.Errors.First().ToString());
-                            return NotFound();
+                            CurrentRole.NormalizedName = CurrentRole.Name.ToUpper();
+                            var result = await _roleManager.UpdateAsync(CurrentRole);
+                            if (!result.Succeeded)
+                            {
+                                ModelState.AddModelError("", result.Errors.First().ToString());
+                                return NotFound();
+                            }
+                            return RedirectToPage("./Index", new { message = "Role Successfully Updated" });
                         }
-                        return RedirectToPage("./Index", new { message = "Role Successfully Updated" });
+                        else
+                        {
+                            return RedirectToPage("./Index", new { message = "Role Entry Not Changed" });
+                        }
                     }
                 }
                 catch (Exception)

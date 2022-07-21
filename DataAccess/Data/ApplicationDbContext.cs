@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Models.Academic;
+using Models.People;
 namespace DataAccess.Data
 {
 
@@ -33,6 +34,7 @@ namespace DataAccess.Data
         public DbSet<StudentNote> StudentNotes => Set<StudentNote>();
         public DbSet<PublicSchoolSchedule> PublicSchoolSchedules => Set<PublicSchoolSchedule>();
         public DbSet<ApplicationUser> ApplicationUser => Set<ApplicationUser>();
+        public DbSet<Relationship> Relationships => Set<Relationship>();
 
     }
 }

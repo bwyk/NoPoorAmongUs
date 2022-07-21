@@ -11,7 +11,6 @@
         </div>
         <input asp-for="Student.Id" hidden readonly />
         <input asp-for="Guardian.Id" hidden readonly/>
-        <input asp-for="Guardian.StudentId" hidden readonly/>
         <div>
             <div class="mb-3">
                 <label asp-for="Student.Status"></label>
@@ -38,10 +37,6 @@
                 <input asp-for="Student.Village" readonly class="form-control"/>
             </div>
             <div class="mb-3">
-                <label asp-for="Student.Phone"></label>
-                <input asp-for="Student.Phone" readonly class="form-control"/>
-            </div>
-            <div class="mb-3">
                 <label asp-for="Student.EnglishLevel"></label>
                 <input asp-for="Student.EnglishLevel" readonly class="form-control"/>
             </div>
@@ -65,6 +60,31 @@
                 <label asp-for="Guardian.Relationship"></label>
                 <input asp-for="Guardian.Relationship" readonly class="form-control"/>
             </div>
+        </div>
+         <div>
+
+            <h3 class="text-primary">Rate Applicant</h3>
+            <div class="mb-3">
+                <label asp-for="Rating.Age"></label>
+                <input asp-for="Rating.Age" class="form-control"/>
+            </div>            
+            <div class="mb-3">
+                <label asp-for="Rating.Academics"></label>
+                <input asp-for="Rating.Academics" class="form-control"/>
+            </div>            
+            <div class="mb-3">
+                <label asp-for="Rating.AnnualIncome"></label>
+                <input asp-for="Rating.AnnualIncome" class="form-control"/>
+            </div>            
+            <div class="mb-3">
+                <label asp-for="Rating.FamilySupport"></label>
+                <input asp-for="Rating.FamilySupport" class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Rating.Distance"></label>
+                <input asp-for="Rating.Distance" class="form-control"/>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:150px">Save Ratings</button>
         </div>
         <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
