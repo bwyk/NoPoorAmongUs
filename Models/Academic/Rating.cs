@@ -32,6 +32,9 @@ namespace Models
         [Range(1, 5, ErrorMessage = "Distance Rating must be between 1 to 5")]
         public int Distance { get; set; }
 
+        public string ApplicationUserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+
         public int StudentId { get; set; }
         [ValidateNever]
         [ForeignKey("StudentId")]

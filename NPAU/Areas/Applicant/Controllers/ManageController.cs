@@ -188,9 +188,12 @@ namespace NPAU.Controllers
         }
 
         [HttpPost, ActionName("SaveRatings")]
-        public void SaveRatings(Rating rating)
+
+        public IActionResult SaveRatings(Rating rating, int? studentId)
         {
             string result;
+            //rating.ApplicationUser = (ApplicationUser)User.Identity;
+            rating.ApplicationUserId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
             if (rating.Id == 0)
             {
                 //Rating newRating = new Rating()
@@ -210,8 +213,10 @@ namespace NPAU.Controllers
                 result = "updated";
             }
             _unitOfWork.Save();
-            TempData["success"] = "Rating " + result + " successfully";
+            TempData["success"] = "Rating " + result + " successfully";            
+            return Json(new { success = true});
         }
+        
 
 
         [HttpPost, ActionName("Delete")]
@@ -248,14 +253,15 @@ namespace NPAU.Controllers
             return View(studentFromDb);
         }
 
-
         [HttpGet]
         public IActionResult GetAll(string status)
         {
+            IEnumerable<Rating> studentRatings;
             IEnumerable<Student> students;
             students = _unitOfWork.Student.GetAll();
-   
-
+            // TODO check for rater role before allowing
+            string raterId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            studentRatings = _unitOfWork.Rating.GetAll(r => r.ApplicationUserId == raterId);
             switch (status)
             {
                 case "pending":
@@ -266,6 +272,12 @@ namespace NPAU.Controllers
                     break;
                 case "rejected":
                     students = students.Where(s => s.Status == SD.StudentStatusRejected);
+                    break;
+                case "rating_incomplete":
+                    students = students.Where(s => !studentRatings.Select(rating => rating.StudentId).Contains(s.Id));
+                    break;
+                case "rating_complete":
+                    students = students.Where(s => studentRatings.Select(rating => rating.StudentId).Contains(s.Id));
                     break;
                 default:
                     break;

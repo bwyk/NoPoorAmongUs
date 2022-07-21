@@ -134,7 +134,9 @@
         <div class="col-md">
             <form id="form-rating" onsubmit="saveRating(); return false;">
                 <input id="studentId" hidden asp-for="Rating.StudentId" value="@Model.Student.Id"class="studentEdit" />
-                <input id="studentId" hidden asp-for="Rating.Student" value="@Model.Student"class="studentEdit" />
+                <input hidden asp-for="Rating.Student" value="@Model.Student"class="studentEdit" />
+                <input hidden asp-for="Rating" value="@Model.Rating"class="studentEdit" />
+                <input hidden asp-for="Rating.Id" value="@Model.Rating?.Id"class="studentEdit" />
 
                 <h2 class="text-primary">
                     <span class="col-10">Applicant Rating</span>
