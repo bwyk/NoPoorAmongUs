@@ -1,0 +1,24 @@
+﻿@using Models.ViewModels
+@model AttendanceVM
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Attendance</h2>
+        </div>
+    </div>
+    <br /><br />
+    <h4>Attendance for Class</h4>
+    <form method="post" asp-action="SaveAttendance" enctype="multipart/form-data">
+        <table cclass="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                    <th>Late</th>
+                    <th>Excused</th>
+                </tr>
+            </thead>
+        </table>
+    </form>
+</div>
