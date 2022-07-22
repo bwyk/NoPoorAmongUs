@@ -1,1 +1,24 @@
-﻿
+﻿@model Models.ViewModels.PublicSchoolScheduleVM
+<div>
+    <input id="studentId" hidden value="@Model.Student.Id"/>
+
+    <h2 class="text-primary"> Student Public School Schedule</h2>
+    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Meeting Day</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<a asp-controller="Manage" asp-action="Index" class="btn btn-secondary mx-1" style="width:150px">
+    Back to List
+</a>
+
+
+@section Scripts{
+    <script src="~/js/publicSchoolSchedule.js"></script>
+}

@@ -123,7 +123,7 @@ public class CourseController : Controller
         var obj = _unitOfWork.Course.GetFirstOrDefault(u => u.Id == id);
         if (obj == null)
         {
-            return Json(new { success = false, message = "Error while deleting" });
+            return Json(new { success = false, message = "Error While Deleting" });
         }
 
         _unitOfWork.Course.Remove(obj);

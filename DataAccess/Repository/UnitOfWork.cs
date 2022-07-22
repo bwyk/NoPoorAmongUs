@@ -35,6 +35,7 @@ namespace DataAccess.Repository
             Instructor = new InstructorRepository(_db);
             PublicSchoolSchedules = new PublicSchoolScheduleRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);
+            Relationship = new RelationshipRepository(_db);
         }
 
         public IPublicSchoolScheduleRepository PublicSchoolSchedules { get; private set; }
@@ -56,6 +57,7 @@ namespace DataAccess.Repository
         public IStudentNoteRepository StudentNote { get; private set; }
         public ISubjectRepository Subject { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IRelationshipRepository Relationship { get; private set; }
 
         public void Save()
         {

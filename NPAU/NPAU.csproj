@@ -50,6 +50,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Views\Shared\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\documents\students\" />
     <Folder Include="wwwroot\lib\bootstrap\" />

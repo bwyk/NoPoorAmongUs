@@ -241,7 +241,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ClassEnrollmentId");
 
-                    b.ToTable("Attendances", (string)null);
+                    b.ToTable("Attendances");
                 });
 
             modelBuilder.Entity("Models.Academic.CourseEnrollment", b =>
@@ -264,7 +264,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("CourseEnrollments", (string)null);
+                    b.ToTable("CourseEnrollments");
                 });
 
             modelBuilder.Entity("Models.Academic.CourseSession", b =>
@@ -298,7 +298,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("CourseSessions", (string)null);
+                    b.ToTable("CourseSessions");
                 });
 
             modelBuilder.Entity("Models.Academic.Grade", b =>
@@ -312,7 +312,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AssessmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CourseEnrollmentId")
+                    b.Property<int?>("CourseEnrollmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("Score")
@@ -324,7 +324,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CourseEnrollmentId");
 
-                    b.ToTable("Grades", (string)null);
+                    b.ToTable("Grades");
                 });
 
             modelBuilder.Entity("Models.Academic.NoteType", b =>
@@ -341,7 +341,35 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NoteTypes", (string)null);
+                    b.ToTable("NoteTypes");
+                });
+
+            modelBuilder.Entity("Models.Academic.PublicSchoolSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Weekday")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("PublicSchoolSchedules");
                 });
 
             modelBuilder.Entity("Models.Academic.StudentNote", b =>
@@ -368,7 +396,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentNotes", (string)null);
+                    b.ToTable("StudentNotes");
                 });
 
             modelBuilder.Entity("Models.Assessment", b =>
@@ -397,7 +425,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Assessments", (string)null);
+                    b.ToTable("Assessments");
                 });
 
             modelBuilder.Entity("Models.Course", b =>
@@ -434,7 +462,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("TermId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("Models.DocType", b =>
@@ -451,7 +479,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocTypes", (string)null);
+                    b.ToTable("DocTypes");
                 });
 
             modelBuilder.Entity("Models.Guardian", b =>
@@ -470,18 +498,15 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Relationship")
-                        .IsRequired()
+                    b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Guardians", (string)null);
+                    b.ToTable("Guardians");
                 });
 
             modelBuilder.Entity("Models.Instructor", b =>
@@ -510,7 +535,34 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Instructors", (string)null);
+                    b.ToTable("Instructors");
+                });
+
+            modelBuilder.Entity("Models.People.Relationship", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GuardianId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RelationshipType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuardianId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Relationships");
                 });
 
             modelBuilder.Entity("Models.Rating", b =>
@@ -530,16 +582,14 @@ namespace DataAccess.Migrations
                     b.Property<int>("AnnualIncome")
                         .HasColumnType("int");
 
-                    b.Property<int>("Determination")
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Distance")
                         .HasColumnType("int");
 
                     b.Property<int>("FamilySupport")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FoodAssistance")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SchoolLevel")
                         .HasColumnType("int");
 
                     b.Property<int>("StudentId")
@@ -547,9 +597,11 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Ratings", (string)null);
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("Models.School", b =>
@@ -566,7 +618,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Schools", (string)null);
+                    b.ToTable("Schools");
                 });
 
             modelBuilder.Entity("Models.Student", b =>
@@ -598,8 +650,7 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
+                    b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -612,7 +663,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Models.StudentDoc", b =>
@@ -643,7 +694,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentDocs", (string)null);
+                    b.ToTable("StudentDocs");
                 });
 
             modelBuilder.Entity("Models.Subject", b =>
@@ -660,7 +711,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects", (string)null);
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("Models.Term", b =>
@@ -686,7 +737,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Terms", (string)null);
+                    b.ToTable("Terms");
                 });
 
             modelBuilder.Entity("Models.ApplicationUser", b =>
@@ -806,13 +857,22 @@ namespace DataAccess.Migrations
 
                     b.HasOne("Models.Academic.CourseEnrollment", "CourseEnrollment")
                         .WithMany()
-                        .HasForeignKey("CourseEnrollmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseEnrollmentId");
 
                     b.Navigation("Assessment");
 
                     b.Navigation("CourseEnrollment");
+                });
+
+            modelBuilder.Entity("Models.Academic.PublicSchoolSchedule", b =>
+                {
+                    b.HasOne("Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Models.Academic.StudentNote", b =>
@@ -880,24 +940,40 @@ namespace DataAccess.Migrations
                     b.Navigation("Term");
                 });
 
-            modelBuilder.Entity("Models.Guardian", b =>
+            modelBuilder.Entity("Models.People.Relationship", b =>
                 {
+                    b.HasOne("Models.Guardian", "Guardian")
+                        .WithMany()
+                        .HasForeignKey("GuardianId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Guardian");
 
                     b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Models.Rating", b =>
                 {
+                    b.HasOne("Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Student");
                 });

@@ -8,33 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Academic
+namespace Models.People
 {
-    public class PublicSchoolSchedule
+    public class Relationship
     {
         [Key]
         public int Id { get; set; }
-
-        //public Weekdays Weekday { get; set; }
-
-        public string Weekday { get; set; }
-
-        [Required]
-        [DataType(DataType.Time)]
-        [DisplayName("Start Time")]
-        public DateTime StartTime { get; set; }
-
-        [Required]
-        [DataType(DataType.Time)]
-        [DisplayName("End Time")]
-        public DateTime EndTime { get; set; }
-
-        [DisplayName("Students")]
+        [DisplayName("Relationship Type")]
+        public string RelationshipType { get; set; }
+        [DisplayName("Student ID")]
         public int StudentId { get; set; }
-
         [ValidateNever]
         [ForeignKey("StudentId")]
         public Student Student { get; set; }
+        public int GuardianId { get; set; }
+        [ValidateNever]
+        [ForeignKey("GuardianId")]
+        public Guardian Guardian { get; set; }
     }
-
 }
