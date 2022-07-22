@@ -2,6 +2,7 @@
 @model NoteTypeVM
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
     <input asp-for="NoteType.Id" hidden />
+    <input asp-for="NoteType.RoleId" hidden />
     <div class="row">
         <div class="col-10">
             <div class="border p-3 mt-4 row">
@@ -19,22 +20,21 @@
                 <div class="mb-3 col-6">
                     <label asp-for="NoteType.Type"></label>
                     <input asp-for="NoteType.Type" class="form-control" />
+                    <br/>
+                    <h4>What Roles can access these notes?</h4>
                     @{
                         foreach (var r in Model.RoleList)
                         {
                             <div class="form-check">
                                 @{
-                                    //<input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r">
-                                    //<label class="form-check-label">@r</label>
-
-                                    if (Model.NoteType.Role.Name == @r)
-                                    {
-                                        <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r" checked>
-                                        <label class="form-check-label">@r</label>
-                                    }
-                                    else
+                                    if (Model.NoteType.Role == null)
                                     {
                                         <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r">
+                                        <label class="form-check-label">@r</label>
+                                    }
+                                    else if (Model.NoteType.Role.Name == @r)
+                                    {
+                                        <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r" checked>
                                         <label class="form-check-label">@r</label>
                                     }
                                 }
@@ -42,8 +42,6 @@
                         }
                     }
                 </div>
-
-
 
                 <div class="col-12">
                     @if (Model.NoteType.Id != 0)

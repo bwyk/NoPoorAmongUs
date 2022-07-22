@@ -9,6 +9,8 @@ namespace Models.ViewModels
     {
         public NoteType NoteType { get; set; }
 
+        public IEnumerable<NoteType> NoteTypes { get; set; }
+
         [ValidateNever]
         public List<string> RoleList { get; set; }
     }

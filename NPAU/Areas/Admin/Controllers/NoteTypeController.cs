@@ -19,8 +19,9 @@ namespace NPAU.Areas.Admin.Controllers
         {
             _unitOfWork = unitOfWork;
             _roleManager = roleManager;
+            
         }
-        public IActionResult Index()
+        public ViewResult Index()
         {
             return View();
         }
@@ -50,7 +51,27 @@ namespace NPAU.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(NoteTypeVM obj)
         {
-            if (ModelState.IsValid)
+            var checkedRoles = Request.Form["roles"].ToList();
+            var roleIds = new List<string>();
+
+            foreach(var item in checkedRoles)
+            {
+                obj.NoteType.Role = _roleManager.Roles.FirstOrDefault(r => r.Name == item);
+                _unitOfWork.NoteType.Add(obj.NoteType);
+                TempData["success"] = "Note Type Created Successfully";
+            }
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+
+/*            obj.RoleList = _roleManager.Roles.Select(r => r.Name).ToList();
+
+            return View(obj);*/
+
+            //            var oldNotesRoles = _unitOfWork.NoteType.GetAll().Where(n => n.RoleId == obj.NoteType.RoleId).ToList();
+
+
+
+            /*if (ModelState.IsValid)
             {  
                 if (obj.NoteType.Id == 0)
                 {
@@ -66,7 +87,8 @@ namespace NPAU.Areas.Admin.Controllers
                 }
                 _unitOfWork.Save();
                 return RedirectToAction("Index");
-            }
+            }*/
+
             obj.RoleList = _roleManager.Roles.Select(r => r.Name).ToList();
 
             return View(obj);
