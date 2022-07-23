@@ -14,7 +14,6 @@ namespace NPAU.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly RoleManager<IdentityRole> _roleManager;
-       /* public Dictionary<string, List<string>> allData { get; set; }*/
 
         public NoteTypeController(IUnitOfWork unitOfWork, RoleManager<IdentityRole> roleManager)
         {
@@ -23,6 +22,7 @@ namespace NPAU.Areas.Admin.Controllers
         }
         public ViewResult Index()
         {
+            //This currently works to fill the html with type and list of roles.  They are strings though.
             List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
             Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
 
@@ -30,24 +30,12 @@ namespace NPAU.Areas.Admin.Controllers
             {
                 List<string> rolesToAdd = new List<string>();
                 rolesToAdd = _unitOfWork.NoteType.GetAll(u => u.Type == nt, includeProperties: "Role").Select(n => n.Role.Name).ToList();
-
-                Debug.WriteLine("*************************************");
-                Debug.WriteLine("Type: " + nt);
-                Debug.WriteLine("Roles: ");
-                foreach (var item in rolesToAdd)
-                {
-                    Debug.WriteLine(item);
-                }
-                Debug.WriteLine("*************************************");
-
                 allData.Add(nt, rolesToAdd);
             }
 
             NoteTypeVM noteTypeVM = new NoteTypeVM()
             {
                 NoteRoles = allData
-                //NoteTypes = _unitOfWork.NoteType.GetAll(includeProperties: "Role").ToList()
-
             };
             return View(noteTypeVM);
         }
@@ -82,7 +70,7 @@ namespace NPAU.Areas.Admin.Controllers
             var roleIds = new List<string>();
             List<NoteType> notetypes = new List<NoteType>();
 
-            foreach(var item in checkedRoles)
+            foreach (var item in checkedRoles)
             {
                 obj.NoteType.Role = _roleManager.Roles.FirstOrDefault(r => r.Name == item);
                 NoteType nt = new NoteType();
@@ -96,27 +84,46 @@ namespace NPAU.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult Delete(string? type)
+        {
+            List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
+            Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
+
+            foreach (var nt in noteTypes)
+            {
+                List<string> rolesToAdd = new List<string>();
+                rolesToAdd = _unitOfWork.NoteType.GetAll(u => u.Type == nt, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+                allData.Add(nt, rolesToAdd);
+            }
+
+            NoteTypeVM noteTypeVM = new NoteTypeVM()
+            {
+                NoteRoles = allData,
+                NoteType = _unitOfWork.NoteType.GetFirstOrDefault(t => t.Type == type),
+                RoleList = _roleManager.Roles.Select(r => r.Name).ToList()
+            };
+            return View(noteTypeVM);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePost(NoteTypeVM obj)
+        {
+            NoteType incomingNT = _unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Id == obj.NoteType.Id, includeProperties: "Role");
+            IEnumerable<NoteType> foundNoteTypes = _unitOfWork.NoteType.GetAll(t => t.Type == incomingNT.Type);
+
+            _unitOfWork.NoteType.RemoveRange(foundNoteTypes);
+            _unitOfWork.Save();
+            TempData["success"] = "Note Type deleted successfully";
+            return RedirectToAction("Index");
+        }
+
         #region API CALLS 
         [HttpGet]
         public IActionResult GetAll()
         {
             var noteTypeList = _unitOfWork.NoteType.GetAll(includeProperties: "Role");
             return Json(new { data = noteTypeList });
-        }
-
-        [HttpDelete]
-        public IActionResult Delete(int? id)
-        {
-            var obj = _unitOfWork.NoteType.GetFirstOrDefault(u => u.Id == id);
-            if (obj == null)
-            {
-                return Json(new { success = false, message = "Error while deleting" });
-            }
-
-            _unitOfWork.NoteType.Remove(obj);
-            _unitOfWork.Save();
-            return Json(new { success = true, message = "Note Type Deleted Successfully" });
-
         }
 
         #endregion
