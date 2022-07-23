@@ -22,6 +22,8 @@ namespace NPAU.Areas.Student.Controllers
 
         public IActionResult CourseSelect()
         {
+            //.Where(c => c.Term.IsActive == true)
+            //this query results in null... why?
             IEnumerable<Course> courseList = _unitOfWork.Course.GetAll();
             return View(courseList);
         }
