@@ -22,9 +22,40 @@
                 <th>Actions</th>
             </tr>
         </thead>
+        <tbody>
+            @{
+                foreach (var nt in Model.NoteRoles)
+                {
+                    <tr>
+                        <td width="20%">@nt.Key</td>
+                        <td width="15%">
+                            @{
+                                if (@nt.Value.Count() == 1)
+                                {
+                                    @nt.Value.ElementAt(0);
+                                }
+                                else
+                                {
+                                    <ul>
+                                        @{
+                                            foreach (var r in nt.Value)
+                                            {
+                                                <li>
+                                                    @r.ToString();
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
     </table>
 </div>
 
-@section Scripts{
+@*@section Scripts{
     <script src="~/js/noteType.js"></script>
-}
+}*@

@@ -14,17 +14,44 @@ namespace NPAU.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly RoleManager<IdentityRole> _roleManager;
+       /* public Dictionary<string, List<string>> allData { get; set; }*/
 
         public NoteTypeController(IUnitOfWork unitOfWork, RoleManager<IdentityRole> roleManager)
         {
             _unitOfWork = unitOfWork;
             _roleManager = roleManager;
-            
         }
         public ViewResult Index()
         {
-            return View();
+            List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
+            Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
+
+            foreach (var nt in noteTypes)
+            {
+                List<string> rolesToAdd = new List<string>();
+                rolesToAdd = _unitOfWork.NoteType.GetAll(u => u.Type == nt, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+
+                Debug.WriteLine("*************************************");
+                Debug.WriteLine("Type: " + nt);
+                Debug.WriteLine("Roles: ");
+                foreach (var item in rolesToAdd)
+                {
+                    Debug.WriteLine(item);
+                }
+                Debug.WriteLine("*************************************");
+
+                allData.Add(nt, rolesToAdd);
+            }
+
+            NoteTypeVM noteTypeVM = new NoteTypeVM()
+            {
+                NoteRoles = allData
+                //NoteTypes = _unitOfWork.NoteType.GetAll(includeProperties: "Role").ToList()
+
+            };
+            return View(noteTypeVM);
         }
+
 
         public IActionResult Upsert(int? id)
         {
@@ -53,45 +80,20 @@ namespace NPAU.Areas.Admin.Controllers
         {
             var checkedRoles = Request.Form["roles"].ToList();
             var roleIds = new List<string>();
+            List<NoteType> notetypes = new List<NoteType>();
 
             foreach(var item in checkedRoles)
             {
                 obj.NoteType.Role = _roleManager.Roles.FirstOrDefault(r => r.Name == item);
-                _unitOfWork.NoteType.Add(obj.NoteType);
-                TempData["success"] = "Note Type Created Successfully";
+                NoteType nt = new NoteType();
+                nt.Type = obj.NoteType.Type;
+                nt.Role = obj.NoteType.Role;
+                notetypes.Add(nt);
             }
+
+            _unitOfWork.NoteType.AddRange(notetypes);
             _unitOfWork.Save();
             return RedirectToAction("Index");
-
-/*            obj.RoleList = _roleManager.Roles.Select(r => r.Name).ToList();
-
-            return View(obj);*/
-
-            //            var oldNotesRoles = _unitOfWork.NoteType.GetAll().Where(n => n.RoleId == obj.NoteType.RoleId).ToList();
-
-
-
-            /*if (ModelState.IsValid)
-            {  
-                if (obj.NoteType.Id == 0)
-                {
-                    _unitOfWork.NoteType.Add(obj.NoteType);
-                    TempData["success"] = "Note Type Created Successfully";
-
-                }
-                else
-                {
-                    _unitOfWork.NoteType.Update(obj.NoteType);
-                    TempData["success"] = "Note Type Updated Successfully";
-
-                }
-                _unitOfWork.Save();
-                return RedirectToAction("Index");
-            }*/
-
-            obj.RoleList = _roleManager.Roles.Select(r => r.Name).ToList();
-
-            return View(obj);
         }
 
         #region API CALLS 
