@@ -29,25 +29,16 @@
                     <tr>
                         <td width="20%">@nt.Key</td>
                         <td width="15%">
-                            @{
-                                if (@nt.Value.Count() == 1)
-                                {
-                                    @nt.Value.ElementAt(0);
+                            <ul>
+                                @{
+                                    foreach (var r in nt.Value)
+                                    {
+                                        <li>
+                                            @r
+                                        </li>
+                                    }
                                 }
-                                else
-                                {
-                                    <ul>
-                                        @{
-                                            foreach (var r in nt.Value)
-                                            {
-                                                <li>
-                                                    @r.ToString();
-                                                </li>
-                                            }
-                                        }
-                                    </ul>
-                                }
-                            }
+                            </ul>
                         </td>
                     </tr>
                 }
