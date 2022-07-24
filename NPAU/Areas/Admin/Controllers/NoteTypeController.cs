@@ -107,6 +107,48 @@ namespace NPAU.Areas.Admin.Controllers
                 oldRoles.Sort();
                 checkedRoles.Sort();
 
+                List<NoteType> noteTypeUpdates = _unitOfWork.NoteType.GetAll(nt => nt.Type == oldTypeName.Type).ToList();
+                foreach (NoteType nt in noteTypeUpdates)
+                {
+                    nt.Type = obj.NoteType.Type;
+                }
+
+                _unitOfWork.NoteType.UpdateRange(noteTypeUpdates);
+                _unitOfWork.Save();
+
+                var list1 = oldRoles.Except(checkedRoles); //removed
+                var list2 = checkedRoles.Except(oldRoles); //added
+                List<NoteType> rolesToRemove = new List<NoteType>();
+                List<NoteType> rolesToAdd = new List<NoteType>();
+                foreach (string s in oldRoles.Except(checkedRoles))
+                {
+                    NoteType remove = _unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Type == obj.NoteType.Type && nt.Role.Name == s, includeProperties: "Role");
+                    rolesToRemove.Add(remove);
+                }
+                foreach (string s in checkedRoles.Except(oldRoles))
+                {
+                    NoteType add = new NoteType();
+                    add.Type = obj.NoteType.Type;
+                    add.Role = _roleManager.Roles.FirstOrDefault(r => r.Name == s);
+                    rolesToAdd.Add(add);
+                }
+
+                _unitOfWork.NoteType.AddRange(rolesToAdd);
+                _unitOfWork.NoteType.RemoveRange(rolesToRemove);
+                _unitOfWork.Save();
+
+                TempData["success"] = "Note Type updated successfully";
+                return RedirectToAction("Index");
+            }
+            /*{
+                //Update Notetype
+                //Find what the currently saved Note Type Roles are.
+                obj.RoleList = _unitOfWork.NoteType.GetAll(nt => nt.Type == obj.NoteType.Type, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+                var oldTypeName = _unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Id == obj.NoteType.Id, includeProperties: "Role");
+                List<string> oldRoles = _unitOfWork.NoteType.GetAll(nt => nt.Type == oldTypeName.Type, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+                oldRoles.Sort();
+                checkedRoles.Sort();
+
                 //Compare old checked roles to the new incoming checked roles.
                 if (oldRoles.SequenceEqual(checkedRoles))
                 {
@@ -148,7 +190,7 @@ namespace NPAU.Areas.Admin.Controllers
                     TempData["success"] = "Note Type updated successfully";
                     return RedirectToAction("Index");
                 }
-            }
+            }*/
         }
 
         [HttpGet]
