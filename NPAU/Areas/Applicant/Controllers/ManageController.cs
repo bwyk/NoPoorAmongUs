@@ -49,7 +49,21 @@ namespace NPAU.Controllers
                 return View(studentVM);
             }
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details(StudentVM obj)
+        {
+            if (ModelState.IsValid)
+            {
+                obj.Rating.StudentId = obj.Student.Id;
+                _unitOfWork.Rating.Add(obj.Rating);
+                _unitOfWork.Save();
 
+                TempData["success"] = "Ratings added successfully";
+                return RedirectToAction("Index");
+            }
+            return View(obj);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(StudentVM obj)
