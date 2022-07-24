@@ -7,36 +7,44 @@
         <div class="col-10">
             <div class="border p-3 mt-4 row">
                 <div class="col-12 pb-2">
-                    @if (Model.NoteType.Id != 0)
+
+                    @if (Model.NoteType.Id == 0)
                     {
-                        <h2 class="text-primary">Update Note Type</h2>
+                        <h2 class="text-primary">Create Note Type</h2>
                     }
                     else
                     {
-                        <h2 class="text-primary">Create Note Type</h2>
+                        <h2 class="text-primary">Update Note Type</h2>
                     }
                     <hr />
                 </div>
                 <div class="mb-3 col-6">
                     <label asp-for="NoteType.Type"></label>
                     <input asp-for="NoteType.Type" class="form-control" />
-                    <br/>
-                    <h4>What Roles can access these notes?</h4>
+                    <br />
+                    <h4>Select which roles can access this note type:</h4>
                     @{
-                        foreach (var r in Model.RoleList)
+                        foreach (var role in Model.RoleList)
                         {
                             <div class="form-check">
                                 @{
-                                    if (Model.NoteType.Role == null)
+                                    <label class="form-check-label">@role</label>
+                                    if (Model.NoteType.Id == 0)
                                     {
-                                        <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r">
-                                        <label class="form-check-label">@r</label>
+                                        <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role">
                                     }
-                                    else if (Model.NoteType.Role.Name == @r)
+                                    else
                                     {
-                                        <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r" checked>
-                                        <label class="form-check-label">@r</label>
+                                        if (Model.NoteRoles[Model.NoteType.Type].Contains(role))
+                                        {
+                                            <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role" checked>
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role">
+                                        }
                                     }
+
                                 }
                             </div>
                         }
@@ -44,17 +52,16 @@
                 </div>
 
                 <div class="col-12">
-                    @if (Model.NoteType.Id != 0)
-                    {
-                        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
-                    }
-                    else
+                    @if (Model.NoteType.Id == 0)
                     {
                         <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
                     }
-                    <a asp-controller="NoteType" asp-action="Index" class="btn btn-secondary" style="width:150px">
-                        Back to List
-                    </a>
+                    else
+                    {
+                        <button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px">Update</button>
+                    }
+
+                    <a asp-controller="NoteType" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
                 </div>
             </div>
         </div>
