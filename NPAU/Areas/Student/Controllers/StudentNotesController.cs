@@ -29,27 +29,21 @@ namespace NPAU.Controllers
             return View();
         }
 
-        public async Task<ViewResult> Upsert(int? id)
+        public async Task<IActionResult> Upsert(int? id)
         {
             //Need to check what Role I'm logged in as.
             string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
             ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID);
-            //Find out this user's Roles Name.
+            //Find out this user's Role Names.
             var userRoleNames = await _userManager.GetRolesAsync(applicationUser);
-            //Grab all the NoteTypes Role Names
-            //List<NoteType> allNoteTypes = _unitOfWork.NoteType.GetAll(includeProperties: "Role").ToList();
+            //Creat empty list we can add allowed NoteTypes to.
             List<NoteType> allowedNoteTypes = new List<NoteType>();
-
-/*            List<IdentityRole> userRoles = new List<IdentityRole>();
-
-            foreach(string roleName in userRoleNames)
-            {
-                userRoles.Add(await _roleManager.FindByNameAsync(roleName));
-            }*/
-
+            //Grab list of all current NoteType Types in db.
             List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
+            //Create emppty dictionary with notetype type as the key and the roles that can access as the values.
             Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
 
+            //Loop through all the notetype types, on each grab the roles associated with the type.  Add them to dictionary.
             foreach (var nt in noteTypes)
             {
                 List<string> rolesToAdd = new List<string>();
@@ -57,6 +51,7 @@ namespace NPAU.Controllers
                 allData.Add(nt, rolesToAdd);
             }
 
+            //Loop through dictionary and check what this User has access.  Add allowable notetype if they have access.
             foreach (KeyValuePair<string, List<string>> entry in allData)
             {
                 foreach (string noteType in entry.Value)
@@ -68,11 +63,11 @@ namespace NPAU.Controllers
                 }
             }
 
-                     
-            
+            //Create NoteType Viewmodel
             NotesVM notesVM = new()
             {
                 StudentNote = new(),
+                AppUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID),
                 Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.FullName,
@@ -87,7 +82,7 @@ namespace NPAU.Controllers
                 {
                     Text = i,
                     Value = i
-                })
+                }),
             };
 
             if (id == null || id == 0)
@@ -96,7 +91,7 @@ namespace NPAU.Controllers
             }
             else
             {
-                notesVM.StudentNote = _unitOfWork.StudentNote.GetFirstOrDefault(u => u.Id == id);
+                notesVM.StudentNote = _unitOfWork.StudentNote.GetFirstOrDefault(u => u.Id == id, "Student,NoteType,ApplicationUser");
                 return View(notesVM);
             }
         }
@@ -105,8 +100,8 @@ namespace NPAU.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(NotesVM obj)
         {
-            obj.StudentNote.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(n => n.Id == obj.StudentNote.NoteTypeId);
-            obj.StudentNote.Student = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == obj.StudentNote.StudentId);
+            string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            obj.StudentNote.ApplicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID);
 
             if (ModelState.IsValid)
             {
@@ -137,6 +132,12 @@ namespace NPAU.Controllers
                 Value = i.Id.ToString()
             });
 
+            obj.PriorityList = SD.PriorityList.Select(i => new SelectListItem
+            {
+                Text = i,
+                Value = i
+            });
+
             return View(obj);
         }
 
@@ -145,7 +146,7 @@ namespace NPAU.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var studentNoteList = _unitOfWork.StudentNote.GetAll(includeProperties: "Student,NoteType");
+            var studentNoteList = _unitOfWork.StudentNote.GetAll(includeProperties: "Student,NoteType,ApplicationUser");
             return Json(new { data = studentNoteList });
         }
 
