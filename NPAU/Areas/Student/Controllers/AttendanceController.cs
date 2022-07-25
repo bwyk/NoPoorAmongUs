@@ -46,5 +46,34 @@ namespace NPAU.Controllers
             return View(attendanceVM);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AttendanceTable(AttendanceVM obj)
+        {
+            if (ModelState.IsValid)
+            {
+                if(obj.Attendance.Id == 0)
+                {
+                    _unitOfWork.Attendance.Add(obj.Attendance);
+                }
+                else
+                {
+                    _unitOfWork.Attendance.Update(obj.Attendance);
+                }
+                _unitOfWork.Save();
+                TempData["Success"] = "Attendance has been recorded.";
+                return RedirectToAction("CourseSelect");
+            }
+            return View(obj);
+        }
+
+        #region API CALLS
+        public IActionResult GetAll()
+        {
+            var attendanceList = _unitOfWork.Attendance.GetAll();
+            return Json(new {data = attendanceList});
+        }
+        #endregion
+
     }
 }

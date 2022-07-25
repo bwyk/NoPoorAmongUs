@@ -8,7 +8,7 @@
     </div>
     <br /><br />
     <h4>Attendance for Class</h4>
-    <form method="post" asp-action="SaveAttendance" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
         <table cclass="table table-bordered table-striped" style="width:100%">
             <thead>
                 <tr>
@@ -19,6 +19,36 @@
                     <th>Excused</th>
                 </tr>
             </thead>
+            <tbody>
+                @foreach (var obj in Model.CourseEnrollmentList)
+                {
+                    <tr>
+                        <td>
+                            @obj.Student.FirstName @obj.Student.LastName
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="Attendance.Present">
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="Attendance.Absent">
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="Attendance.Late">
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="Attendance.Excused">
+                        </td>
+                    </tr>
+                }
+            </tbody>
         </table>
+        <button type="submit" class="btn btn-primary" style="width: 150px">Accept Attendance</button>
+        <a asp-controller="Attendance" asp-action="SessionSelect" class="btn btn-secondary">Back to Sessions</a>
     </form>
 </div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }
+}
