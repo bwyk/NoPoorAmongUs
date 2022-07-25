@@ -1,8 +1,12 @@
 ﻿using DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Models;
 using Models.Academic;
 using Models.ViewModels;
+using System.Diagnostics;
+using Utilities;
 
 namespace NPAU.Controllers
 {
@@ -10,40 +14,84 @@ namespace NPAU.Controllers
     public class StudentNotesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public StudentNotesController(IUnitOfWork unitOfWork)
+
+        public StudentNotesController(IUnitOfWork unitOfWork, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Upsert(int? id)
+        public async Task<IActionResult> Upsert(int? id)
         {
+            //Need to check what Role I'm logged in as.
+            string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID);
+            //Find out this user's Role Names.
+            var userRoleNames = await _userManager.GetRolesAsync(applicationUser);
+            //Creat empty list we can add allowed NoteTypes to.
+            List<NoteType> allowedNoteTypes = new List<NoteType>();
+            //Grab list of all current NoteType Types in db.
+            List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
+            //Create emppty dictionary with notetype type as the key and the roles that can access as the values.
+            Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
+
+            //Loop through all the notetype types, on each grab the roles associated with the type.  Add them to dictionary.
+            foreach (var nt in noteTypes)
+            {
+                List<string> rolesToAdd = new List<string>();
+                rolesToAdd = _unitOfWork.NoteType.GetAll(u => u.Type == nt, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+                allData.Add(nt, rolesToAdd);
+            }
+
+            //Loop through dictionary and check what this User has access.  Add allowable notetype if they have access.
+            foreach (KeyValuePair<string, List<string>> entry in allData)
+            {
+                foreach (string noteType in entry.Value)
+                {
+                    if(userRoleNames.Contains(noteType))
+                    {
+                        allowedNoteTypes.Add(_unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Type == entry.Key, includeProperties: "Role"));
+                    }
+                }
+            }
+
+            //Create NoteType Viewmodel
             NotesVM notesVM = new()
             {
                 StudentNote = new(),
-                Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
+                AppUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID),
+                Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.FullName,
                     Value = i.Id.ToString()
                 }),
-                NoteTypeList = _unitOfWork.NoteType.GetAll().Select(i => new SelectListItem
+                NoteTypeList = allowedNoteTypes.Select(i => new SelectListItem
                 {
                     Text = i.Type,
                     Value = i.Id.ToString()
-                })
+                }),
+                PriorityList = SD.PriorityList.Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i
+                }),
             };
 
             if (id == null || id == 0)
             {
                 return View(notesVM);
             }
-            else 
+            else
             {
-                notesVM.StudentNote = _unitOfWork.StudentNote.GetFirstOrDefault(u => u.Id == id);
+                notesVM.StudentNote = _unitOfWork.StudentNote.GetFirstOrDefault(u => u.Id == id, "Student,NoteType,ApplicationUser");
                 return View(notesVM);
             }
         }
@@ -52,26 +100,27 @@ namespace NPAU.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(NotesVM obj)
         {
-            obj.StudentNote.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(n => n.Id == obj.StudentNote.NoteTypeId);
-            obj.StudentNote.Student = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == obj.StudentNote.StudentId);
-            ModelState.Clear();
-            TryValidateModel(obj);
+            string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            obj.StudentNote.ApplicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID);
+
             if (ModelState.IsValid)
             {
                 if (obj.StudentNote.Id == 0)
                 {
+                    obj.StudentNote.CreatedDate = DateTime.Now;
                     _unitOfWork.StudentNote.Add(obj.StudentNote);
+                    TempData["success"] = "A new note has been created.";
                 }
                 else
                 {
                     _unitOfWork.StudentNote.Update(obj.StudentNote);
+                    TempData["success"] = "A note has been modified.";
                 }
                 _unitOfWork.Save();
-                TempData["success"] = "A new note has been created.";
                 return RedirectToAction("Index");
             }
 
-            obj.Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem  //Projection
+            obj.Students = _unitOfWork.Student.GetAll().Select(i => new SelectListItem
             {
                 Text = i.FullName,
                 Value = i.Id.ToString()
@@ -83,6 +132,12 @@ namespace NPAU.Controllers
                 Value = i.Id.ToString()
             });
 
+            obj.PriorityList = SD.PriorityList.Select(i => new SelectListItem
+            {
+                Text = i,
+                Value = i
+            });
+
             return View(obj);
         }
 
@@ -91,7 +146,7 @@ namespace NPAU.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var studentNoteList = _unitOfWork.StudentNote.GetAll(includeProperties: "Student,NoteType");
+            var studentNoteList = _unitOfWork.StudentNote.GetAll(includeProperties: "Student,NoteType,ApplicationUser");
             return Json(new { data = studentNoteList });
         }
 
