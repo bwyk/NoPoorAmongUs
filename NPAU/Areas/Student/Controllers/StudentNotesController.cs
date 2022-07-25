@@ -37,15 +37,15 @@ namespace NPAU.Controllers
             //Find out this user's Roles Name.
             var userRoleNames = await _userManager.GetRolesAsync(applicationUser);
             //Grab all the NoteTypes Role Names
-            List<NoteType> allNoteTypes = _unitOfWork.NoteType.GetAll(includeProperties: "Role").ToList();
+            //List<NoteType> allNoteTypes = _unitOfWork.NoteType.GetAll(includeProperties: "Role").ToList();
             List<NoteType> allowedNoteTypes = new List<NoteType>();
 
-            List<IdentityRole> userRoles = new List<IdentityRole>();
+/*            List<IdentityRole> userRoles = new List<IdentityRole>();
 
             foreach(string roleName in userRoleNames)
             {
                 userRoles.Add(await _roleManager.FindByNameAsync(roleName));
-            }
+            }*/
 
             List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
             Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
@@ -63,11 +63,12 @@ namespace NPAU.Controllers
                 {
                     if(userRoleNames.Contains(noteType))
                     {
-                        Debug.WriteLine("Need to Add: " + entry.Key);
                         allowedNoteTypes.Add(_unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Type == entry.Key, includeProperties: "Role"));
                     }
                 }
             }
+
+                     
             
             NotesVM notesVM = new()
             {
@@ -81,6 +82,11 @@ namespace NPAU.Controllers
                 {
                     Text = i.Type,
                     Value = i.Id.ToString()
+                }),
+                PriorityList = SD.PriorityList.Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i
                 })
             };
 

@@ -13,5 +13,8 @@ namespace Models.ViewModels
 
         [ValidateNever]
         public IEnumerable<SelectListItem> NoteTypeList { get; set; }
+
+        [ValidateNever]
+        public IEnumerable<SelectListItem> PriorityList { get; set; }
     }
 }

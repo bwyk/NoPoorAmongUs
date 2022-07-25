@@ -11,10 +11,11 @@ function loadDataTable() {
             "url": "/Student/StudentNotes/GetAll"
         },
         "columns": [
-            { "data": "createdDate", "render": DataTable.render.datetime(), "width": "10%" },
+            { "data": "createdDate", "render": DataTable.render.datetime(), "width": "15%" },
+            { "data": "priority", "width": "15%" },
             { "data": "student.firstName", "width": "15%" },
-            { "data": "student.lastName", "width": "25%" },
-            { "data": "noteType.type", "width": "25%" },
+            { "data": "student.lastName", "width": "15%" },
+            { "data": "noteType.type", "width": "15%" },
             { "data": "id",
                 "render": function (data) {
                     return `

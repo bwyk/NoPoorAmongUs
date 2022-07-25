@@ -17,6 +17,8 @@ namespace Models.Academic
 
         [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
+
+        public string Priority { get; set; }
         public int StudentId { get; set; }
         [ForeignKey("StudentId")]
         [ValidateNever]

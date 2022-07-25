@@ -15,7 +15,7 @@
                 <h2 class="text-primary">Create Note</h2>
             }
             <hr />
-        </div> 
+        </div>
         <div class="mb-3">
             <label asp-for="StudentNote.Text"></label>
             <textarea asp-for="StudentNote.Text" rows="5" class="form-control"></textarea>
@@ -36,6 +36,14 @@
             </select>
             <span asp-validation-for="StudentNote.NoteTypeId" class="text-danger"></span>
         </div>
+
+        <div class="mb-3 col-6">
+            <label asp-for="StudentNote.Priority"></label>
+            <select asp-for="StudentNote.Priority" asp-items="@Model.PriorityList" class="form-select">
+                <option disabled selected>--Select Type--</option>
+            </select>
+            <span asp-validation-for="StudentNote.Priority" class="text-danger"></span>
+        </div>
         <div class="col-12">
 
             @if (Model.StudentNote.Id != 0)
@@ -55,16 +63,16 @@
 </form>
 
 @section Scripts
-{
+    {
     @{
         <partial name="_ValidationScriptsPartial" />
     }
 
-<script>
-    tinymce.init({
-      selector: 'textarea',
-      plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
-      toolbar_mode: 'floating',
-    });
-</script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
+            toolbar_mode: 'floating',
+        });
+    </script>
 }
