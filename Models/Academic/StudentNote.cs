@@ -14,6 +14,8 @@ namespace Models.Academic
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
         public int StudentId { get; set; }
         [ForeignKey("StudentId")]
@@ -22,7 +24,7 @@ namespace Models.Academic
         public int NoteTypeId { get; set; }
         [ForeignKey("NoteTypeId")]
         [ValidateNever]
+        [Display(Name = "Note Type")]
         public NoteType NoteType { get; set; }
-        
     }
 }

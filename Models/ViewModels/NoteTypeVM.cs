@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Models.Academic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.ViewModels
 {

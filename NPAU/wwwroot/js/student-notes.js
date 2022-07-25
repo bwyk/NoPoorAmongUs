@@ -11,7 +11,7 @@ function loadDataTable() {
             "url": "/Student/StudentNotes/GetAll"
         },
         "columns": [
-            { "data": "createdDate", "width": "10%" },
+            { "data": "createdDate", "render": DataTable.render.datetime(), "width": "10%" },
             { "data": "student.firstName", "width": "15%" },
             { "data": "student.lastName", "width": "25%" },
             { "data": "noteType.type", "width": "25%" },
