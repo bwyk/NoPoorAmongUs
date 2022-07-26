@@ -20,6 +20,7 @@ namespace Models.Academic
         public int? CourseEnrollmentId { get; set; }
         [ForeignKey("CourseEnrollmentId")]
         public CourseEnrollment? CourseEnrollment { get; set; }
+        public string? Comment { get; set; }
 
     }
 }
