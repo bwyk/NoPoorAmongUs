@@ -312,7 +312,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AssessmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CourseEnrollmentId")
+                    b.Property<int?>("CourseEnrollmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("Score")
@@ -522,9 +522,6 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
-
-
                     b.ToTable("Guardians");
                 });
 
@@ -582,7 +579,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Relationships");
-
                 });
 
             modelBuilder.Entity("Models.Rating", b =>
@@ -602,6 +598,10 @@ namespace DataAccess.Migrations
                     b.Property<int>("AnnualIncome")
                         .HasColumnType("int");
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Distance")
                         .HasColumnType("int");
 
@@ -612,6 +612,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("StudentId");
 
@@ -871,9 +873,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("Models.Academic.CourseEnrollment", "CourseEnrollment")
                         .WithMany()
-                        .HasForeignKey("CourseEnrollmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseEnrollmentId");
 
                     b.Navigation("Assessment");
 
@@ -985,11 +985,19 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Rating", b =>
                 {
+                    b.HasOne("Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Student");
                 });

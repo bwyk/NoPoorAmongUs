@@ -10,6 +10,9 @@
     var rejected = "text-primary";
     var rating_incomplete = "text-primary";
     var rating_complete = "text-primary";
+    var social = "text-primary";
+    var instructor = "text-primary";
+    var admin = "text-primary";
     var all = "text-primary";
 
     switch (status)
@@ -28,6 +31,15 @@
             break;
         case "rating_completed":
             rating_complete = "active text-white";
+            break;
+        case "social":
+            social= "active text-white";
+            break;
+        case "instructor":
+            instructor = "active text-white";
+            break;
+        case "admin":
+            admin = "active text-white";
             break;
         default:
             all = "active text-white";
@@ -50,7 +62,23 @@
     <div class="d-flex justify-content-between pt-4 row-cols-2">
         <div class="p-2">
             <ul class="list-group list-group-horizontal-sm">
-                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="student">
+                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="social">
+                <li class="list-group-item @social">Social</li>
+                </a>
+                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="instructor">
+                <li class="list-group-item @instructor">Instructor</li>
+                </a>
+                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="admin">
+                <li class="list-group-item @admin">Admin</li>
+                </a>
+                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="all">
+                <li class="list-group-item @all">All</li>
+                </a>
+            </ul>
+            <hr />
+
+            <ul class="list-group list-group-horizontal-sm">
+                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="student">@*get/pass role?*@
                 <li class="list-group-item @student">Student</li>
                 </a>
                 <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="pending">
@@ -65,26 +93,28 @@
                 <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="rating_complete">
                 <li class="list-group-item @rating_complete">Rating Completed</li>
                 </a>
-                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="all">
-                <li class="list-group-item @all">All</li>
-                </a>
             </ul>
+            
         </div>
     </div>
 
     <br />
 
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Full Name</th>
-                <th>Birthday</th>
-                <th>Address</th>
-                <th>English Level</th>
-                <th>Computer Level</th>
-                <th></th>
-            </tr>
+        <thead id="table-row-container">
+      @*      <tr id="table-row-container">
+    @*            <th id="col-1"></th>
+                <th id="col-2"></th>
+                <th id="col-3"></th>
+                <th id="col-4"></th>
+                <th id="col-5"></th>
+                <th id="col-6"></th>
+                <th id="col-7"></th>
+                <th id="col-8"></th>
+                <th id="col-9"></th>
+                <th id="col-10"></th>
+                <th id="col-11"></th>
+            </tr>*@
         </thead>
     </table>
 </div>

@@ -5,6 +5,11 @@ var isEditable;
 var ratingIsEditable;
 var studentId;
 var row;
+var col1;
+var col2;
+var col3;
+var col4;
+var col5;
 $(document).ready(function () {
     $("#ratingSubmit").click(function (e) {
         ratingToggleEditable();
@@ -139,7 +144,8 @@ function addGuardian() {
         dataTableCurrent.draw();
     }
 }
-
+var test = "firstName"
+var ajaxCall = "/Applicant/Manage/GetCurrentGuardians?studentId="
 function loadDataTableCurrent() {
     dataTableCurrent = $('#tblDataCurrentGuardians').DataTable({
         "bAutoWidth": false,
@@ -147,10 +153,10 @@ function loadDataTableCurrent() {
             "emptyTable": "No Guardians Found"
         },
         "ajax": {
-            "url": "/Applicant/Manage/GetCurrentGuardians?studentId=" + studentId
+            "url": ajaxCall + studentId
         },
         "columns": [
-            { "data": "firstName", "width": "5%" },
+            { "data": test, "width": "5%" },
             { "data": "lastName", "width": "5%" },
             { "data": "relationship", "width": "5%" },
             {
