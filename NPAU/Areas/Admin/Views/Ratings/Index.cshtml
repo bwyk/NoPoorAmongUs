@@ -41,7 +41,7 @@
                         Average Score
                     </th>
                     <th>
-                        Accept Applicant
+                        Accept/Reject Applicant
                     </th>
                 </tr>
             </thead>
@@ -49,37 +49,92 @@
 
                 @for (var i = 0; i < Model.Count; i++)
                 {
+                    
                     <tr>
                         <td>
                             @Html.HiddenFor(modelItem => modelItem[i].Id)
                             @Html.HiddenFor(modelItem => modelItem[i].Name)
                             @Html.DisplayFor(modelItem => modelItem[i].Name)
                         </td>
-                        <td>
+                        @if(Model[i].AvgAge != 0)
+                        {                  
+                            <td>
                             @Html.DisplayFor(modelItem => modelItem[i].AvgAge)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Age")                           
+                            </td>
+                        }
+                        @if (Model[i].AvgAcademics != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgAcademics)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Academics")
                         </td>
+                        }
+                        @if (Model[i].AvgFinances != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgFinances)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Finances")                           
+                            </td>
+                        }
+                        @if (Model[i].AvgSupport != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgSupport)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Family Support")                        
+                            </td>
+                        }
+                        @if (Model[i].AvgDistance != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgDistance)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Distance")                        
+                            </td>
+                        }
+                        @if (Model[i].AvgScore != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgScore)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Ratings needed to Generate a score")                           
+                            </td>
+                        }
                         <td>
-                            @Html.DisplayFor(modelItem => modelItem[i].AvgAcademics)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => modelItem[i].AvgFinances)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => modelItem[i].AvgSupport)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => modelItem[i].AvgDistance)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => modelItem[i].AvgScore)
-                        </td>
-                        <td>
-                            @Html.CheckBoxFor(modelItem => modelItem[i].accepted)
-                        </td>
+                            @Html.Label("Accept")
+                            @Html.RadioButtonFor(modelItem => modelItem[i].approveApplicant, "Accept")
+                            @Html.Label("Reject")
+                            @Html.RadioButtonFor(modelItem => modelItem[i].approveApplicant, "Reject")
+                        </td>                                                                
                     </tr>
-
-
-
                 }
 
             </tbody>
