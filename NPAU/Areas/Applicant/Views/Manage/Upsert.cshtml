@@ -78,7 +78,7 @@
                         @if (Model.Student.Id != 0)
                         {
                             <label asp-for="Student.Status"></label>
-                            <input asp-for="Student.Status" readonly class="student-edit-hide  form-control" />
+                            <input readonly class="student-edit-hide form-control" value="@Model.Student.Status"/>
                             <select asp-for="Student.Status" asp-items="@Model.StudentStatusList" class="student-edit-show form-select">
                             </select>
                             <span asp-validation-for="Student.Status" class="text-danger"></span>

@@ -14,10 +14,10 @@
             <thead>
                 <tr>
 
-                    <th>Student</th>
-                    <th>Earned Points</th>
-                    <th>Maximum Points</th>
-                    <th></th>
+                    <th style="width:20%">Student</th>
+                    <th style="width:10%">Earned Points</th>
+                    <th style="width:10%">Maximum Points</th>
+                    <th style="width:60%">Comment</th>
                 </tr>
             </thead>
 
@@ -50,8 +50,13 @@
                     <td>
                         <input type="number" asp-for="Grades[i].Score" value="@(Model.StudentGrades[i].CurrentScore)" class="form-control" />
                         <span asp-validation-for="Grades[i].Score" class="text-danger"></span>
+                        
                     </td>
                     <td>@Model.StudentGrades[i].MaxScore</td>
+                    <td>
+                        <input type="text" asp-for="Grades[i].Comment" value="@(Model.StudentGrades[i].CurrentComment)" class="form-control" />
+                        <span asp-validation-for="Grades[i].Comment" class="text-danger"></span>
+                    </td>
                 </tr>
             }
             <input asp-for="@Model.StudentGrades" value="@Model.StudentGrades" hidden />

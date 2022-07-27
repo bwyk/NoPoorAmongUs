@@ -22,9 +22,8 @@ namespace NPAU.Areas.Student.Controllers
 
         public IActionResult CourseSelect()
         {
-            //.Where(c => c.Term.IsActive == true)
-            //this query results in null... why?
-            IEnumerable<Course> courseList = _unitOfWork.Course.GetAll();
+            
+            IEnumerable<Course> courseList = _unitOfWork.Course.GetAll(c => c.Term.IsActive == true);
             return View(courseList);
         }
 
@@ -66,6 +65,7 @@ namespace NPAU.Areas.Student.Controllers
             {
                 int score = 0;
                 int gradeId = -1;
+                string comment = "";
                 Models.Student student = cE.Student;
 
                 Grade oldGrade = _unitOfWork.Grade.GetFirstOrDefault(g => g.CourseEnrollmentId == cE.Id );
@@ -74,9 +74,10 @@ namespace NPAU.Areas.Student.Controllers
                 {
                     score = oldGrade.Score;
                     gradeId = oldGrade.Id;
+                    comment = oldGrade.Comment;
                 }
 
-                StudentGradeVM sg = new StudentGradeVM(student, score, maxScore, gradeId);
+                StudentGradeVM sg = new StudentGradeVM(student, score, maxScore, gradeId, comment);
                 studentGrades.Add(sg);
                 currentGrades.Append(oldGrade);
             }
@@ -104,7 +105,8 @@ namespace NPAU.Areas.Student.Controllers
                         CourseEnrollment = g.CourseEnrollment,
                         Score = g.Score,
                         Assessment = g.Assessment,
-                        AssessmentId = g.Assessment.Id
+                        AssessmentId = g.Assessment.Id,
+                        Comment = g.Comment
                     };
                     _unitOfWork.Grade.Add(newGrade);
                     _unitOfWork.Save();

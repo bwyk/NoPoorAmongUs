@@ -82,6 +82,7 @@ function toggleEditable() {
     $(".student-edit-show").each(function () {
         $(this).prop('hidden', !isEditable);
     })
+    
     isEditable = !isEditable;
 }
 
