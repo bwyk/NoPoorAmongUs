@@ -234,12 +234,24 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ClassEnrollmentId")
+                    b.Property<bool>("Absent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("CourseEnrollmentId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Excused")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Present")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Tardy")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassEnrollmentId");
+                    b.HasIndex("CourseEnrollmentId");
 
                     b.ToTable("Attendances");
                 });
@@ -829,13 +841,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Academic.Attendance", b =>
                 {
-                    b.HasOne("Models.Academic.CourseEnrollment", "ClassEnrollment")
+                    b.HasOne("Models.Academic.CourseEnrollment", "CourseEnrollment")
                         .WithMany()
-                        .HasForeignKey("ClassEnrollmentId")
+                        .HasForeignKey("CourseEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ClassEnrollment");
+                    b.Navigation("CourseEnrollment");
                 });
 
             modelBuilder.Entity("Models.Academic.CourseEnrollment", b =>

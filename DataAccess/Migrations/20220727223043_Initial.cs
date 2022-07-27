@@ -546,14 +546,18 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClassEnrollmentId = table.Column<int>(type: "int", nullable: false)
+                    Present = table.Column<bool>(type: "bit", nullable: false),
+                    Absent = table.Column<bool>(type: "bit", nullable: false),
+                    Tardy = table.Column<bool>(type: "bit", nullable: false),
+                    Excused = table.Column<bool>(type: "bit", nullable: false),
+                    CourseEnrollmentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Attendances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attendances_CourseEnrollments_ClassEnrollmentId",
-                        column: x => x.ClassEnrollmentId,
+                        name: "FK_Attendances_CourseEnrollments_CourseEnrollmentId",
+                        column: x => x.CourseEnrollmentId,
                         principalTable: "CourseEnrollments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -631,9 +635,9 @@ namespace DataAccess.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attendances_ClassEnrollmentId",
+                name: "IX_Attendances_CourseEnrollmentId",
                 table: "Attendances",
-                column: "ClassEnrollmentId");
+                column: "CourseEnrollmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CourseEnrollments_CourseSessionId",
