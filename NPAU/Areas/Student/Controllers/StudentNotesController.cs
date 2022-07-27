@@ -24,12 +24,30 @@ namespace NPAU.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            //Need to check what Role I'm logged in as.
+            string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID);
+
+            var allowedNoteTypes = await GetAllowedNoteTypes();
+
+            //Create Student Notes Viewmodel
+            NotesVM notesVM = new()
+            {
+                StudentNote = new(),
+                AppUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID),
+                NoteTypeList = allowedNoteTypes.Select(i => new SelectListItem
+                {
+                    Text = i.Type,
+                    Value = i.Id.ToString()
+                })
+            };
+
+            return View(notesVM);
         }
 
-        public async Task<IActionResult> Upsert(int? id)
+        public async Task<List<NoteType>> GetAllowedNoteTypes()
         {
             //Need to check what Role I'm logged in as.
             string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
@@ -56,14 +74,22 @@ namespace NPAU.Controllers
             {
                 foreach (string noteType in entry.Value)
                 {
-                    if(userRoleNames.Contains(noteType))
+                    if (userRoleNames.Contains(noteType))
                     {
                         allowedNoteTypes.Add(_unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Type == entry.Key, includeProperties: "Role"));
                     }
                 }
             }
+            return allowedNoteTypes;
+        }
 
-            //Create NoteType Viewmodel
+        public async Task<IActionResult> Upsert(int? id)
+        {
+            // Need to check what Role I'm logged in as and grab the allowed NoteTypes.
+            string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            List<NoteType> allowedNoteTypes = await GetAllowedNoteTypes();
+
+            //Create Student Notes Viewmodel
             NotesVM notesVM = new()
             {
                 StudentNote = new(),

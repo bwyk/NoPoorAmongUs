@@ -5,6 +5,16 @@
     <div class="row pt-4">
         <div class="col-6">
             <h2 class="text-primary">Student Notes</h2>
+            <h5 class="text-info">Current User: @Model.AppUser.FullName</h5>
+            <p>Accessible Note Types: </p>
+
+                <ul>
+                    @foreach(var obj in Model.NoteTypeList)
+                    {
+                        <li width="50%">@obj.Text</li>
+                    }
+                </ul>
+
         </div>
         <div class="col-6 text-end">
             <a asp-controller="StudentNotes" asp-action="Upsert" class="btn btn-primary">
@@ -12,7 +22,8 @@
             </a>
         </div>
     </div>
-    <br /><br />
+
+    <br />
 
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">
         <thead>
