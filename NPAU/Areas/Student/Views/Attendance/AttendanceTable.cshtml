@@ -15,12 +15,36 @@
                     <th>Student</th>
                     <th>Present</th>
                     <th>Absent</th>
-                    <th>Late</th>
+                    <th>Tardy</th>
                     <th>Excused</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var obj in Model.CourseEnrollmentList)
+                @for (int i = 0; i < Model.AttendanceList.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            <label>@Model.AttendanceList[i].CourseEnrollment.Student.FullName</label>
+                            <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Student.Id name=@Model.AttendanceList[i].CourseEnrollment.Student.Id>
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Present">
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Absent">
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Tardy">
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused">
+                        </td>
+                    </tr>
+
+                    <input asp-for=@Model.AttendanceList[i].Id hidden>
+                    <input asp-for=@Model.AttendanceList[i].CourseEnrollmentId hidden>
+                }
+               @* @foreach (var obj in Model.CourseEnrollmentList)
                 {
                     <tr>
                         <td>
@@ -33,13 +57,13 @@
                             <input type="checkbox" asp-for="Attendance.Absent">
                         </td>
                         <td>
-                            <input type="checkbox" asp-for="Attendance.Late">
+                            <input type="checkbox" asp-for="Attendance.Tardy">
                         </td>
                         <td>
                             <input type="checkbox" asp-for="Attendance.Excused">
                         </td>
                     </tr>
-                }
+                }*@
             </tbody>
         </table>
         <button type="submit" class="btn btn-primary" style="width: 150px">Accept Attendance</button>

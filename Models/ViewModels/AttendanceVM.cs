@@ -6,9 +6,10 @@ namespace Models.ViewModels
 {
     public class AttendanceVM
     {
-        public Attendance Attendance { get; set; }
+        //public Attendance Attendance { get; set; }
         [ValidateNever]
-        public List<CourseEnrollment> CourseEnrollmentList { get; set; }
+        public List<Attendance> AttendanceList { get; set; }
+        //public List<CourseEnrollment> CourseEnrollmentList { get; set; }
 
 
 
