@@ -21,16 +21,8 @@ namespace NPAU.Controllers
 
 
         public IActionResult Index()
-        {
-            //RatingsObjList = new RatingsObj();
-            List<RatingVM> ratingVMList = new List<RatingVM>();
-
-            //ratingVM = new RatingVM()
-            //{
-            //    StudentList = _unitOfWork.Student.GetAll(s => s.Status == "Pending"),
-            //    RatingList = _unitOfWork.Rating.GetAll(),
-            //   //RatingsObjs = new()
-            //};
+        {    
+            List<RatingVM> ratingVMList = new List<RatingVM>();          
 
             double counter = 0.0;
             //This number is for the amount of ratings we have can be scaled up or down.
@@ -54,12 +46,8 @@ namespace NPAU.Controllers
             //Avg Score            
             double avgScore = 0.0;
 
-
-
-
             IEnumerable<Rating> ratingsList = _unitOfWork.Rating.GetAll();
             IEnumerable<Student> studentList = _unitOfWork.Student.GetAll(s => s.Status == "Pending");
-
 
             foreach (var student in studentList)
             {
@@ -78,6 +66,7 @@ namespace NPAU.Controllers
                     }
 
                 }
+                
                 avgAge = sumAge / counter;
                 avgAcademics = sumAcademics / counter;
                 avgFinances = sumFinances / counter;
@@ -94,14 +83,12 @@ namespace NPAU.Controllers
                 obj.AvgSupport = Math.Round(avgSupport, 2);
                 obj.AvgDistance = Math.Round(avgDistance, 2);
                 obj.AvgScore = Math.Round(avgScore, 2);
-                obj.accepted = false;
 
-                ratingVMList.Add(obj);
+                ratingVMList.Add(obj);  
+                
             }
             var sortedList = ratingVMList.OrderByDescending(s => s.AvgScore).ToList();
             ratingVMList = sortedList;
-
-
 
             return View(ratingVMList);
         }
@@ -114,15 +101,22 @@ namespace NPAU.Controllers
             {
                 foreach (var item in items)
                 {
-                    if (item.accepted == true)
+                    if (item.approveApplicant == "Accept")
                     {
                         var obj = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == item.Id);
                         obj.Status = "Student";
                         _unitOfWork.Student.Update(obj);
                         _unitOfWork.Save();
                     }
+                    else if(item.approveApplicant == "Reject")
+                    {
+                        var obj = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == item.Id);
+                        obj.Status = "Rejected";
+                        _unitOfWork.Student.Update(obj);
+                        _unitOfWork.Save();
+                    }
                 }
-                TempData["success"] = "Students Accepted";
+                TempData["success"] = "Students Reviewed";
                 return RedirectToAction("Index");
             }
             return View(items);

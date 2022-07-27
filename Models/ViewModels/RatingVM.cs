@@ -22,7 +22,7 @@ namespace Models.ViewModels
         public double AvgSupport { get; set; }
         public double AvgDistance { get; set; }
         public double AvgScore { get; set; }
-        public bool accepted { get; set; }
+        public string approveApplicant { get; set; }
         //public bool rejected { get; set; }
 
     }
