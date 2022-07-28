@@ -9,6 +9,7 @@ namespace NPAU.Controllers
     [Area("Admin")]
     public class RatingsController : Controller
     {
+        private const double Zero = 0.0;
         private readonly IUnitOfWork _unitOfWork;
 
         public RatingVM ratingVM { get; set; }
@@ -51,6 +52,7 @@ namespace NPAU.Controllers
 
             foreach (var student in studentList)
             {
+                counter = 0.0;
                 RatingVM obj = new RatingVM();
                 foreach (var rating in ratingsList)
                 {
@@ -66,26 +68,39 @@ namespace NPAU.Controllers
                     }
 
                 }
-                
-                avgAge = sumAge / counter;
-                avgAcademics = sumAcademics / counter;
-                avgFinances = sumFinances / counter;
-                avgSupport = sumSupport / counter;
-                avgDistance = sumDistance / counter;
 
-                avgScore = (avgAge + avgAcademics + avgFinances + avgSupport + avgDistance) / constRatings;
+                if (counter <= 0)
+                {
+                    //Zero is a constant with 0.0 as its paramiter
+                    avgAge = Zero;
+                    avgAcademics = Zero;
+                    avgFinances = Zero;
+                    avgSupport = Zero;
+                    avgDistance = Zero;
 
-                obj.Id = student.Id;
-                obj.Name = student.FullName;
-                obj.AvgAge = Math.Round(avgAge, 2);
-                obj.AvgAcademics = Math.Round(avgAcademics, 2);
-                obj.AvgFinances = Math.Round(avgFinances, 2);
-                obj.AvgSupport = Math.Round(avgSupport, 2);
-                obj.AvgDistance = Math.Round(avgDistance, 2);
-                obj.AvgScore = Math.Round(avgScore, 2);
+                    avgScore = Zero;
+                }
+                else
+                {
+                    avgAge = sumAge / counter;
+                    avgAcademics = sumAcademics / counter;
+                    avgFinances = sumFinances / counter;
+                    avgSupport = sumSupport / counter;
+                    avgDistance = sumDistance / counter;
 
-                ratingVMList.Add(obj);  
-                
+                    avgScore = (avgAge + avgAcademics + avgFinances + avgSupport + avgDistance) / constRatings;
+                }
+              
+                 obj.Id = student.Id;
+                 obj.Name = student.FullName;
+                 obj.AvgAge = Math.Round(avgAge, 2);
+                 obj.AvgAcademics = Math.Round(avgAcademics, 2);
+                 obj.AvgFinances = Math.Round(avgFinances, 2);
+                 obj.AvgSupport = Math.Round(avgSupport, 2);
+                 obj.AvgDistance = Math.Round(avgDistance, 2);
+                 obj.AvgScore = Math.Round(avgScore, 2);
+
+                 ratingVMList.Add(obj);               
             }
             var sortedList = ratingVMList.OrderByDescending(s => s.AvgScore).ToList();
             ratingVMList = sortedList;
