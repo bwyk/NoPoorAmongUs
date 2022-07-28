@@ -234,12 +234,24 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ClassEnrollmentId")
+                    b.Property<bool>("Absent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("CourseEnrollmentId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Excused")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Present")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Tardy")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassEnrollmentId");
+                    b.HasIndex("CourseEnrollmentId");
 
                     b.ToTable("Attendances");
                 });
@@ -312,6 +324,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("AssessmentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("CourseEnrollmentId")
                         .HasColumnType("int");
 
@@ -335,11 +350,17 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("NoteTypes");
                 });
@@ -355,33 +376,17 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Friday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Monday")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SchoolId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Thursday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Tuesday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Wednesday")
-                        .HasColumnType("bit");
+                    b.Property<string>("Weekday")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SchoolId");
 
                     b.HasIndex("StudentId");
 
@@ -396,8 +401,18 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("NoteTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -407,6 +422,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("NoteTypeId");
 
@@ -824,13 +841,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Academic.Attendance", b =>
                 {
-                    b.HasOne("Models.Academic.CourseEnrollment", "ClassEnrollment")
+                    b.HasOne("Models.Academic.CourseEnrollment", "CourseEnrollment")
                         .WithMany()
-                        .HasForeignKey("ClassEnrollmentId")
+                        .HasForeignKey("CourseEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ClassEnrollment");
+                    b.Navigation("CourseEnrollment");
                 });
 
             modelBuilder.Entity("Models.Academic.CourseEnrollment", b =>
@@ -880,27 +897,34 @@ namespace DataAccess.Migrations
                     b.Navigation("CourseEnrollment");
                 });
 
-            modelBuilder.Entity("Models.Academic.PublicSchoolSchedule", b =>
+            modelBuilder.Entity("Models.Academic.NoteType", b =>
                 {
-                    b.HasOne("Models.School", "School")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
                         .WithMany()
-                        .HasForeignKey("SchoolId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Models.Academic.PublicSchoolSchedule", b =>
+                {
                     b.HasOne("Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("School");
-
                     b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Models.Academic.StudentNote", b =>
                 {
+                    b.HasOne("Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Models.Academic.NoteType", "NoteType")
                         .WithMany()
                         .HasForeignKey("NoteTypeId")
@@ -912,6 +936,8 @@ namespace DataAccess.Migrations
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("NoteType");
 
