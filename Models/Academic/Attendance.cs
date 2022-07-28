@@ -12,9 +12,13 @@ namespace Models.Academic
     {
         [Key]
         public int Id { get; set; }
-        public int ClassEnrollmentId { get; set; }
-        [ForeignKey("ClassEnrollmentId")]
-        public CourseEnrollment ClassEnrollment { get; set; }
+        public bool Present { get; set; }
+        public bool Absent { get; set; }
+        public bool Tardy { get; set; }
+        public bool Excused { get; set; }
+        public int CourseEnrollmentId { get; set; }
+        [ForeignKey("CourseEnrollmentId")]
+        public CourseEnrollment CourseEnrollment { get; set; }
         
     }
 }
