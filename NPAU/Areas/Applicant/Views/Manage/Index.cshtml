@@ -1,12 +1,26 @@
-﻿@{
+﻿@using Utilities
+@{
     ViewData["Title"] = "Applicant List";
 }
 
 @{
-
     var status = Context.Request.Query["status"];
+    if (status[0].Contains("all"))
+        status = "all";
+    else if (status[0].Contains("students") || status[0].Contains("Students"))
+        status = "student";
+    else if (status[0].Contains("pending"))
+        status = "pending";
+    else if (status[0].Contains("rejected"))
+        status = "rejected";
+    else if (status[0].Contains("rating_incomplete"))
+        status = "rating_incomplete";
+    else if (status[0].Contains("rating_completed"))
+        status = "rating_completed";
+
+
     var pending = "text-primary";
-    var student = "text-primary";
+    var students = "text-primary";
     var rejected = "text-primary";
     var rating_incomplete = "text-primary";
     var rating_complete = "text-primary";
@@ -15,7 +29,7 @@
     switch (status)
     {
         case "student":
-            student = "active text-white";
+            students = "active text-white";
             break;
         case "pending":
             pending = "active text-white";
@@ -50,41 +64,63 @@
     <div class="d-flex justify-content-between pt-4 row-cols-2">
         <div class="p-2">
             <ul class="list-group list-group-horizontal-sm">
-                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="student">
-                <li class="list-group-item @student">Student</li>
-                </a>
-                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="pending">
-                <li class="list-group-item @pending">Pending</li>
-                </a>
-                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="rejected">
-                <li class="list-group-item @rejected">Rejected</li>
-                </a>
-                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="rating_incomplete">
-                <li class="list-group-item @rating_incomplete">Rating Pending</li>
-                </a>
-                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="rating_complete">
-                <li class="list-group-item @rating_complete">Rating Completed</li>
-                </a>
-                <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="all">
-                <li class="list-group-item @all">All</li>
-                </a>
+                @if (User.IsInRole(SD.Role_Instructor) || User.IsInRole(SD.Role_Admin) )
+                {
+                    <a style="text-decoration:none" id="all" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_allStudents")">
+                    <li class="list-group-item @all">All Students</li>
+                    </a>
+                    <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_yourStudents")">
+                    <li class="list-group-item @students">Your Students</li>
+                    </a>
+                }
+                @if (User.IsInRole(SD.Role_Social) || User.IsInRole(SD.Role_Admin))
+                {
+                    <a style="text-decoration:none" id="all" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_all")">
+                        <li class="list-group-item @all">All</li>
+                    </a>
+                    <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_students")">
+                        <li class="list-group-item @students">Students</li>
+                    </a>
+                    <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_pending")">
+                        <li class="list-group-item @pending">Pending</li>
+                    </a>
+                    <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_rejected")">
+                        <li class="list-group-item @rejected">Rejected</li>
+                    </a>
+                    
+                }
+                @if (User.IsInRole(SD.Role_Rater) || User.IsInRole(SD.Role_Admin))
+                {
+                    <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Rater+"rating_incomplete")">
+                        <li class="list-group-item @rating_incomplete">Rating Pending</li>
+                    </a>
+                    <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Rater+"rating_completed")">
+                        <li class="list-group-item @rating_complete">Rating Completed</li>
+                    </a>
+                }
+
             </ul>
+            
         </div>
     </div>
 
     <br />
 
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Full Name</th>
-                <th>Birthday</th>
-                <th>Address</th>
-                <th>English Level</th>
-                <th>Computer Level</th>
-                <th></th>
-            </tr>
+        <thead id="table-row-container">
+      @*      <tr id="table-row-container">
+    @*            <th id="col-1"></th>
+                <th id="col-2"></th>
+                <th id="col-3"></th>
+                <th id="col-4"></th>
+                <th id="col-5"></th>
+                <th id="col-6"></th>
+                <th id="col-7"></th>
+                <th id="col-8"></th>
+                <th id="col-9"></th>
+                <th id="col-10"></th>
+                <th id="col-11"></th>
+            </tr>*@
         </thead>
     </table>
 </div>

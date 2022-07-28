@@ -8,6 +8,7 @@ using Models.People;
 using System.Text.Json;
 using Newtonsoft.Json;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NPAU.Controllers
 {
@@ -159,8 +160,6 @@ namespace NPAU.Controllers
             return View(obj);
         }
 
-
-        //var guardianIds = relationships.Select(relationships => relationships.GuardianId).Contains(global.Id);
         private IEnumerable<Guardian> GetCurrentGuardians(int studentId)
         {
             // All relationships involving the student
@@ -202,11 +201,9 @@ namespace NPAU.Controllers
         }
 
         [HttpPost, ActionName("SaveRatings")]
-
         public IActionResult SaveRatings(Rating rating, int? studentId)
         {
             string result;
-            //rating.ApplicationUser = (ApplicationUser)User.Identity;
             rating.ApplicationUserId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
             if (rating.Id == 0)
             {
@@ -231,8 +228,6 @@ namespace NPAU.Controllers
             return Json(new { success = true});
         }
         
-
-
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
@@ -247,7 +242,6 @@ namespace NPAU.Controllers
             TempData["success"] = "Student deleted successfully";
             return RedirectToAction("Index");
         }
-
 
         [HttpGet]
         public IActionResult Delete(int? id)
@@ -268,36 +262,91 @@ namespace NPAU.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Instructor + "," + SD.Role_Social + "," + SD.Role_Rater)]
         public IActionResult GetAll(string status)
         {
+            string userId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            string[] args = new string[0];
+            string role = "";
+            string filter1;
+            if (status != null)
+            {
+                args = status.Split('_');
+                role = args[0];
+                
+            }
+            
             IEnumerable<Rating> studentRatings;
             IEnumerable<Student> students;
             students = _unitOfWork.Student.GetAll();
-            // TODO check for rater role before allowing
-            string raterId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
-            studentRatings = _unitOfWork.Rating.GetAll(r => r.ApplicationUserId == raterId);
-            switch (status)
+            switch (role)
             {
-                case "pending":
-                    students = students.Where(s => s.Status == SD.StudentStatusPending);
+                case SD.Role_Instructor:
+                    if (User.IsInRole(SD.Role_Instructor) || User.IsInRole(SD.Role_Admin))
+                    {
+                        filter1 = args[1];
+                    switch (filter1)
+                    {
+                        case "all":
+                            students = _unitOfWork.Student.GetAll(s => s.Status == SD.StudentStatusAccepted);
+                            break;
+                        case "your":
+                            //students.Where(s => !studentRatings.Select(rating => rating.StudentId).Contains(s.Id));
+                            var course = _unitOfWork.Course.GetAll(c => c.InstructorId == 3);// TODO change to user id
+
+                            var sessions = _unitOfWork.CourseSession.GetAll(s => course.Select(c => c.Id).Contains(s.CourseId));
+                            var enrollments = _unitOfWork.CourseEnrollment.GetAll(e => sessions.Select(s => s.Id).Contains(e.CourseSessionId));
+                            students = _unitOfWork.Student.GetAll(s => enrollments.Select(e => e.StudentId).Contains(s.Id));
+
+                            break;
+                    }
+                    
+                    return Json(new { data = students });
+                    }
                     break;
-                case "student":
-                    students = students.Where(s => s.Status == SD.StudentStatusAccepted);
+                case SD.Role_Social:
+                    if (User.IsInRole(SD.Role_Social) || User.IsInRole(SD.Role_Admin))
+                    {
+                        filter1 = args[1];
+                    switch (filter1)
+                    {
+                        case "all":
+                            students = _unitOfWork.Student.GetAll();
+                            break;
+                        case "pending":
+                            students = students.Where(s => s.Status == SD.StudentStatusPending);
+                            break;
+                        case "students":
+                            students = students.Where(s => s.Status == SD.StudentStatusAccepted);
+                            break;
+                        case "rejected":
+                            students = students.Where(s => s.Status == SD.StudentStatusRejected);
+                            break;
+                    }
+                    return Json(new { data = students });
+                    }
                     break;
-                case "rejected":
-                    students = students.Where(s => s.Status == SD.StudentStatusRejected);
-                    break;
-                case "rating_incomplete":
-                    students = students.Where(s => !studentRatings.Select(rating => rating.StudentId).Contains(s.Id));
-                    break;
-                case "rating_complete":
-                    students = students.Where(s => studentRatings.Select(rating => rating.StudentId).Contains(s.Id));
-                    break;
-                default:
+                case SD.Role_Rater:
+                    if (User.IsInRole(SD.Role_Rater) || User.IsInRole(SD.Role_Admin))
+                    {
+                        string raterId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+                        studentRatings = _unitOfWork.Rating.GetAll(r => r.ApplicationUserId == raterId);
+                        filter1 = args[2];
+                        switch (filter1)
+                        {
+                            case "incomplete":
+                                students = students.Where(s => !studentRatings.Select(rating => rating.StudentId).Contains(s.Id));
+                                break;
+                            case "complete":
+                                students = students.Where(s => studentRatings.Select(rating => rating.StudentId).Contains(s.Id));
+                                break;
+                        }
+                        return Json(new { data = students });
+                    }
                     break;
             }
 
-            return Json(new { data = students });
+            return Json(new { data = "" });
         }
         [HttpGet]
         public IActionResult GetPotentialGuardians(string status, int studentId)
