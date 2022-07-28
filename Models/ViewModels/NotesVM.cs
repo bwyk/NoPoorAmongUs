@@ -9,9 +9,15 @@ namespace Models.ViewModels
         public StudentNote StudentNote { get; set; }
 
         [ValidateNever]
+        public ApplicationUser AppUser { get; set; }
+
+        [ValidateNever]
         public IEnumerable<SelectListItem> Students { get; set; }
 
         [ValidateNever]
         public IEnumerable<SelectListItem> NoteTypeList { get; set; }
+
+        [ValidateNever]
+        public IEnumerable<SelectListItem> PriorityList { get; set; }
     }
 }

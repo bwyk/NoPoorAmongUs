@@ -87,6 +87,7 @@ function toggleEditable() {
     $(".student-edit-show").each(function () {
         $(this).prop('hidden', !isEditable);
     })
+    
     isEditable = !isEditable;
 }
 
@@ -126,15 +127,40 @@ function ratingToggleEditable() {
 //        dataTableCurrent.draw();
 //    }
 //}
-
+function resetForm(id) {
+    $('#' + id).val(function () {
+        return this.defaultValue;
+    });
+}
+//TODO validation only works the first time
 function addGuardian() {
+    
     var firstName = document.getElementById("guardian-first-name").value;
     var lastName = document.getElementById("guardian-last-name").value;
-    if (firstName && lastName) {
-        document.getElementById("guardian-first-name").value = "";
-        document.getElementById("guardian-last-name").value = "";
-        var relationship = document.getElementById("guardian-relationship").value;
-        document.getElementById("guardian-relationship").selectedIndex = 0;
+    var relationship = $("#guardian-relationship").val();
+
+    if (!firstName) {
+        $("#first-guardian-error").show()
+    }
+    if (!lastName) {
+        $("#last-guardian-error").show()
+    }
+    if (!relationship) {
+        $("#rel-guardian-error").show()
+
+    }
+
+    if (firstName && lastName && relationship) {
+        $("#form-guardian")[0].reset();
+        $("#form-guardian").prop("isvalid", true)
+        //var validator = $("#form-guardian").validate();
+        //validator.resetForm();
+        //$("#form-guardian").validate().css("display", "none");
+        $(".guardian-error").each(function () {
+            //$(this).prop('hidden', true);
+            $(this).hide();
+        })
+        //ValidatorUpdateDisplay(validator);
         dataTableCurrent.row.add({
             "id": -1,
             "firstName": firstName,
@@ -142,6 +168,8 @@ function addGuardian() {
             "relationship": relationship
         });
         dataTableCurrent.draw();
+    } else {
+
     }
 }
 var test = "firstName"
@@ -231,10 +259,10 @@ $('#save').click(function () {                              // If saved process 
 });
 
 
-$('#distance-slider').mdbRange({
-    single: {
-        active: true,
-        counting: true,
-        countingTarget: '#distance'
-    }
-});
+//$('#distance-slider').mdbRange({
+//    single: {
+//        active: true,
+//        counting: true,
+//        countingTarget: '#distance'
+//    }
+//});

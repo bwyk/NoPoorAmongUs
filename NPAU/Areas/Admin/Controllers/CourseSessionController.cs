@@ -68,7 +68,7 @@ public class CourseSessionController : Controller
         if (ModelState.IsValid)
         {
             _unitOfWork.CourseSession.Update(obj);
-            _unitOfWork.Save();
+            _unitOfWork.Save(); 
             TempData["success"] = "Course Session updated successfully!";
             return RedirectToAction("Index");
         }

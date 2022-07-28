@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DataAccess.Repository.IRepository;
+﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using System.Dynamic;
+using System.Collections.Generic;
 using Models.ViewModels;
-using System.Diagnostics;
-using System.Data;
 
 namespace NPAU.Controllers
 {
@@ -14,25 +11,26 @@ namespace NPAU.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
 
+        public RatingVM ratingVM { get; set; }
+
+
         public RatingsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
 
-        public ViewResult Index()
+        public IActionResult Index()
         {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Age", typeof(double));
-            dt.Columns.Add("Academics", typeof(double));
-            dt.Columns.Add("Finances", typeof(double));
-            dt.Columns.Add("Support", typeof(double));
-            dt.Columns.Add("Distance", typeof(double));
-            dt.Columns.Add("Average", typeof(double));
+            //RatingsObjList = new RatingsObj();
+            List<RatingVM> ratingVMList = new List<RatingVM>();
 
-            IEnumerable<Rating> Ratings = _unitOfWork.Rating.GetAll();
-            IEnumerable<Student> Students = _unitOfWork.Student.GetAll();
+            //ratingVM = new RatingVM()
+            //{
+            //    StudentList = _unitOfWork.Student.GetAll(s => s.Status == "Pending"),
+            //    RatingList = _unitOfWork.Rating.GetAll(),
+            //   //RatingsObjs = new()
+            //};
 
             double counter = 0.0;
             //This number is for the amount of ratings we have can be scaled up or down.
@@ -43,7 +41,7 @@ namespace NPAU.Controllers
             double avgAge = 0.0;
             //Academics
             double sumAcademics = 0.0;
-            double avgAcdemics = 0.0;
+            double avgAcademics = 0.0;
             //Finances
             double sumFinances = 0.0;
             double avgFinances = 0.0;
@@ -56,10 +54,17 @@ namespace NPAU.Controllers
             //Avg Score            
             double avgScore = 0.0;
 
-            foreach (var student in Students)
+
+
+
+            IEnumerable<Rating> ratingsList = _unitOfWork.Rating.GetAll();
+            IEnumerable<Student> studentList = _unitOfWork.Student.GetAll(s => s.Status == "Pending");
+
+
+            foreach (var student in studentList)
             {
-                DataRow row = dt.NewRow();
-                foreach (var rating in Ratings)
+                RatingVM obj = new RatingVM();
+                foreach (var rating in ratingsList)
                 {
                     if (rating.StudentId == student.Id)
                     {
@@ -69,34 +74,60 @@ namespace NPAU.Controllers
                         sumFinances += rating.AnnualIncome;
                         sumSupport += rating.FamilySupport;
                         sumDistance += rating.Distance;
+
                     }
+
                 }
                 avgAge = sumAge / counter;
-                avgAcdemics = sumAcademics / counter;
+                avgAcademics = sumAcademics / counter;
                 avgFinances = sumFinances / counter;
                 avgSupport = sumSupport / counter;
                 avgDistance = sumDistance / counter;
 
-                avgScore = (avgAge + avgAcdemics + avgFinances + avgSupport + avgDistance) / constRatings;
+                avgScore = (avgAge + avgAcademics + avgFinances + avgSupport + avgDistance) / constRatings;
 
-                row["Name"] = student.FullName;
-                row["Age"] = avgAge;
-                row["Academics"] = avgAcdemics;
-                row["Finances"] = avgFinances;
-                row["Support"] = avgSupport;
-                row["Distance"] = avgDistance;
-                row["Average"] = avgScore;
+                obj.Id = student.Id;
+                obj.Name = student.FullName;
+                obj.AvgAge = Math.Round(avgAge, 2);
+                obj.AvgAcademics = Math.Round(avgAcademics, 2);
+                obj.AvgFinances = Math.Round(avgFinances, 2);
+                obj.AvgSupport = Math.Round(avgSupport, 2);
+                obj.AvgDistance = Math.Round(avgDistance, 2);
+                obj.AvgScore = Math.Round(avgScore, 2);
+                obj.accepted = false;
 
-                dt.Rows.Add(row);
+                ratingVMList.Add(obj);
             }
-            DataView dv = dt.DefaultView;
-            dv.Sort = "Average DESC";
-            dt = dv.ToTable();
+            var sortedList = ratingVMList.OrderByDescending(s => s.AvgScore).ToList();
+            ratingVMList = sortedList;
 
 
 
-            return View(dt);
+            return View(ratingVMList);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Index(List<RatingVM> items)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var item in items)
+                {
+                    if (item.accepted == true)
+                    {
+                        var obj = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == item.Id);
+                        obj.Status = "Student";
+                        _unitOfWork.Student.Update(obj);
+                        _unitOfWork.Save();
+                    }
+                }
+                TempData["success"] = "Students Accepted";
+                return RedirectToAction("Index");
+            }
+            return View(items);
+        }
+
 
     }
 }
