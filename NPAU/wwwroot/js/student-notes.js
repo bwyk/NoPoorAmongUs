@@ -8,7 +8,7 @@ $(document).ready(function () {
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Student/StudentNotes/GetAll"
+            "url": "/Student/StudentNotes/GetAllByRole"
         },
         "columns": [
             { "data": "createdDate", "render": DataTable.render.datetime(), "width": "20%" },
