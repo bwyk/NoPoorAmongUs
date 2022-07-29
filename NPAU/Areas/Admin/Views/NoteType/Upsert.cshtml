@@ -30,18 +30,14 @@
                             <div class="form-check">
                                 @{
                                     <label class="form-check-label">@role</label>
-                                    if (Model.NoteType.Id == 0)
+                                    if (@role == SD.Role_Admin)
                                     {
-                                        if(@role == SD.Role_Admin)
-                                        {
-                                            <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role" checked disabled>
-                                            <input class="form-check-input" name="roles" type="hidden" id="@role" value="@role" checked>
-                                        }
-                                        else
-                                        {
-                                            <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role">
-                                        }
-                                        
+                                        <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role" checked disabled>
+                                        <input class="form-check-input" name="roles" type="hidden" id="@role" value="@role" checked>
+                                    }
+                                    else if (Model.NoteType.Id == 0)
+                                    {
+                                        <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role">
                                     }
                                     else
                                     {

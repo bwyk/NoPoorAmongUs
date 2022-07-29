@@ -32,6 +32,11 @@ namespace NPAU.Areas.Admin.Controllers
                 allData.Add(nt, rolesToAdd);
             }
 
+            foreach (KeyValuePair<string, List<string>> entry in allData)
+            {
+                entry.Value.Sort();
+            }
+
             NoteTypeVM noteTypeVM = new NoteTypeVM()
             {
                 NoteRoles = allData

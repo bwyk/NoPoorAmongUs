@@ -80,7 +80,8 @@ namespace NPAU.Controllers
                     }
                 }
             }
-            return allowedNoteTypes;
+            allowedNoteTypes.Sort((p, q) => p.Type.CompareTo(q.Type));
+            return allowedNoteTypes.Distinct().ToList();
         }
 
         public async Task<IActionResult> Upsert(int? id)
