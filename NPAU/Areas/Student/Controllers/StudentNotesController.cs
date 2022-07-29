@@ -178,12 +178,26 @@ namespace NPAU.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllByRole()
+        public async Task<IActionResult> GetAllForUser()
         {
             List<NoteType> allowedNoteTypes = await GetAllowedNoteTypes();
             List<StudentNote> studentNoteList = new List<StudentNote>();
 
             foreach(var notetype in allowedNoteTypes)
+            {
+                var results = _unitOfWork.StudentNote.GetAll(s => s.NoteType.Type == notetype.Type, includeProperties: "Student,NoteType,ApplicationUser");
+                studentNoteList.AddRange(results);
+            }
+            return Json(new { data = studentNoteList });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudents()
+        {
+            List<NoteType> allowedNoteTypes = await GetAllowedNoteTypes();
+            List<StudentNote> studentNoteList = new List<StudentNote>();
+
+            foreach (var notetype in allowedNoteTypes)
             {
                 var results = _unitOfWork.StudentNote.GetAll(s => s.NoteType.Type == notetype.Type, includeProperties: "Student,NoteType,ApplicationUser");
                 studentNoteList.AddRange(results);

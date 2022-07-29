@@ -1,20 +1,45 @@
 ﻿@{
     ViewData["Title"] = "Student Notes";
 }
+
+@{
+    var filter = Context.Request.Query["filter"];
+    var student = "text-primary";
+    var author = "text-primary";
+    //var inprocess = "text-primary";
+    //var completed = "text-primary";
+    //var approved = "text-primary";
+    var all = "text-primary";
+
+    switch (filter)
+    {
+        case "All":
+            all = "active text-white";
+            break;
+        case "StudentList":
+            student = "active text-white";
+            break;
+        case "author":
+            student = "active text-white";
+            break;
+        default:
+            all = "active text-white";
+            break;
+    }
+}
+
 <div class="container">
     <div class="row pt-4">
         <div class="col-6">
             <h2 class="text-primary">Student Notes</h2>
             <h5 class="text-info">Current User: @Model.AppUser.FullName (@Model.AppUser.UserName)</h5>
             <p>Accessible Note Types: </p>
-
-                <ul>
-                    @foreach(var obj in Model.NoteTypeList)
-                    {
-                        <li width="50%">@obj.Text</li>
-                    }
-                </ul>
-
+            <ul>
+                @foreach (var obj in Model.NoteTypeList)
+                {
+                    <li width="50%">@obj.Text</li>
+                }
+            </ul>
         </div>
         <div class="col-6 text-end">
             <a asp-controller="StudentNotes" asp-action="Upsert" class="btn btn-primary">
@@ -23,11 +48,27 @@
         </div>
     </div>
 
-    <br />
+    <div class="p-2">
+        <ul class="list-group list-group-horizontal-sm">
+
+            <a style="text-decoration:none;" asp-controller="StudentNotes" asp-action="Index"
+               asp-route-filter="GetAllForUser">
+            <li class="list-group-item @all">All</li>
+            </a>
+            <a style="text-decoration:none;" asp-controller="StudentNotes" asp-action="Index"
+               asp-route-filter="StudentList">
+            <li class="list-group-item @student">Student</li>
+            </a>
+            <a style="text-decoration:none;" asp-controller="StudentNotes" asp-action="Index"
+               asp-route-filter="GetAllByAuthor">
+            <li class="list-group-item @author">Author</li>
+            </a>
+        </ul>
+    </div>
 
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">
         <thead>
-            <tr>
+@*            <tr>
                 <th>Date Created</th>
                 <th>Priority Level</th>
                 <th>Author</th>
@@ -35,7 +76,7 @@
                 <th>Last Name</th>
                 <th>Note Type</th>
                 <th>Actions</th>
-            </tr>
+            </tr>*@
         </thead>
     </table>
 </div>

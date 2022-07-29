@@ -1,25 +1,49 @@
 ﻿var dataTable;
 
-$(document).ready(function () {
+/*$(document).ready(function () {
     loadDataTable();
+});*/
+
+$(document).ready(function () {
+    var url = window.location.search;
+
+    console.log("what is this value?");
+    console.log(url);
+
+    switch (true) {
+        case url.includes("GetAllForUser"):
+            loadDataTable("GetAllForUser");
+            break;
+        case (url.includes("StudentList")):
+            loadDataTable("StudentList");
+            break;
+        default:
+            loadDataTable("GetAllForUser");
+    }
 });
 
 
-function loadDataTable() {
-    dataTable = $('#tblData').DataTable({
-        "ajax": {
-            "url": "/Student/StudentNotes/GetAllByRole"
-        },
-        "columns": [
-            { "data": "createdDate", "render": DataTable.render.datetime(), "width": "20%" },
-            { "data": "priority", "width": "10%" },
-            { "data": "applicationUser.fullName", "width": "15%" },
-            { "data": "student.firstName", "width": "15%" },
-            { "data": "student.lastName", "width": "15%" },
-            { "data": "noteType.type", "width": "15%" },
-            { "data": "id",
-                "render": function (data) {
-                    return `
+function loadDataTable(table) {
+
+    switch (table) {
+        case "GetAllForUser":
+
+            dataTable = $('#tblData').DataTable({
+                "ajax": {
+                    "url": "/Student/StudentNotes/GetAllForUser"
+                },
+                "columns": [
+                    { title: 'Date Created', "data": "createdDate", "render": DataTable.render.datetime(), "width": "20%" },
+                    { title: 'Priority Level', "data": "priority", "width": "10%" },
+                    { title: 'Author', "data": "applicationUser.fullName", "width": "15%" },
+                    { title: 'First Name', "data": "student.firstName", "width": "15%" },
+                    { title: 'Last Name', "data": "student.lastName", "width": "15%" },
+                    { title: 'Note Type', "data": "noteType.type", "width": "15%" },
+                    {
+                        title: 'Actions', 
+                        "data": "id",
+                        "render": function (data) {
+                            return `
                     <div class= text-center>
                         <div class="w-100 btn-group" role="group">
                         <a onClick=viewNoteText('/Student/StudentNotes/GetNoteText/${data}')
@@ -31,11 +55,40 @@ function loadDataTable() {
                         </div>
                     </div>
                     `
-                },
-                "width": "15%"
-            }
-        ]
-    });
+                        },
+                        "width": "15%"
+                    }
+                ]
+            });
+            break;
+        case "StudentList":
+            dataTable = $('#tblData').DataTable(
+                {
+                    "ajax": {
+                        "url": "/Student/StudentNotes/GetAllForUser"
+                    },
+                    "columns": [
+                        { title: 'First Name', "data": "student.firstName", "width": "20%" },
+                        { title: 'Last Name', "data": "student.lastName", "width": "20%" },
+                        {
+                            title: 'Actions',
+                            "data": "id",
+                            "render": function (data) {
+                                return `
+                    <div class= text-center>
+                        <div class="w-100 btn-group" role="group">
+                        <a onClick=viewNoteText('/Student/StudentNotes/GetNoteText/${data}')/*TODO: Change this to grab all notes by this student passing in their ID.*/
+                        class="btn btn-secondary mx-2"> <i class="bi bi-binoculars-fill"></i>View All Notes</a>
+                        </div>
+                    </div>
+                    `
+                            },
+                            "width": "15%"
+                        }
+                    ]
+                });
+            break;
+    }
 }
 
 function viewNoteText(url) {
@@ -55,8 +108,7 @@ function viewNoteText(url) {
             confirmButtonText: 'Close',
             denyButtonText: 'Update Note',
         }).then((result) => {
-            if (result.isDenied)
-            {
+            if (result.isDenied) {
                 window.location.href = '/Student/StudentNotes/Upsert?id=' + id;
             }
         })
