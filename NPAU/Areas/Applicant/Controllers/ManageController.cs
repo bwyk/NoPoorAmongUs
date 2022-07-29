@@ -9,6 +9,7 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace NPAU.Controllers
 {
@@ -16,12 +17,14 @@ namespace NPAU.Controllers
     public class ManageController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<IdentityUser> _userManager;
 
         [BindProperty]
         public StudentVM StudentVM { get; set; } = null!;
-        public ManageController(IUnitOfWork unitOfWork)
+        public ManageController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -65,9 +68,12 @@ namespace NPAU.Controllers
             }
             return View(obj);
         }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(StudentVM obj)
+        public async Task<IActionResult> UpsertAsync(StudentVM obj)
         {
             if (ModelState.IsValid)
             {
@@ -292,7 +298,7 @@ namespace NPAU.Controllers
                             break;
                         case "your":
                             //students.Where(s => !studentRatings.Select(rating => rating.StudentId).Contains(s.Id));
-                            var course = _unitOfWork.Course.GetAll(c => c.InstructorId == 3);// TODO change to user id
+                            var course = _unitOfWork.Course.GetAll(c => c.InstructorId == userId);// TODO change to user id
 
                             var sessions = _unitOfWork.CourseSession.GetAll(s => course.Select(c => c.Id).Contains(s.CourseId));
                             var enrollments = _unitOfWork.CourseEnrollment.GetAll(e => sessions.Select(s => s.Id).Contains(e.CourseSessionId));
