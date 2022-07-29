@@ -117,27 +117,25 @@ namespace NPAU.Controllers
         public IActionResult ViewAttendance(int sessionId)
         {
             CourseSession targetSession = _unitOfWork.CourseSession.GetFirstOrDefault(cS => cS.Id == sessionId);
-            CourseEnrollment cEList = _unitOfWork.CourseEnrollment.GetFirstOrDefault((cE => cE.CourseSession.CourseId == targetSession.CourseId), includeProperties: "Student");
+            List<CourseEnrollment> cEList = _unitOfWork.CourseEnrollment.GetAll((cE => cE.CourseSession.CourseId == targetSession.CourseId), includeProperties: "Student").ToList();
 
             //Blank list so we can add an Attendance for each enrolled student.
-            IEnumerable<Attendance> attendance = _unitOfWork.Attendance.GetAll(a => a.Id == cEList.Id, includeProperties: "CourseEnrollment");
+            List<Attendance> attendance = new List<Attendance>();
 
             //Loop through the number of students that are enrolled for this SessionID.
             //For each enrolled student, create a new Attendance and update their CourseEnrollmentId so we know who they are.
             //Add it to List of Attendance objects which we can set our viewmodel with.
-            //for (int i = 0; i < cEList.Count(); i++)
-            //{
-            //    Attendance newAttendance = new Attendance();
-            //    newAttendance.CourseEnrollmentId = cEList[i].Id;
-            //    newAttendance.CourseEnrollment = _unitOfWork.CourseEnrollment.GetFirstOrDefault(ce => ce.Id == cEList[i].Id, includeProperties: "CourseSession,Student");
-            //    attendance.Add(newAttendance);
-            //}
+            for (int i = 0; i < cEList.Count(); i++)
+            {
+                Attendance newAttendance = _unitOfWork.Attendance.GetFirstOrDefault(nA => nA.CourseEnrollmentId == cEList[i].Id);
+                attendance.Add(newAttendance);
+            }
 
             //May not need an CourseEnrollment list now as we have a tie in with AttendanceList holding an ID for it.
             attendanceVM = new AttendanceVM()
             {
                 //CourseEnrollmentList = cEList,  //Might be able to remove.
-                AttendanceList = attendance.ToList()
+                AttendanceList = attendance
             };
 
             return View(attendanceVM);

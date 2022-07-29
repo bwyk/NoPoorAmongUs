@@ -1,4 +1,7 @@
-﻿@using Models.ViewModels
+﻿@{
+    ViewData["Title"] = "Attendance";
+}
+@using Models.ViewModels
 @model AttendanceVM
 <div class="container p-3">
     <div class="row pt-4">
@@ -13,9 +16,7 @@
             <thead>
                 <tr>
                     <th>Student</th>
-                    <th>Present</th>
-                    <th>Absent</th>
-                    <th>Tardy</th>
+                    <th>Attendance</th>
                     <th>Excused</th>
                 </tr>
             </thead>
@@ -28,13 +29,11 @@
                             <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Student.Id name=@Model.AttendanceList[i].CourseEnrollment.Student.Id>
                         </td>
                         <td>
-                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Present">
-                        </td>
-                        <td>
-                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Absent">
-                        </td>
-                        <td>
-                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Tardy">
+                            <div>
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].Present, "Present")@Html.Label("Present")
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].Absent, "Absent")@Html.Label("Absent")
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].Tardy, "Tardy")@Html.Label("Tardy")
+                            </div>
                         </td>
                         <td>
                             <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused">
@@ -44,26 +43,6 @@
                     <input asp-for=@Model.AttendanceList[i].Id hidden>
                     <input asp-for=@Model.AttendanceList[i].CourseEnrollmentId hidden>
                 }
-               @* @foreach (var obj in Model.CourseEnrollmentList)
-                {
-                    <tr>
-                        <td>
-                            @obj.Student.FirstName @obj.Student.LastName
-                        </td>
-                        <td>
-                            <input type="checkbox" asp-for="Attendance.Present">
-                        </td>
-                        <td>
-                            <input type="checkbox" asp-for="Attendance.Absent">
-                        </td>
-                        <td>
-                            <input type="checkbox" asp-for="Attendance.Tardy">
-                        </td>
-                        <td>
-                            <input type="checkbox" asp-for="Attendance.Excused">
-                        </td>
-                    </tr>
-                }*@
             </tbody>
         </table>
         <button type="submit" class="btn btn-primary" style="width: 150px">Accept Attendance</button>
@@ -73,6 +52,6 @@
 
 @section Scripts {
     @{
-        <partial name="_ValidationScriptsPartial"/>
+        <partial name="_ValidationScriptsPartial" />
     }
-}
+    }
