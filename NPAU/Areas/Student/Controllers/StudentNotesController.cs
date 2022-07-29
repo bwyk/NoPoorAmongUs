@@ -205,6 +205,21 @@ namespace NPAU.Controllers
             return Json(new { data = studentNoteList });
         }
 
+        
+        [HttpGet]
+        public async Task<IActionResult> GetNotesByStudent(int id)
+        {
+            List<NoteType> allowedNoteTypes = await GetAllowedNoteTypes();
+            List<StudentNote> studentNoteList = new List<StudentNote>();
+
+            foreach (var notetype in allowedNoteTypes)
+            {
+                var results = _unitOfWork.StudentNote.GetAll(nt => nt.NoteType.Type == notetype.Type && nt.StudentId == id,includeProperties: "Student,NoteType,ApplicationUser");
+                studentNoteList.AddRange(results);
+            }
+            return Json(new { data = studentNoteList });
+        }
+
         [HttpGet]
         public IActionResult GetNoteText(int? id)
         {
