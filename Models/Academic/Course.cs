@@ -20,10 +20,10 @@ namespace Models
         public string Name { get; set; }
 
         [DisplayName("Instructor")]
-        public int InstructorId { get; set; }
+        public string InstructorId { get; set; }
         [ValidateNever]
         [ForeignKey("InstructorId")]
-        public Instructor Instructor { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
         [DisplayName("Term")]
         public int TermId { get; set; }

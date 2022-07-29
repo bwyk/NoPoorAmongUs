@@ -5,7 +5,7 @@
 
 @{
     var status = Context.Request.Query["status"];
-    if (status[0].Contains("all"))
+    if (status.Count == 0 || status[0].Contains("all"))
         status = "all";
     else if (status[0].Contains("students") || status[0].Contains("Students"))
         status = "student";
