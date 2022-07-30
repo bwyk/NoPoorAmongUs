@@ -144,18 +144,20 @@ function loadDataTable(table) {
     }
 }
 
+
 function viewNoteText(url) {
     var text;
     var id;
     $.getJSON(url, function (data) {
         $.each(data, function (key, val) {
-            text = val.text;
+            text = val.text.replace(/<(.|\n)*?>/g, '');
             id = val.id;
         });
 
         Swal.fire({
             title: 'Student Note',
-            html: text,
+            html: '<textarea rows="5" class="form-control" disabled>' + text + '</textarea>',
+            width: '75%',
             showDenyButton: true,
             confirmButtonText: 'Close',
             denyButtonText: 'Update Note',
