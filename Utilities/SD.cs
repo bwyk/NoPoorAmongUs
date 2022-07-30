@@ -63,5 +63,12 @@ namespace Utilities
         public const string Role_Instructor_IT = "IT Instructor";
         public const string Role_Rater = "Rater";
         public const string Role_User_Indi = "Individual";
+
+        //Priority items for Student Notes
+        public const string PriorityLow = "Low";
+        public const string PriorityMedium = "Medium";
+        public const string PriorityHigh = "High";
+        public const string PriorityComplete = "Complete";
+        public static List<string> PriorityList = new List<string>() { PriorityLow, PriorityMedium, PriorityHigh, PriorityComplete };
     }
 }

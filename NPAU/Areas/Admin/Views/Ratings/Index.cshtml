@@ -1,65 +1,143 @@
 ﻿@{
-	ViewData["Title"] = "Ratings";
+    ViewData["Title"] = "Ratings";
 }
-@using System.Data
-@model DataTable
+@model IList<Models.ViewModels.RatingVM>
 <form method="post">
 
-<div class="container p-3">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-primary">Ratings</h2>            
-        </div>        
-    </div>
-    <br /><br />
+    <div class="container p-3">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-primary">Ratings</h2>
+                <br />
+                <button type="submit" value="SaveStudent" class="btn btn-primary" style="width:150px;">Accept/Reject Applicants</button>
+            </div>
 
+        </div>
+        <br />
 
-<table class="table table-bordered table-striped" style="width:100%">     
-    <thead>
-        <tr>
-            <th>
-                 Student Name
-            </th>
-            <th>
-                Age
-            </th>           
-            <th>
-                Academics
-            </th>            
-            <th>
-                Finances
-            </th>             
-            <th>
-                Family Support
-            </th> 
-            <th>
-                Distance
-            </th> 
-            <th>
-                Average Score
-            </th>
-        </tr>
-    </thead>
+        <br />
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        Student Name
+                    </th>
+                    <th>
+                        Age
+                    </th>
+                    <th>
+                        Academics
+                    </th>
+                    <th>
+                        Finances
+                    </th>
+                    <th>
+                        Family Support
+                    </th>
+                    <th>
+                        Distance
+                    </th>
+                    <th>
+                        Average Score
+                    </th>
+                    <th>
+                        Accept/Reject Applicant
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
 
-     <tbody>  
-         @foreach (DataRow row in Model.Rows)
+                @for (var i = 0; i < Model.Count; i++)
                 {
-
-                        <tr>
-
-                            <td>@row["Name"]</td>
-                            <td>@row["Age"]</td>
-                            <td>@row["Academics"]</td>
-                            <td>@row["Finances"]</td>
-                            <td>@row["Support"]</td>
-                            <td>@row["Distance"]</td>
-                            <td>@row["Average"]</td>
-
-                        </tr>
-
-
+                    
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(modelItem => modelItem[i].Id)
+                            @Html.HiddenFor(modelItem => modelItem[i].Name)
+                            @Html.DisplayFor(modelItem => modelItem[i].Name)
+                        </td>
+                        @if(Model[i].AvgAge != 0)
+                        {                  
+                            <td>
+                            @Html.DisplayFor(modelItem => modelItem[i].AvgAge)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Age")                           
+                            </td>
+                        }
+                        @if (Model[i].AvgAcademics != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgAcademics)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Academics")
+                        </td>
+                        }
+                        @if (Model[i].AvgFinances != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgFinances)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Finances")                           
+                            </td>
+                        }
+                        @if (Model[i].AvgSupport != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgSupport)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Family Support")                        
+                            </td>
+                        }
+                        @if (Model[i].AvgDistance != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgDistance)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Rating needed for Distance")                        
+                            </td>
+                        }
+                        @if (Model[i].AvgScore != 0)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem[i].AvgScore)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                            @Html.Label("Ratings needed to Generate a score")                           
+                            </td>
+                        }
+                        <td>
+                            @Html.Label("Accept")
+                            @Html.RadioButtonFor(modelItem => modelItem[i].approveApplicant, "Accept")
+                            @Html.Label("Reject")
+                            @Html.RadioButtonFor(modelItem => modelItem[i].approveApplicant, "Reject")
+                        </td>                                                                
+                    </tr>
                 }
-    </tbody>
-</table>
-</div>
-</form>
+
+            </tbody>
+        </table>
+    </div>
+</form> 

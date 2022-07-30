@@ -11,5 +11,6 @@ namespace DataAccess.Repository.IRepository
     public interface INoteTypeRepository : IRepository<NoteType>
     {
         void Update(NoteType obj);
+        void UpdateRange(IEnumerable<NoteType> entities);
     }
 }

@@ -1,0 +1,51 @@
+﻿@using Models.ViewModels
+@model NoteTypeVM
+<form method="post" asp-action="Delete" enctype="multipart/form-data">
+    <input asp-for="NoteType.Id" hidden />
+    <input asp-for="NoteType.RoleId" hidden />
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">Delete Note Type</h2>
+                    <hr />
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="NoteType.Type"></label>
+                    <input asp-for="NoteType.Type" disabled class="form-control" />
+                    <br />
+                    <h4>These roles currently access this note type:</h4>
+                    @{
+                        foreach (var role in Model.RoleList)
+                        {
+                            <div class="form-check">
+                                @{
+                                    <label class="form-check-label">@role</label>
+                                    if(Model.NoteRoles[Model.NoteType.Type].Contains(role))
+                                    {
+                                        <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role" checked disabled>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input" name="roles" type="checkbox" id="@role" value="@role" disabled>
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary" style="width:150px">Delete</button>
+                    <a asp-controller="NoteType" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    }

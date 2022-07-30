@@ -35,18 +35,22 @@ namespace DataAccess.Repository
             {
                 _db.Database.Migrate();
             }
-            //SeedGuardians();
-            //SeedCourses();
-            SeedRelationships();
-            SeedCourseSession();
-            SeedCourseEnrollment();
-
             //Create roles
             _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(SD.Role_Social)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(SD.Role_Rater)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(SD.Role_User_Indi)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor_English)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor_IT)).GetAwaiter().GetResult();
+
+            //SeedGuardians();
+            //SeedCourses();
+            SeedRelationships();
+            SeedCourseSessionAsync();
+            SeedCourseEnrollmentAsync();
+
+            
 
             //Create "Super Admins"
             _userManager.CreateAsync(new ApplicationUser
@@ -354,10 +358,10 @@ namespace DataAccess.Repository
         private (Course, Course) GetCourses()
         {
             bool saveChanges = false;
-            Instructor j_Phillips;
-            Instructor a_Nelson;
-            Instructor e_Mussane;
-            Instructor celeste;
+            ApplicationUser j_Phillips;
+            ApplicationUser a_Nelson;
+            ApplicationUser e_Mussane;
+            ApplicationUser celeste;
             (j_Phillips, a_Nelson, e_Mussane, celeste) = GetInstructors();
 
             School publicSchool;
@@ -447,7 +451,7 @@ namespace DataAccess.Repository
             return (sessionEnglish1, sessionComputers1);
         }
 
-        private void SeedCourseEnrollment()
+        private void SeedCourseEnrollmentAsync()
         {
             bool saveChanges = false;
             Student m_Boa;
@@ -559,7 +563,7 @@ namespace DataAccess.Repository
         }
 
 
-        private void SeedCourseSession()
+        private void SeedCourseSessionAsync()
         {
             bool saveChanges = false;
             Course courseEnglish1;
@@ -627,64 +631,72 @@ namespace DataAccess.Repository
             return fall2022;
         }
 
-        private (Instructor, Instructor, Instructor, Instructor) GetInstructors()
+        private (ApplicationUser, ApplicationUser, ApplicationUser, ApplicationUser) GetInstructors()
         {
             bool saveChanges = false;
-            Instructor? j_Phillips = _db.Instructors.FirstOrDefault(i => i.LastName == "Phillips");
-            Instructor? a_Nelson = _db.Instructors.FirstOrDefault(i => i.LastName == "Nelson");
-            Instructor? e_Mussane = _db.Instructors.FirstOrDefault(i => i.LastName == "Mussane");
-            Instructor? celeste = _db.Instructors.FirstOrDefault(i => i.FirstName == "Celeste");
+            ApplicationUser? j_Phillips =_db.ApplicationUser.FirstOrDefault(i => i.LastName == "Phillips");
+            ApplicationUser? a_Nelson =  _db.ApplicationUser.FirstOrDefault(i => i.LastName == "Nelson");
+            ApplicationUser? e_Mussane = _db.ApplicationUser.FirstOrDefault(i => i.LastName == "Mussane");
+            ApplicationUser? celeste =   _db.ApplicationUser.FirstOrDefault(i => i.FirstName == "Celeste");
 
             if (j_Phillips is null)
             {
                 _db.Add(
-                    j_Phillips = new Instructor
+                    j_Phillips = new ApplicationUser
                     {
                         FirstName = "Josh",
                         LastName = "Phillips",
-                        Email = "joshphllps14@gmail.com",
-                        Role = SD.Role_Admin
+                        Email = "joshphllps14@gmail.com"
                     }
                 );
+                _userManager.AddToRoleAsync(j_Phillips, SD.Role_Admin).GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(j_Phillips, SD.Role_Rater).GetAwaiter().GetResult();
+
                 saveChanges = true;
             }
             if (a_Nelson is null)
             {
                 _db.Add(
-                    a_Nelson = new Instructor
+                    a_Nelson = new ApplicationUser
                     {
                         FirstName = "Agnaldo",
                         LastName = "Nelson",
-                        Email = "agnaldodejesus4@gmail.com",
-                        Role = SD.Role_Instructor_English
+                        Email = "agnaldodejesus4@gmail.com"
                     }
                 );
+                _userManager.AddToRoleAsync(a_Nelson, SD.Role_Instructor).GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(a_Nelson, SD.Role_Rater).GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(a_Nelson, SD.Role_Instructor_English).GetAwaiter().GetResult();
                 saveChanges = true;
             }
             if (e_Mussane is null)
             {
                 _db.Add(
-                    e_Mussane = new Instructor
+                    e_Mussane = new ApplicationUser
                     {
                         FirstName = "Enfraime",
                         LastName = "Mussane",
-                        Email = "novela1992@gmail.com",
-                        Role = SD.Role_Instructor_IT
+                        Email = "novela1992@gmail.com"
                     }
                 );
+                _userManager.AddToRoleAsync(e_Mussane, SD.Role_Instructor).GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(e_Mussane, SD.Role_Rater).GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(e_Mussane, SD.Role_Instructor_IT).GetAwaiter().GetResult();
                 saveChanges = true;
             }
             if (celeste is null)
             {
                 _db.Add(
-                    celeste = new Instructor
+                    celeste = new ApplicationUser
                     {
                         FirstName = "Celeste",
                         LastName = "Unknown",
-                        Email = "Uknown",
-                        Role = SD.Role_Social
+                        Email = "Uknown"
                     }
                 );
+                _userManager.AddToRoleAsync(celeste, SD.Role_Social).GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(celeste, SD.Role_Rater).GetAwaiter().GetResult();
+
                 saveChanges = true;
             }
             if (saveChanges)
