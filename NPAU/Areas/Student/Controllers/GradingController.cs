@@ -12,6 +12,8 @@ namespace NPAU.Areas.Student.Controllers
     {
         [BindProperty]
         private GradingVM gradingVM { get; set; }
+        [BindProperty]
+        private StudentAssessmentGradesVM studentAssessmentGradesVM { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -31,6 +33,45 @@ namespace NPAU.Areas.Student.Controllers
         {
             IEnumerable<Assessment> assessmentList = _unitOfWork.Assessment.GetAll(a => a.CourseId == courseId);
             return View(assessmentList);
+        }
+
+        public IActionResult StudentSelect(int courseId)
+        {
+            List<CourseEnrollment> ceList = (List<CourseEnrollment>)_unitOfWork.CourseEnrollment.GetAll((c => c.CourseSession.CourseId == courseId), includeProperties: "Student");
+            
+            
+          
+            return View(ceList);
+        }
+
+        public IActionResult StudentAssessmentTable(int ceId)
+        {
+            CourseEnrollment cE = _unitOfWork.CourseEnrollment.GetFirstOrDefault((e => e.Id == ceId), includeProperties: "CourseSession");
+            //CourseSession cS = _unitOfWork.CourseSession.GetFirstOrDefault(s => s.Id == cE.CourseSessionId);
+            Course targetCourse = _unitOfWork.Course.GetFirstOrDefault(c => c.Id == cE.CourseSession.CourseId);
+            
+            studentAssessmentGradesVM.Assessments = (List<Assessment>)_unitOfWork.Assessment.GetAll(a => a.CourseId == targetCourse.Id);
+            studentAssessmentGradesVM.Course = targetCourse;
+
+            foreach(Assessment a in studentAssessmentGradesVM.Assessments)
+            {
+                Grade gradeCheck = _unitOfWork.Grade.GetFirstOrDefault(g => g.AssessmentId == a.Id);
+                if (gradeCheck == null)
+                {
+                    Grade emptyGrade = new Grade();
+                    emptyGrade.AssessmentId = a.Id;
+                    emptyGrade.Id = 0;
+                    emptyGrade.Comment = "Not Yet Graded";
+                    emptyGrade.CourseEnrollmentId = cE.Id;
+                    emptyGrade.Score = 0;
+                    gradeCheck = emptyGrade;
+                }
+                
+                studentAssessmentGradesVM.Grades.Append(gradeCheck);
+
+            }
+
+            return View(studentAssessmentGradesVM);
         }
 
 
