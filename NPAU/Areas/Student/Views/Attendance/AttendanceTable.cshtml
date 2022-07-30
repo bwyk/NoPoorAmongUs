@@ -30,9 +30,9 @@
                         </td>
                         <td>
                             <div>
-                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].Present, "Present")@Html.Label("Present")
-                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].Absent, "Absent")@Html.Label("Absent")
-                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].Tardy, "Tardy")@Html.Label("Tardy")
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Present")@Html.Label("Present")
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Absent")@Html.Label("Absent")
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Tardy")@Html.Label("Tardy")
                             </div>
                         </td>
                         <td>

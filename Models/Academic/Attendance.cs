@@ -12,10 +12,10 @@ namespace Models.Academic
     {
         [Key]
         public int Id { get; set; }
-        public bool Present { get; set; }
-        public bool Absent { get; set; }
-        public bool Tardy { get; set; }
+        public string MarkedAttendance { get; set; } = string.Empty;
         public bool Excused { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime DateTaken { get; set; } = DateTime.Now;
         public int CourseEnrollmentId { get; set; }
         [ForeignKey("CourseEnrollmentId")]
         public CourseEnrollment CourseEnrollment { get; set; }

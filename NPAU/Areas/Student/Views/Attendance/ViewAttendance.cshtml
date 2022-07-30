@@ -7,10 +7,11 @@
         </div>
     </div>
     <br /><br />
-    <table cclass="table table-bordered table-striped" style="width:100%">
+    <table class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
                 <th>Student</th>
+                <th>Date</th>
                 <th>Marked</th>
                 <th>Excused</th>
                 <th></th>
@@ -25,11 +26,15 @@
                         <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Student.Id name=@Model.AttendanceList[i].CourseEnrollment.Student.Id>
                     </td>
                     <td>
-                        @if (Model.AttendanceList[i].Present == true)
+                        <label>@Model.AttendanceList[i].DateTaken</label>
+                        <input type="hidden" asp-for=@Model.AttendanceList[i].DateTaken name=@Model.AttendanceList[i].DateTaken />
+                    </td>
+                    <td>
+                        @if (Model.AttendanceList[i].MarkedAttendance == "Present")
                         {
                             <p>Present</p>
                         }
-                        else if (Model.AttendanceList[i].Absent == true)
+                        else if (Model.AttendanceList[i].MarkedAttendance == "Absent")
                         {
                             <p>Absent</p>
                         }
@@ -45,7 +50,7 @@
                         }
                     </td>
                     <td>
-                        <a asp-controller="Attendance" asp-action="ViewSessionSelect" asp-route-courseId="@Model.AttendanceList[i].Id"
+                        <a asp-controller="Attendance" asp-action="Edit" asp-route-Id="@Model.AttendanceList[i].Id"
                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
                     </td>
                 </tr>
@@ -53,3 +58,13 @@
         </tbody>
     </table>
 </div>
+<div class="border p-3 mt-4">
+</div>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script src="~/js/viewAttendance.js"></script>
+}

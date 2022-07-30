@@ -95,9 +95,7 @@ namespace NPAU.Controllers
                         {
                             CourseEnrollmentId = a.CourseEnrollment.Id,
                             CourseEnrollment = a.CourseEnrollment,
-                            Present = a.Present,
-                            Absent = a.Absent,
-                            Tardy = a.Tardy,
+                            MarkedAttendance = a.MarkedAttendance,
                             Excused = a.Excused
                         };
                         _unitOfWork.Attendance.Add(newAttendance);
@@ -127,8 +125,8 @@ namespace NPAU.Controllers
             //Add it to List of Attendance objects which we can set our viewmodel with.
             for (int i = 0; i < cEList.Count(); i++)
             {
-                Attendance newAttendance = _unitOfWork.Attendance.GetFirstOrDefault(nA => nA.CourseEnrollmentId == cEList[i].Id);
-                attendance.Add(newAttendance);
+                List<Attendance> newAttendance = _unitOfWork.Attendance.GetAll(nA => nA.CourseEnrollmentId == cEList[i].Id).ToList();
+                attendance.AddRange(newAttendance);
             }
 
             //May not need an CourseEnrollment list now as we have a tie in with AttendanceList holding an ID for it.
@@ -139,6 +137,37 @@ namespace NPAU.Controllers
             };
 
             return View(attendanceVM);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var attendanceFromDb = _unitOfWork.Attendance.GetFirstOrDefault(a => a.Id == id);
+            
+            if(attendanceFromDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(attendanceFromDb);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Attendance obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Attendance.Update(obj);
+                _unitOfWork.Save();
+                TempData["success"] = "Attendance Updated!";
+                return RedirectToAction("Index");
+            }
+            return View(obj);
         }
 
         #region API CALLS
