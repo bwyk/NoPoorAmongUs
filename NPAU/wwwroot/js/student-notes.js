@@ -1,8 +1,6 @@
-﻿var dataTable;
+﻿//credit to kthorngren's post on https://datatables.net/forums/discussion/42045/nested-tables for nested datatables. -Kevin McLennan
 
-/*$(document).ready(function () {
-    loadDataTable();
-});*/
+var dataTable;
 
 $(document).ready(function () {
     var url = window.location.search;
@@ -19,11 +17,8 @@ $(document).ready(function () {
     }
 });
 
-// Return table with id generated from row's name field
 function format(rowData) {
-    console.log(rowData)
-    console.log(rowData.id)
-    return '<table id="' + rowData.id + '" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+    return '<table id="' + rowData.id + '" class="table table-bordered table-striped" style = "width:100%">' +
         '</table>';
 }
 
@@ -65,7 +60,6 @@ function loadDataTable(table) {
             });
             break;
         case "StudentList":
-            console.log("StudentList DataTable");
             dataTable = $('#tblData').DataTable(
                 {
                     responsive: true,
@@ -81,12 +75,12 @@ function loadDataTable(table) {
                             "render": function (data, type, row, meta)
                             {
                                 return `
-                    <div class= text-center>
-                        <div class="w-100 btn-group" role="group">
-                        <button data-name="' + row[0] + '" class="btn btn-secondary mx-2"> <i class="bi bi-binoculars-fill"></i>View All Notes</button>
-                        </div>
-                    </div>
-                    `
+                                    <div class= text-center>
+                                        <div class="w-100 btn-group" role="group">
+                                        <button data-name="' + row[0] + '" class="btn btn-secondary mx-2"> <i class="bi bi-binoculars-fill"></i>View All Notes</button>
+                                        </div>
+                                    </div>
+                                    `
                             },
                             "width": "15%"
                         },
@@ -109,13 +103,37 @@ function loadDataTable(table) {
                     var id = rowData.id;
 
                     $('#' + id).DataTable({
+                        "ajax": {
+                            "url": "/Student/StudentNotes/GetNotesByStudent/" + rowData.studentId
+                        },
                         dom: "t",
-                        data: [rowData],
-                        columns: [
-                            { title: 'First Name', "data": "student.firstName", "width": "20%" },
-                            { title: 'Last Name', "data": "student.lastName", "width": "20%" },
-                        ],
-                        scrollY: '100px',
+                        columns:[
+                                { title: 'Date Created', "data": "createdDate", "render": DataTable.render.datetime(), "width": "20%" },
+                                { title: 'Priority Level', "data": "priority", "width": "10%" },
+                                { title: 'Author', "data": "applicationUser.fullName", "width": "15%" },
+                                { title: 'Note Type', "data": "noteType.type", "width": "15%" },
+                                {
+                                    title: 'Actions',
+                                    "data": "id",
+                                    "render": function (data) {
+                                        return `
+                                                <div class= text-center>
+                                                    <div class="w-100 btn-group" role="group">
+                                                    <a onClick=viewNoteText('/Student/StudentNotes/GetNoteText/${data}')
+                                                    class="btn btn-secondary mx-2"> <i class="bi bi-binoculars-fill"></i>View</a>
+                                                    <a href="/Student/StudentNotes/Upsert?id=${data}"
+                                                    class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
+                                                    <a onClick=Delete('/Student/StudentNotes/Delete/${data}')
+                                                    class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i>Delete</a>
+                                                    </div>
+                                                </div>
+                                            `
+                                    },
+                                    "width": "15%"
+                                }
+                            ]
+                        ,
+                        scrollY: '300px',
                         select: true,
                     });
 
@@ -125,41 +143,6 @@ function loadDataTable(table) {
             break;
     }
 }
-
-/*
- https://localhost:7140/Student/StudentNotes/GetNotesByStudent/5
- */
-function viewStudentNoteList(url) {
-    var tr = $(this).closest('tr');
-    console.log(tr);
-    var row = dataTable.row(tr);
-
-    if (row.child.isShown()) {
-        // This row is already open - close it
-        console.log("row is already open - close it");
-        row.child.hide();
-        tr.removeClass('shown');
-    } else {
-        // Open this row
-        console.log("open this row");
-        row.child(format()).show();
-        tr.addClass('shown');
-    }
-
-    /*
-     This grabs the data properly at the moment.
-     */
-    /*        $.getJSON(url, function (allData)
-        {
-            console.log(allData.data);
-            $.each(allData.data, function (key, val) {
-                console.log(val.id);
-            });
-        });*/
-
-}
-
-
 
 function viewNoteText(url) {
     var text;

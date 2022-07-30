@@ -5,10 +5,6 @@
 @{
     var filter = Context.Request.Query["filter"];
     var student = "text-primary";
-    var author = "text-primary";
-    //var inprocess = "text-primary";
-    //var completed = "text-primary";
-    //var approved = "text-primary";
     var all = "text-primary";
 
     switch (filter)
@@ -17,9 +13,6 @@
             all = "active text-white";
             break;
         case "StudentList":
-            student = "active text-white";
-            break;
-        case "author":
             student = "active text-white";
             break;
         default:
@@ -58,10 +51,6 @@
             <a style="text-decoration:none;" asp-controller="StudentNotes" asp-action="Index"
                asp-route-filter="StudentList">
             <li class="list-group-item @student">Student</li>
-            </a>
-            <a style="text-decoration:none;" asp-controller="StudentNotes" asp-action="Index"
-               asp-route-filter="GetAllByAuthor">
-            <li class="list-group-item @author">Author</li>
             </a>
         </ul>
     </div>
