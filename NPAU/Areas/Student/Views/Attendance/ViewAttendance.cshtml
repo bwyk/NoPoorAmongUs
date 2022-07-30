@@ -23,7 +23,7 @@
                 <tr>
                     <td>
                         <label>@Model.AttendanceList[i].CourseEnrollment.Student.FullName</label>
-                        <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Student.Id name=@Model.AttendanceList[i].CourseEnrollment.Student.Id>
+                        <input type="hidden" id="attendanceId" asp-for=@Model.AttendanceList[i].Id name=@Model.AttendanceList[i].Id>
                     </td>
                     <td>
                         <label>@Model.AttendanceList[i].DateTaken</label>
@@ -50,7 +50,7 @@
                         }
                     </td>
                     <td>
-                        <a asp-controller="Attendance" asp-action="Edit" asp-route-Id="@Model.AttendanceList[i].Id"
+                        <a onclick="toggleEdit()" asp-controller="Attendance" asp-action="Edit" asp-route-Id="@Model.AttendanceList[i].Id"
                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
                     </td>
                 </tr>
@@ -59,6 +59,23 @@
     </table>
 </div>
 <div class="border p-3 mt-4">
+    <div class="row">
+        <div class="col-md">
+            <div class="p-2">
+                <h2 class="text-primary text-start">Change Student Attendance</h2>
+            </div>
+            <br />
+            <table id="tblChangeAttendance" class="table table-bordered table-striped">
+                <thead>
+                    <th>Student Name
+                    </th>
+                    <th>Attendance</th>
+                    <th>Excused</th>
+                    <th></th>
+                </thead>
+            </table>
+        </div>
+    </div>
 </div>
 
 @section Scripts{

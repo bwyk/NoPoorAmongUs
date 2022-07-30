@@ -176,6 +176,12 @@ namespace NPAU.Controllers
             var attendanceList = _unitOfWork.Attendance.GetAll();
             return Json(new {data = attendanceList});
         }
+
+        private Attendance GetAttendance(int id)
+        {
+            var attendance = _unitOfWork.Attendance.GetFirstOrDefault(a => a.Id == id);
+            return attendance;
+        }
         #endregion
 
     }
