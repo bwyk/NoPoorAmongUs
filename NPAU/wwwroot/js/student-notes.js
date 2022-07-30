@@ -19,12 +19,18 @@ $(document).ready(function () {
     }
 });
 
+// Return table with id generated from row's name field
+function format(rowData) {
+    console.log(rowData)
+    console.log(rowData.id)
+    return '<table id="' + rowData.id + '" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+        '</table>';
+}
 
 function loadDataTable(table) {
 
     switch (table) {
         case "GetAllForUser":
-
             dataTable = $('#tblData').DataTable({
                 "ajax": {
                     "url": "/Student/StudentNotes/GetAllForUser"
@@ -37,7 +43,7 @@ function loadDataTable(table) {
                     { title: 'Last Name', "data": "student.lastName", "width": "15%" },
                     { title: 'Note Type', "data": "noteType.type", "width": "15%" },
                     {
-                        title: 'Actions', 
+                        title: 'Actions',
                         "data": "id",
                         "render": function (data) {
                             return `
@@ -59,10 +65,12 @@ function loadDataTable(table) {
             });
             break;
         case "StudentList":
+            console.log("StudentList DataTable");
             dataTable = $('#tblData').DataTable(
                 {
+                    responsive: true,
                     "ajax": {
-                        "url": "/Student/StudentNotes/GetAllForUser"
+                        "url": "/Student/StudentNotes/GetStudents"
                     },
                     "columns": [
                         { title: 'First Name', "data": "student.firstName", "width": "20%" },
@@ -70,20 +78,50 @@ function loadDataTable(table) {
                         {
                             title: 'Actions',
                             "data": "studentId",
-                            "render": function (data) {
+                            "render": function (data, type, row, meta)
+                            {
                                 return `
                     <div class= text-center>
                         <div class="w-100 btn-group" role="group">
-                        <a onClick=viewStudentNoteList('/Student/StudentNotes/GetNotesByStudent/${data}')
-                        class="btn btn-secondary mx-2"> <i class="bi bi-binoculars-fill"></i>View All Notes</a>
+                        <button data-name="' + row[0] + '" class="btn btn-secondary mx-2"> <i class="bi bi-binoculars-fill"></i>View All Notes</button>
                         </div>
                     </div>
                     `
                             },
                             "width": "15%"
-                        }
+                        },
                     ]
                 });
+            $('#tblData tbody').on('click', 'button', function () {
+                var tr = $(this).closest('tr');
+                var row = dataTable.row(tr);
+                var rowData = row.data();
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    // Destroy the Child Datatable
+                    $('#' + rowData.id).DataTable().destroy();
+                } else {
+                    // Open this row
+                    row.child(format(rowData)).show();
+                    var id = rowData.id;
+
+                    $('#' + id).DataTable({
+                        dom: "t",
+                        data: [rowData],
+                        columns: [
+                            { title: 'First Name', "data": "student.firstName", "width": "20%" },
+                            { title: 'Last Name', "data": "student.lastName", "width": "20%" },
+                        ],
+                        scrollY: '100px',
+                        select: true,
+                    });
+
+                    tr.addClass('shown');
+                }
+            });
             break;
     }
 }
@@ -91,64 +129,37 @@ function loadDataTable(table) {
 /*
  https://localhost:7140/Student/StudentNotes/GetNotesByStudent/5
  */
-function viewStudentNoteList(url)
-{
+function viewStudentNoteList(url) {
     var tr = $(this).closest('tr');
+    console.log(tr);
     var row = dataTable.row(tr);
 
     if (row.child.isShown()) {
         // This row is already open - close it
+        console.log("row is already open - close it");
         row.child.hide();
         tr.removeClass('shown');
     } else {
         // Open this row
+        console.log("open this row");
+        row.child(format()).show();
+        tr.addClass('shown');
+    }
 
-        $.getJSON(url, function (allData)
+    /*
+     This grabs the data properly at the moment.
+     */
+    /*        $.getJSON(url, function (allData)
         {
+            console.log(allData.data);
             $.each(allData.data, function (key, val) {
                 console.log(val.id);
             });
-        });
+        });*/
 
-        console.log("This would open the notes for: " );
-/*        row.child(format(row.data())).show();
-        tr.addClass('shown');*/
-    }
-
-
-    /*This grabs the data and is working.*/
-/*    var id;
-    console.log("url: " + url);
-    $.getJSON(url, function (data)
-    {
-        console.log("data: " + data);
-        $.each(data, function (key, val)
-        {
-            console.log(data)
-        });
-        console.log("id value: " + id);
-    });*/
 }
 
-function format(d) {
-    // `d` is the original data object for the row
-    return (
-        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-        '<tr>' +
-        '<td>Note ID:</td>' +
-        '<td>' +
-        d.id +
-        '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Student Id:</td>' +
-        '<td>' +
-        d.studentId +
-        '</td>' +
-        '</tr>' +
-        '</table>'
-    );
-}
+
 
 function viewNoteText(url) {
     var text;
