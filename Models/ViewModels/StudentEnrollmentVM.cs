@@ -13,6 +13,11 @@ namespace Models.ViewModels
     {
         public CourseSession courseSession { get; set; }
         [ValidateNever]
-        public List<Student> Student { get; set; }
+        public List<CourseEnrollment> courseEnrollment { get; set; }
+        [ValidateNever]
+        public List<Student> UnEnrolledStudents { get; set; }
+        [ValidateNever]
+        public List<Student> EnrolledStudents { get; set; }
     }
+
 }
