@@ -11,7 +11,7 @@
     </div>
     <br /><br />
     <h4>Assessment Table for @(Model.Student.FirstName) @(Model.Student.LastName), for @(Model.Course.Name)</h4>
-    <h2>Click the student's name to see their grades for this course.</h2>
+    <h6>Click the student's name to see their grades for this course.</h6>
     
         <table class="table table-bordered table-striped" style="width:100%">
             <thead>
@@ -24,16 +24,8 @@
                 </tr>
             </thead>
 
-
-           
-
             @for (int i = 0; i < Model.Assessments.Count(); i++)
             {
-
-
-                
-                <input value="@Model.Assessments[i].Id" hidden />
-                
 
                 <tr>
                     <td>
@@ -48,16 +40,7 @@
                     <td>
                         <input type="text" value="@(Model.Grades[i].Comment)" class="form-control" disabled />
                     </td>
-                    
-                
-                    <td>
-                        <input type="number" value="0" class="form-control" disabled />
-                    </td>
-                    <td>@Model.Assessments[i].MaxScore</td>
-                    <td>
-                        <input type="text" value="" class="form-control" disabled />
-                    </td>
-                
+
                 </tr>
             }
             
