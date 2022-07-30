@@ -36,7 +36,8 @@ namespace Utilities
         public static IEnumerable<SelectListItem> DocTypeList = new List<SelectListItem>() { all, instructor};
 
         // Schools
-        public const string PublicSchool = "Public School";
+        public const string SchoolPublic = "Public School";
+        public const string SchoolBoanne = "Boanne";
 
         // Guardian relationship types
         public const string GuardianRelationFather = "Father";

@@ -66,6 +66,10 @@
             <ul class="list-group list-group-horizontal-sm">
                 @if (User.IsInRole(SD.Role_Instructor) || User.IsInRole(SD.Role_Admin) )
                 {
+                     <a style="text-decoration:none" asp-controller="Session" asp-action="Index")">
+                        <li class="list-group-item @all">View Course Session</li>
+                    </a>
+
                     <a style="text-decoration:none" id="all" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_allStudents")">
                     <li class="list-group-item @all">All Students</li>
                     </a>

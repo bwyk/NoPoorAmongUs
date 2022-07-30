@@ -73,12 +73,11 @@ namespace NPAU.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpsertAsync(StudentVM obj)
+        public IActionResult Upsert(StudentVM obj)
         {
             if (ModelState.IsValid)
             {
                 bool match;
-                bool saveChanges = false;
                 var enteredGuardians = new List<Guardian>();
                 if (!string.IsNullOrEmpty(obj.GuardianJSON))
                 {

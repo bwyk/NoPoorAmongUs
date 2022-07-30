@@ -15,6 +15,7 @@ namespace DataAccess.Repository
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _db;
 
+        private string publicCourseName = "Course: Public";
         private string english1CourseName = "Course: English 1";
         private string computers1CourseName = "Course: Computers 1";
 
@@ -47,8 +48,7 @@ namespace DataAccess.Repository
             //SeedGuardians();
             //SeedCourses();
             SeedRelationships();
-            SeedCourseSessionAsync();
-            SeedCourseEnrollmentAsync();
+            SeedCourseEnrollment();
 
             
 
@@ -355,24 +355,40 @@ namespace DataAccess.Repository
                 _db.SaveChanges();
         }
 
-        private (Course, Course) GetCourses()
+        private (Course, Course, Course) GetCourses()
         {
             bool saveChanges = false;
+            ApplicationUser publicInstructor;
             ApplicationUser j_Phillips;
             ApplicationUser a_Nelson;
             ApplicationUser e_Mussane;
             ApplicationUser celeste;
-            (j_Phillips, a_Nelson, e_Mussane, celeste) = GetInstructors();
+            (publicInstructor, j_Phillips, a_Nelson, e_Mussane, celeste) = GetInstructors();
 
             School publicSchool;
             School boanne;
             (publicSchool, boanne) = GetSchools();
             Term fall22 = GetTerm();
+            Subject publicSubject;
             Subject english;
             Subject computers;
-            (english, computers) = GetSubjects();
-            Course? computers1 = _db.Courses.FirstOrDefault(c => c.Name == english1CourseName);
-            Course? english1 = _db.Courses.FirstOrDefault(c => c.Name == computers1CourseName);
+            (publicSubject, english, computers) = GetSubjects();
+            Course? publicCourse = _db.Courses.FirstOrDefault(c => c.Name == publicCourseName);
+            Course? computers1 = _db.Courses.FirstOrDefault(c => c.Name == computers1CourseName);
+            Course? english1 = _db.Courses.FirstOrDefault(c => c.Name == english1CourseName);
+            if (publicCourse is null)
+            {
+                _db.Courses.Add(
+                    publicCourse = new Course
+                    {
+                        Name = publicCourseName,
+                        InstructorId = publicInstructor.Id,
+                        TermId = fall22.Id,
+                        SchoolId = publicSchool.Id,
+                        SubjectId = publicSubject.Id
+                    }
+                );
+            }
             if (computers1 is null)
             {
                 _db.Courses.Add(
@@ -394,7 +410,7 @@ namespace DataAccess.Repository
                     {
                         Name = english1CourseName,
                         InstructorId = a_Nelson.Id,
-                        SchoolId = publicSchool.Id,
+                        SchoolId = boanne.Id,
                         TermId = fall22.Id,
                         SubjectId = english.Id
                     }
@@ -404,16 +420,34 @@ namespace DataAccess.Repository
             if (saveChanges)
                 _db.SaveChanges();
 
-            return (english1, computers1);
+            return (publicCourse, english1, computers1);
         }
-        private (CourseSession, CourseSession) GetCourseSessions()
+
+        private (CourseSession, CourseSession, CourseSession) GetCourseSessions()
         {
             bool saveChanges = false;
+            Course coursePublic;
             Course courseEnglish1;
             Course courseComputers1;
-            (courseEnglish1, courseComputers1) = GetCourses();
+            (coursePublic, courseEnglish1, courseComputers1) = GetCourses();
+            CourseSession? sessionPublic = _db.CourseSessions.FirstOrDefault(g => g.Course == coursePublic);
             CourseSession? sessionEnglish1 = _db.CourseSessions.FirstOrDefault(g => g.Course == courseEnglish1);
             CourseSession? sessionComputers1 = _db.CourseSessions.FirstOrDefault(g => g.Course == courseComputers1);
+            if (sessionPublic is null)
+            {
+                _db.CourseSessions.Add(
+                    sessionPublic= new CourseSession
+                    {
+                        CourseId = coursePublic.Id,
+                        Course = coursePublic,
+                        CourseName = coursePublic.Name,
+                        Day = SD.Weekdays.Thursday.ToString(),
+                        EndTime = "11:30",
+                        StartTime = "1:30"
+                    }
+                );
+                saveChanges = true;
+            }
             if (sessionEnglish1 is null)
             {
                 _db.CourseSessions.Add(
@@ -422,7 +456,7 @@ namespace DataAccess.Repository
                         CourseId = courseEnglish1.Id,
                         Course = courseEnglish1,
                         CourseName = courseEnglish1.Name,
-                        Day = "Monday",
+                        Day = SD.Weekdays.Monday.ToString(),
                         EndTime = "11:30",
                         StartTime = "1:30"
                     }
@@ -437,7 +471,7 @@ namespace DataAccess.Repository
                         CourseId = courseComputers1.Id,
                         Course = courseComputers1,
                         CourseName = courseComputers1.Name,
-                        Day = "Tuesday",
+                        Day = SD.Weekdays.Tuesday.ToString(),
                         EndTime = "11:30",
                         StartTime = "1:30"
 
@@ -448,10 +482,10 @@ namespace DataAccess.Repository
             if(saveChanges)
                 _db.SaveChanges();
 
-            return (sessionEnglish1, sessionComputers1);
+            return (sessionPublic, sessionEnglish1, sessionComputers1);
         }
 
-        private void SeedCourseEnrollmentAsync()
+        private void SeedCourseEnrollment()
         {
             bool saveChanges = false;
             Student m_Boa;
@@ -460,24 +494,31 @@ namespace DataAccess.Repository
             Student a_Mac;
             Student a_Fra;
             (m_Boa, a_Arl, r_Ale, a_Mac, a_Fra) = GetStudents();
+            CourseSession sessionPublic;
             CourseSession sessionEnglish1;
             CourseSession sessionComputers1;
-            (sessionEnglish1, sessionComputers1) = GetCourseSessions();
+            (sessionPublic, sessionEnglish1, sessionComputers1) = GetCourseSessions();
 
             CourseEnrollment? m_Boa_Enrollment_Eng = _db.CourseEnrollments.FirstOrDefault(
                     e => ((e.CourseSessionId == sessionEnglish1.Id) && (e.StudentId == m_Boa.Id)));
             CourseEnrollment? m_Boa_Enrollment_Com = _db.CourseEnrollments.FirstOrDefault(
                     e => ((e.CourseSessionId == sessionComputers1.Id) && (e.StudentId == m_Boa.Id)));
+            CourseEnrollment? m_Boa_Enrollment_Pub = _db.CourseEnrollments.FirstOrDefault(
+                    e => ((e.CourseSessionId == sessionPublic.Id) && (e.StudentId == m_Boa.Id)));
 
             CourseEnrollment? r_Ale_Enrollment_Eng = _db.CourseEnrollments.FirstOrDefault(
                 e => ((e.CourseSessionId == sessionEnglish1.Id) && (e.StudentId == r_Ale.Id)));
             CourseEnrollment? r_Ale_Enrollment_Com = _db.CourseEnrollments.FirstOrDefault(
                 e => ((e.CourseSessionId == sessionComputers1.Id) && (e.StudentId == r_Ale.Id)));
+            CourseEnrollment? r_Ale_Enrollment_Pub = _db.CourseEnrollments.FirstOrDefault(
+                e => ((e.CourseSessionId == sessionPublic.Id) && (e.StudentId == r_Ale.Id)));
 
             CourseEnrollment? a_Mac_Enrollment_Eng = _db.CourseEnrollments.FirstOrDefault(
                 e => ((e.CourseSessionId == sessionEnglish1.Id) && (e.StudentId == a_Mac.Id)));
             CourseEnrollment? a_Mac_Enrollment_Com = _db.CourseEnrollments.FirstOrDefault(
                 e => ((e.CourseSessionId == sessionComputers1.Id) && (e.StudentId == a_Mac.Id)));
+            CourseEnrollment? a_Mac_Enrollment_Pub = _db.CourseEnrollments.FirstOrDefault(
+                e => ((e.CourseSessionId == sessionPublic.Id) && (e.StudentId == a_Mac.Id)));
             if (m_Boa_Enrollment_Eng is null)
             {
                 _db.CourseEnrollments.Add(
@@ -499,6 +540,19 @@ namespace DataAccess.Repository
                         CourseSessionId = sessionComputers1.CourseId,
                         StudentId = m_Boa.Id,
                         CourseSession = sessionComputers1,
+                        Student = m_Boa
+                    }
+                );
+                saveChanges = true;
+            }
+            if (m_Boa_Enrollment_Pub is null)
+            {
+                _db.CourseEnrollments.Add(
+                    new CourseEnrollment
+                    {
+                        CourseSessionId = sessionPublic.CourseId,
+                        StudentId = m_Boa.Id,
+                        CourseSession = sessionPublic,
                         Student = m_Boa
                     }
                 );
@@ -531,6 +585,19 @@ namespace DataAccess.Repository
                 );
                 saveChanges = true;
             }
+            if (r_Ale_Enrollment_Pub is null)
+            {
+                _db.CourseEnrollments.Add(
+                    new CourseEnrollment
+                    {
+                        CourseSessionId = sessionPublic.CourseId,
+                        StudentId = r_Ale.Id,
+                        CourseSession = sessionPublic,
+                        Student = r_Ale
+                    }
+                );
+                saveChanges = true;
+            }
 
             if (a_Mac_Enrollment_Eng is null)
             {
@@ -558,53 +625,20 @@ namespace DataAccess.Repository
                 );
                 saveChanges = true;
             }
+            if (a_Mac_Enrollment_Pub is null)
+            {
+                _db.CourseEnrollments.Add(
+                    new CourseEnrollment
+                    {
+                        CourseSessionId = sessionPublic.CourseId,
+                        StudentId = a_Mac.Id,
+                        CourseSession = sessionPublic,
+                        Student = a_Mac
+                    }
+                );
+                saveChanges = true;
+            }
             if (saveChanges)
-                _db.SaveChanges();
-        }
-
-
-        private void SeedCourseSessionAsync()
-        {
-            bool saveChanges = false;
-            Course courseEnglish1;
-            Course courseComputers1;
-            (courseEnglish1, courseComputers1) = GetCourses();
-            Subject subjectEnglish1;
-            Subject subjectComputers1;
-            (subjectEnglish1, subjectComputers1) = GetSubjects();
-            CourseSession? sessionEnglish1 = _db.CourseSessions.FirstOrDefault(s => s.CourseName == english1CourseName);
-            CourseSession? sessionComputers1 = _db.CourseSessions.FirstOrDefault(s => s.CourseName == computers1CourseName);
-            if (sessionComputers1 is null)
-            {
-                _db.Add(
-                    new CourseSession
-                    {
-                        CourseId = courseComputers1.Id,
-                        Course = courseComputers1,
-                        CourseName = computers1CourseName,
-                        Day = "Monday",
-                        StartTime = DateTime.Now.ToShortTimeString(),
-                        EndTime = DateTime.Now.ToShortTimeString()
-                    }
-                );
-                saveChanges = true;
-            }
-            if (sessionEnglish1 is null)
-            {
-                _db.Add(
-                    new CourseSession
-                    {
-                        CourseId = courseEnglish1.Id,
-                        Course = courseEnglish1,
-                        CourseName = english1CourseName,
-                        Day = "Tuesday",
-                        StartTime = DateTime.Now.ToShortTimeString(),
-                        EndTime = DateTime.Now.ToShortTimeString()
-                    }
-                );
-                saveChanges = true;
-            }
-            if(saveChanges)
                 _db.SaveChanges();
         }
         
@@ -631,14 +665,28 @@ namespace DataAccess.Repository
             return fall2022;
         }
 
-        private (ApplicationUser, ApplicationUser, ApplicationUser, ApplicationUser) GetInstructors()
+        private (ApplicationUser, ApplicationUser, ApplicationUser, ApplicationUser, ApplicationUser) GetInstructors()
         {
             bool saveChanges = false;
+            ApplicationUser? publicInstructor =_db.ApplicationUser.FirstOrDefault(i => i.FirstName == "Public");
             ApplicationUser? j_Phillips =_db.ApplicationUser.FirstOrDefault(i => i.LastName == "Phillips");
             ApplicationUser? a_Nelson =  _db.ApplicationUser.FirstOrDefault(i => i.LastName == "Nelson");
             ApplicationUser? e_Mussane = _db.ApplicationUser.FirstOrDefault(i => i.LastName == "Mussane");
             ApplicationUser? celeste =   _db.ApplicationUser.FirstOrDefault(i => i.FirstName == "Celeste");
+            if (publicInstructor is null)
+            {
+                _db.Add(
+                    publicInstructor = new ApplicationUser
+                    {
+                        FirstName = "Public",
+                        LastName = "Instructor",
+                        Email = "placeholder@gmail.com"
+                    }
+                );
+                _userManager.AddToRoleAsync(publicInstructor, SD.Role_Instructor).GetAwaiter().GetResult();
 
+                saveChanges = true;
+            }
             if (j_Phillips is null)
             {
                 _db.Add(
@@ -701,14 +749,26 @@ namespace DataAccess.Repository
             }
             if (saveChanges)
                 _db.SaveChanges();
-            return (j_Phillips, a_Nelson, e_Mussane, celeste);
+            return (publicInstructor, j_Phillips, a_Nelson, e_Mussane, celeste);
         }
 
-        private (Subject, Subject) GetSubjects()
+        private (Subject, Subject, Subject) GetSubjects()
         {
             bool saveChanges = false;
+            Subject? subjectPublic = _db.Subjects.FirstOrDefault(s => s.Name == "Public");
             Subject? subjectEnglish1 = _db.Subjects.FirstOrDefault(s => s.Name == "English 1");
             Subject? subjectComputers1 = _db.Subjects.FirstOrDefault(s => s.Name == "Computers 1");
+
+            if (subjectPublic is null)
+            {
+                _db.Add(
+                   subjectPublic = new Subject
+                   {
+                       Name = "Public"
+                   }
+                );
+                saveChanges = true;
+            }
             if (subjectEnglish1 is null)
             {
                 _db.Add(
@@ -732,20 +792,20 @@ namespace DataAccess.Repository
             if (saveChanges)
                 _db.SaveChanges();
 
-            return (subjectEnglish1, subjectComputers1);
+            return (subjectPublic, subjectEnglish1, subjectComputers1);
         }
 
         private (School, School) GetSchools()
         {
             bool saveChanges = false;
-            School? publicSchool = _db.Schools.FirstOrDefault(s => s.Name == "Public School");
-            School? boanne = _db.Schools.FirstOrDefault(s => s.Name == "Boanne");
+            School? publicSchool = _db.Schools.FirstOrDefault(s => s.Name == SD.SchoolPublic);
+            School? boanne = _db.Schools.FirstOrDefault(s => s.Name == SD.SchoolPublic);
             if (publicSchool is null)
             {
                 _db.Add(
                     publicSchool = new School
                     {
-                        Name = "Public School"
+                        Name = SD.SchoolPublic
                     }
                 );
                 saveChanges = true;
@@ -755,7 +815,7 @@ namespace DataAccess.Repository
                 _db.Add(
                     boanne = new School
                     {
-                        Name = "Boanne"
+                        Name = SD.SchoolBoanne
                     }
                 );
                 saveChanges = true;
