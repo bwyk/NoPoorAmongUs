@@ -46,28 +46,36 @@ namespace NPAU.Areas.Student.Controllers
 
         public IActionResult StudentAssessmentTable(int ceId)
         {
-            CourseEnrollment cE = _unitOfWork.CourseEnrollment.GetFirstOrDefault((e => e.Id == ceId), includeProperties: "CourseSession");
-            //CourseSession cS = _unitOfWork.CourseSession.GetFirstOrDefault(s => s.Id == cE.CourseSessionId);
-            Course targetCourse = _unitOfWork.Course.GetFirstOrDefault(c => c.Id == cE.CourseSession.CourseId);
+            studentAssessmentGradesVM = new StudentAssessmentGradesVM();
+            CourseEnrollment cE = _unitOfWork.CourseEnrollment.GetFirstOrDefault((e => e.Id == ceId), includeProperties: "CourseSession,Student");
+
+            studentAssessmentGradesVM.Student = cE.Student;
             
-            studentAssessmentGradesVM.Assessments = (List<Assessment>)_unitOfWork.Assessment.GetAll(a => a.CourseId == targetCourse.Id);
-            studentAssessmentGradesVM.Course = targetCourse;
+            studentAssessmentGradesVM.Course = _unitOfWork.Course.GetFirstOrDefault(c => c.Id == cE.CourseSession.CourseId);
+            
+            studentAssessmentGradesVM.Assessments = (List<Assessment>)_unitOfWork.Assessment.GetAll(a => a.CourseId == studentAssessmentGradesVM.Course.Id);
+
+            studentAssessmentGradesVM.Grades = new List<Grade>();
 
             foreach(Assessment a in studentAssessmentGradesVM.Assessments)
             {
+                
                 Grade gradeCheck = _unitOfWork.Grade.GetFirstOrDefault(g => g.AssessmentId == a.Id);
+                Grade emptyGrade = new Grade();
                 if (gradeCheck == null)
                 {
-                    Grade emptyGrade = new Grade();
+                    
+                    emptyGrade.Assessment = a;
                     emptyGrade.AssessmentId = a.Id;
                     emptyGrade.Id = 0;
                     emptyGrade.Comment = "Not Yet Graded";
+                    emptyGrade.CourseEnrollment = cE;
                     emptyGrade.CourseEnrollmentId = cE.Id;
                     emptyGrade.Score = 0;
                     gradeCheck = emptyGrade;
                 }
                 
-                studentAssessmentGradesVM.Grades.Append(gradeCheck);
+                studentAssessmentGradesVM.Grades.Add(gradeCheck);
 
             }
 
@@ -159,7 +167,8 @@ namespace NPAU.Areas.Student.Controllers
                     _unitOfWork.Save();
                 }
 
-            }  
+            }
+            TempData["success"] = "All grades saved successfully.";
 
             return RedirectToAction("CourseSelect");
         }

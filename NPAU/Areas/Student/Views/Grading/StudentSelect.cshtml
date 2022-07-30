@@ -8,7 +8,7 @@
 
     </div>
     <br /><br />
-    <h3 class="text-secondary">Choose a student to view grades in COURSE NAME:</h3>
+    <h3 class="text-secondary">Choose a student to view grades:</h3>
     <table>
 
         <tr>
@@ -25,7 +25,7 @@
                 <tr>
                     <td>@obj.Student.FirstName @obj.Student.LastName</td>
                     <td>
-                        <a asp-controller="Grading" asp-action="StudentAssessmentTable" asp-route-assessmentId="@obj.Id"
+                        <a asp-controller="Grading" asp-action="StudentAssessmentTable" asp-route-ceId="@obj.Id"
                    class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Course Grades</a>
                     </td>
                 </tr>
