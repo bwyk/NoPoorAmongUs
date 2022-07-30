@@ -199,10 +199,12 @@ namespace NPAU.Controllers
 
             foreach (var notetype in allowedNoteTypes)
             {
-                var results = _unitOfWork.StudentNote.GetAll(s => s.NoteType.Type == notetype.Type, includeProperties: "Student,NoteType,ApplicationUser").DistinctBy(s => s.Student.Id);
+                var results = _unitOfWork.StudentNote.GetAll(s => s.NoteType.Type == notetype.Type, includeProperties: "Student,NoteType,ApplicationUser");
                 studentNoteList.AddRange(results);
             }
-            return Json(new { data = studentNoteList });
+
+            
+            return Json(new { data = studentNoteList.DistinctBy(s => s.Student.Id) });
         }
 
         
