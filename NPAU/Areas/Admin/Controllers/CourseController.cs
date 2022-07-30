@@ -1,17 +1,22 @@
 ﻿using DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Models;
 using Models.ViewModels;
+using Utilities;
 
 namespace NPAU.Areas.Admin.Controllers;
 [Area("Admin")]
 public class CourseController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public CourseController(IUnitOfWork unitOfWork)
+    public CourseController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager)
     {
         _unitOfWork = unitOfWork;
+        _userManager = userManager;
     }
 
     public IActionResult Index()
@@ -19,8 +24,10 @@ public class CourseController : Controller
         return View();
     }
 
-    public IActionResult Upsert(int? id)
+    public async Task<IActionResult> UpsertAsync(int? id)
     {
+        var instructors = await _userManager.GetUsersInRoleAsync(SD.Role_Instructor);
+
         CourseVM courseVM = new()
         {
             Course = new(),
@@ -29,7 +36,8 @@ public class CourseController : Controller
                 Text = i.Name,
                 Value = i.Id.ToString()
             }),
-            InstructorList = _unitOfWork.Instructor.GetAll().Select(i => new SelectListItem
+            
+            InstructorList = _unitOfWork.ApplicationUser.GetAll(u => instructors.Select(i => i.Id).Contains(u.Id)).Select(i => new SelectListItem
             {
                 Text = i.FirstName + ' ' + i.LastName,
                 Value = i.Id.ToString()
@@ -62,7 +70,7 @@ public class CourseController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Upsert(CourseVM obj)
+    public async Task<IActionResult> UpsertAsync(CourseVM obj)
     {
         if (ModelState.IsValid)
         {
@@ -87,8 +95,10 @@ public class CourseController : Controller
             Text = i.Name,
             Value = i.Id.ToString()
         });
+        var instructors = await _userManager.GetUsersInRoleAsync(SD.Role_Instructor);
 
-        obj.InstructorList = _unitOfWork.Instructor.GetAll().Select(i => new SelectListItem
+
+        obj.InstructorList = _unitOfWork.ApplicationUser.GetAll(u => instructors.Select(i => i.Id).Contains(u.Id)).Select(i => new SelectListItem
         {
             Text = i.FirstName + ' ' + i.LastName,
             Value = i.Id.ToString()
@@ -113,7 +123,7 @@ public class CourseController : Controller
     [HttpGet]
     public IActionResult GetAll()
     {
-        var courseList = _unitOfWork.Course.GetAll(includeProperties: "School,Instructor,Subject,Term");
+        var courseList = _unitOfWork.Course.GetAll(includeProperties: "School,ApplicationUser,Subject,Term");
         return Json(new { data = courseList });
     }
 
