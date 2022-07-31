@@ -767,19 +767,30 @@ namespace DataAccess.Repository
 
         private async Task SeedNotes()
         {
-            ApplicationUser user = _db.ApplicationUser.FirstOrDefault(u => u.Email == "kevinmclennan@mail.weber.edu");
             IdentityRole Admin = await _roleManager.FindByNameAsync(SD.Role_Admin);
-            string admin_id = await _roleManager.GetRoleIdAsync(Admin);
-
+            IdentityRole SocialWorker = await _roleManager.FindByNameAsync(SD.Role_Social);
+            IdentityRole Rater = await _roleManager.FindByNameAsync(SD.Role_Rater);
+            IdentityRole Individual = await _roleManager.FindByNameAsync(SD.Role_User_Indi);
+            IdentityRole Instructor = await _roleManager.FindByNameAsync(SD.Role_Instructor);
+            string AdminId = await _roleManager.GetRoleIdAsync(Admin);
+            string SocialWorkerId = await _roleManager.GetRoleIdAsync(SocialWorker);
+            string RaterId = await _roleManager.GetRoleIdAsync(Rater);
+            string IndividualId = await _roleManager.GetRoleIdAsync(Individual);
+            string InstructorId = await _roleManager.GetRoleIdAsync(Instructor);
 
             var NoteType = new List<NoteType>
             {
-                new NoteType{  Type = "Admin Note", RoleId = admin_id}
+                new NoteType{  Type = "Admin Note", RoleId = AdminId},
+                new NoteType{  Type = "General Note", RoleId = AdminId},
+                new NoteType{  Type = "General Note", RoleId = SocialWorkerId},
+                new NoteType{  Type = "General Note", RoleId = RaterId},
+                new NoteType{  Type = "General Note", RoleId = IndividualId},
+                new NoteType{  Type = "General Note", RoleId = InstructorId}
             };
 
             foreach( var n in NoteType )
             {
-                if(_db.NoteTypes.FirstOrDefault(nt => nt.Type == n.Type) == null)
+                if(_db.NoteTypes.FirstOrDefault(nt => nt.Type == n.Type && nt.RoleId == n.RoleId) == null)
                 {
                     _db.NoteTypes.Add(n);
                 }
