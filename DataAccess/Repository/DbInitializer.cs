@@ -49,8 +49,7 @@ namespace DataAccess.Repository
             SeedRelationships();
             SeedCourseSessionAsync();
             SeedCourseEnrollmentAsync();
-
-            
+            SeedNotes().GetAwaiter().GetResult();
 
             //Create "Super Admins"
             _userManager.CreateAsync(new ApplicationUser
@@ -445,7 +444,7 @@ namespace DataAccess.Repository
                 );
                 saveChanges = true;
             }
-            if(saveChanges)
+            if (saveChanges)
                 _db.SaveChanges();
 
             return (sessionEnglish1, sessionComputers1);
@@ -604,10 +603,10 @@ namespace DataAccess.Repository
                 );
                 saveChanges = true;
             }
-            if(saveChanges)
+            if (saveChanges)
                 _db.SaveChanges();
         }
-        
+
         private Term GetTerm()
         {
             bool saveChanges = false;
@@ -634,10 +633,10 @@ namespace DataAccess.Repository
         private (ApplicationUser, ApplicationUser, ApplicationUser, ApplicationUser) GetInstructors()
         {
             bool saveChanges = false;
-            ApplicationUser? j_Phillips =_db.ApplicationUser.FirstOrDefault(i => i.LastName == "Phillips");
-            ApplicationUser? a_Nelson =  _db.ApplicationUser.FirstOrDefault(i => i.LastName == "Nelson");
+            ApplicationUser? j_Phillips = _db.ApplicationUser.FirstOrDefault(i => i.LastName == "Phillips");
+            ApplicationUser? a_Nelson = _db.ApplicationUser.FirstOrDefault(i => i.LastName == "Nelson");
             ApplicationUser? e_Mussane = _db.ApplicationUser.FirstOrDefault(i => i.LastName == "Mussane");
-            ApplicationUser? celeste =   _db.ApplicationUser.FirstOrDefault(i => i.FirstName == "Celeste");
+            ApplicationUser? celeste = _db.ApplicationUser.FirstOrDefault(i => i.FirstName == "Celeste");
 
             if (j_Phillips is null)
             {
@@ -713,9 +712,9 @@ namespace DataAccess.Repository
             {
                 _db.Add(
                    subjectEnglish1 = new Subject
-                    {
-                        Name = "English 1"
-                    }
+                   {
+                       Name = "English 1"
+                   }
                 );
                 saveChanges = true;
             }
@@ -766,6 +765,27 @@ namespace DataAccess.Repository
             return (publicSchool, boanne);
         }
 
+        private async Task SeedNotes()
+        {
+            ApplicationUser user = _db.ApplicationUser.FirstOrDefault(u => u.Email == "kevinmclennan@mail.weber.edu");
+            IdentityRole Admin = await _roleManager.FindByNameAsync(SD.Role_Admin);
+            string admin_id = await _roleManager.GetRoleIdAsync(Admin);
+
+
+            var NoteType = new List<NoteType>
+            {
+                new NoteType{  Type = "Admin Note", RoleId = admin_id}
+            };
+
+            foreach( var n in NoteType )
+            {
+                if(_db.NoteTypes.FirstOrDefault(nt => nt.Type == n.Type) == null)
+                {
+                    _db.NoteTypes.Add(n);
+                }
+            }
+
+            _db.SaveChanges();
+        }
     }
 }
-
