@@ -31,23 +31,20 @@
                         <input type="hidden" asp-for=@Model.AttendanceList[i].DateTaken name=@Model.AttendanceList[i].DateTaken />
                     </td>
                     <td>
-                        @if (Model.AttendanceList[i].MarkedAttendance == "Present")
-                        {
-                            <p>Present</p>
-                        }
-                        else if (Model.AttendanceList[i].MarkedAttendance == "Absent")
-                        {
-                            <p>Absent</p>
-                        }
-                        else
-                        {
-                            <p>Tardy</p>
-                        }
+                        <div>
+                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Present")@Html.Label("Present")
+                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Absent")@Html.Label("Absent")
+                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Tardy")@Html.Label("Tardy")
+                        </div>
                     </td>
                     <td>
                         @if (Model.AttendanceList[i].Excused == true)
                         {
-                            <p>Excused</p>
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused" checked/>
+                        }
+                        else
+                        {
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused" />
                         }
                     </td>
                     <td>
@@ -59,7 +56,7 @@
         </tbody>
     </table>
 </div>
-<div class="border p-3 mt-4">
+@*<div class="border p-3 mt-4">
     <div class="row">
         <div class="col-md">
             <div class="p-2">
@@ -68,20 +65,20 @@
             <br />
             <table id="tblChangeAttendance" class="table table-bordered table-striped">
                 <thead>
-                    <th>Student Name</th>
-                    <th>Attendance</th>
-                    <th>Excused</th>
-                    <th></th>
+                <th>Student Name</th>
+                <th>Attendance</th>
+                <th>Excused</th>
+                <th></th>
                 </thead>
             </table>
         </div>
     </div>
-</div>
+</div>*@
 
 @section Scripts{
     @{
         <partial name="_ValidationScriptsPartial" />
     }
 
-    <script src="~/js/viewAttendance.js"></script>
+    @*<script src="~/js/viewAttendance.js"></script>*@
 }

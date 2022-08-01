@@ -112,6 +112,7 @@ namespace NPAU.Controllers
             return View(obj);
         }
 
+        [HttpGet]
         public IActionResult ViewAttendance(int sessionId)
         {
             CourseSession targetSession = _unitOfWork.CourseSession.GetFirstOrDefault(cS => cS.Id == sessionId);
@@ -138,6 +139,17 @@ namespace NPAU.Controllers
 
             return View(attendanceVM);
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult ViewAttendance(AttendanceVM obj)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+        //    }
+        //    return View(obj);
+        //}
 
         [HttpGet]
         public IActionResult Edit(int? id)
