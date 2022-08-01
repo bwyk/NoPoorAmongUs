@@ -12,6 +12,9 @@
     <br /><br />
     <h4>Attendance for Class</h4>
     <form method="post" enctype="multipart/form-data">
+        <input type="hidden" readonly asp-for=SessionAttendance.Id>
+        <input type="hidden" readonly asp-for=SessionAttendance.CourseSessionId>
+
         <table class="table table-bordered table-striped" style="width:100%">
             <thead>
                 <tr>
@@ -23,10 +26,10 @@
             <tbody>
                 @for (int i = 0; i < Model.AttendanceList.Count(); i++)
                 {
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].SessionAttendanceId>
                     <tr>
                         <td width="20%">
-                            <label>@Model.AttendanceList[i].CourseEnrollment.Student.FullName</label>
-                            <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Student.Id name=@Model.AttendanceList[i].CourseEnrollment.Student.Id>
+                            <label>@(Model.AttendanceList[i].CourseEnrollment.Student?.FullName ?? "No name found")</label>
                         </td>
                         <td width="25%">
                             <div>
@@ -39,9 +42,12 @@
                             <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused">
                         </td>
                     </tr>
-
-                    <input asp-for=@Model.AttendanceList[i].Id hidden>
-                    <input asp-for=@Model.AttendanceList[i].CourseEnrollmentId hidden>
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].Id >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].SessionAttendanceId >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollmentId >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.StudentId >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.CourseSessionId >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Id >
                 }
             </tbody>
         </table>
