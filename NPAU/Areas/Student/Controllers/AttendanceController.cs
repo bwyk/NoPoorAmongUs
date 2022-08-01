@@ -177,7 +177,7 @@ namespace NPAU.Controllers
             return Json(new {data = attendanceList});
         }
 
-        private Attendance GetAttendance(int id)
+        private Attendance GetStudent(int id)
         {
             var attendance = _unitOfWork.Attendance.GetFirstOrDefault(a => a.Id == id);
             return attendance;

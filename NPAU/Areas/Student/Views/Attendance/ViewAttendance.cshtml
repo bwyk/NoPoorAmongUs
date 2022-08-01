@@ -24,6 +24,7 @@
                     <td>
                         <label>@Model.AttendanceList[i].CourseEnrollment.Student.FullName</label>
                         <input type="hidden" id="attendanceId" asp-for=@Model.AttendanceList[i].Id name=@Model.AttendanceList[i].Id>
+                        <input type="hidden" id="courseEnrId" asp-for="@Model.AttendanceList[i].CourseEnrollmentId" name="@Model.AttendanceList[i].CourseEnrollmentId">
                     </td>
                     <td>
                         <label>@Model.AttendanceList[i].DateTaken</label>
@@ -54,7 +55,7 @@
                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
                     </td>
                 </tr>
-            }
+            }"
         </tbody>
     </table>
 </div>
@@ -67,8 +68,7 @@
             <br />
             <table id="tblChangeAttendance" class="table table-bordered table-striped">
                 <thead>
-                    <th>Student Name
-                    </th>
+                    <th>Student Name</th>
                     <th>Attendance</th>
                     <th>Excused</th>
                     <th></th>

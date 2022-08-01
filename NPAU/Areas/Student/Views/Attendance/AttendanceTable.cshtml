@@ -6,7 +6,7 @@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Attendance</h2>
+            <h2 class="text-primary">Attendance for @DateTime.Now</h2>
         </div>
     </div>
     <br /><br />
@@ -24,11 +24,11 @@
                 @for (int i = 0; i < Model.AttendanceList.Count(); i++)
                 {
                     <tr>
-                        <td>
+                        <td width="20%">
                             <label>@Model.AttendanceList[i].CourseEnrollment.Student.FullName</label>
                             <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Student.Id name=@Model.AttendanceList[i].CourseEnrollment.Student.Id>
                         </td>
-                        <td>
+                        <td width="25%">
                             <div>
                                 @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Present")@Html.Label("Present")
                                 @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Absent")@Html.Label("Absent")
