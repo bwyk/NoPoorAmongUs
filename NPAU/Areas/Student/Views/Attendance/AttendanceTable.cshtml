@@ -6,7 +6,7 @@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Attendance for @DateTime.Now</h2>
+            <h2 class="text-primary">Attendance for @DateTime.Now.Date</h2>
         </div>
     </div>
     <br /><br />
@@ -52,7 +52,7 @@
             </tbody>
         </table>
         <button type="submit" class="btn btn-primary" style="width: 150px">Accept Attendance</button>
-        <a asp-controller="Attendance" asp-action="SessionSelect" class="btn btn-secondary">Back to Sessions</a>
+        <a asp-controller="Attendance" asp-action="SessionSelect" asp-route-courseId="" class="btn btn-secondary">Back to Sessions</a>
     </form>
 </div>
 
