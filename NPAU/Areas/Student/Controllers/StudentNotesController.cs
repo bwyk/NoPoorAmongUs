@@ -24,12 +24,30 @@ namespace NPAU.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            //Need to check what Role I'm logged in as.
+            string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID);
+
+            var allowedNoteTypes = await GetAllowedNoteTypes();
+
+            //Create Student Notes Viewmodel
+            NotesVM notesVM = new()
+            {
+                StudentNote = new(),
+                AppUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userID),
+                NoteTypeList = allowedNoteTypes.Select(i => new SelectListItem
+                {
+                    Text = i.Type,
+                    Value = i.Id.ToString()
+                })
+            };
+
+            return View(notesVM);
         }
 
-        public async Task<IActionResult> Upsert(int? id)
+        public async Task<List<NoteType>> GetAllowedNoteTypes()
         {
             //Need to check what Role I'm logged in as.
             string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
@@ -56,14 +74,23 @@ namespace NPAU.Controllers
             {
                 foreach (string noteType in entry.Value)
                 {
-                    if(userRoleNames.Contains(noteType))
+                    if (userRoleNames.Contains(noteType))
                     {
                         allowedNoteTypes.Add(_unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Type == entry.Key, includeProperties: "Role"));
                     }
                 }
             }
+            allowedNoteTypes.Sort((p, q) => p.Type.CompareTo(q.Type));
+            return allowedNoteTypes.Distinct().ToList();
+        }
 
-            //Create NoteType Viewmodel
+        public async Task<IActionResult> Upsert(int? id)
+        {
+            // Need to check what Role I'm logged in as and grab the allowed NoteTypes.
+            string userID = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+            List<NoteType> allowedNoteTypes = await GetAllowedNoteTypes();
+
+            //Create Student Notes Viewmodel
             NotesVM notesVM = new()
             {
                 StudentNote = new(),
@@ -147,6 +174,51 @@ namespace NPAU.Controllers
         public IActionResult GetAll()
         {
             var studentNoteList = _unitOfWork.StudentNote.GetAll(includeProperties: "Student,NoteType,ApplicationUser");
+            return Json(new { data = studentNoteList });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllForUser()
+        {
+            List<NoteType> allowedNoteTypes = await GetAllowedNoteTypes();
+            List<StudentNote> studentNoteList = new List<StudentNote>();
+
+            foreach(var notetype in allowedNoteTypes)
+            {
+                var results = _unitOfWork.StudentNote.GetAll(s => s.NoteType.Type == notetype.Type, includeProperties: "Student,NoteType,ApplicationUser");
+                studentNoteList.AddRange(results);
+            }
+            return Json(new { data = studentNoteList });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudents()
+        {
+            List<NoteType> allowedNoteTypes = await GetAllowedNoteTypes();
+            List<StudentNote> studentNoteList = new List<StudentNote>();
+
+            foreach (var notetype in allowedNoteTypes)
+            {
+                var results = _unitOfWork.StudentNote.GetAll(s => s.NoteType.Type == notetype.Type, includeProperties: "Student,NoteType,ApplicationUser");
+                studentNoteList.AddRange(results);
+            }
+
+            
+            return Json(new { data = studentNoteList.DistinctBy(s => s.Student.Id) });
+        }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> GetNotesByStudent(int id)
+        {
+            List<NoteType> allowedNoteTypes = await GetAllowedNoteTypes();
+            List<StudentNote> studentNoteList = new List<StudentNote>();
+
+            foreach (var notetype in allowedNoteTypes)
+            {
+                var results = _unitOfWork.StudentNote.GetAll(nt => nt.NoteType.Type == notetype.Type && nt.StudentId == id,includeProperties: "Student,NoteType,ApplicationUser");
+                studentNoteList.AddRange(results);
+            }
             return Json(new { data = studentNoteList });
         }
 

@@ -10,7 +10,6 @@ namespace DataAccess.Repository.IRepository
     {
         IPublicSchoolScheduleRepository PublicSchoolSchedules { get; }
         ICoursesRepository Course { get; }
-        IInstructorRepository Instructor { get; }
         IGuardiansRepository Guardian { get; }
         IRatingsRepository Rating { get; }
         IStudentsRepository Student { get; }

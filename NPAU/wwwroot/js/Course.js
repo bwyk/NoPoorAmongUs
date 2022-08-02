@@ -13,10 +13,10 @@ function loadDataTable() {
             { "data": "name", "width": "15%" },
             { "data": "school.name", "width": "15%" },
             {
-                "data": "instructor.firstName",
-                "data": "instructor.lastName",
+                "data": "applicationUser.firstName",
+                "data": "applicationUser.lastName",
                 "render": function(data, type, row) {
-                    return row.instructor.firstName + ' ' + row.instructor.lastName;
+                    return row.applicationUser.firstName + ' ' + row.applicationUser.lastName;
                 }                
             },
             { "data": "subject.name", "width": "15%" },
