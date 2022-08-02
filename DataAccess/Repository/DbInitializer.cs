@@ -44,13 +44,6 @@ namespace DataAccess.Repository
             _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor_English)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor_IT)).GetAwaiter().GetResult();
 
-            //SeedGuardians();
-            //SeedCourses();
-            SeedRelationships();
-            SeedCourseSessionAsync();
-            SeedCourseEnrollmentAsync();
-            SeedNotes().GetAwaiter().GetResult();
-
             //Create "Super Admins"
             _userManager.CreateAsync(new ApplicationUser
             {
@@ -63,6 +56,14 @@ namespace DataAccess.Repository
             ApplicationUser user = _db.ApplicationUser.FirstOrDefault(u => u.Email == "kevinmclennan@mail.weber.edu");
 
             _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
+
+            //SeedGuardians();
+            //SeedCourses();
+            SeedRelationships();
+            SeedCourseSessionAsync();
+            SeedCourseEnrollmentAsync();
+            SeedNoteTypes().GetAwaiter().GetResult();
+            SeedStudentNotes();
         }
 
         private (Student, Student, Student, Student, Student) GetStudents()
@@ -765,7 +766,7 @@ namespace DataAccess.Repository
             return (publicSchool, boanne);
         }
 
-        private async Task SeedNotes()
+        private async Task SeedNoteTypes()
         {
             IdentityRole Admin = await _roleManager.FindByNameAsync(SD.Role_Admin);
             IdentityRole SocialWorker = await _roleManager.FindByNameAsync(SD.Role_Social);
@@ -793,6 +794,42 @@ namespace DataAccess.Repository
                 if(_db.NoteTypes.FirstOrDefault(nt => nt.Type == n.Type && nt.RoleId == n.RoleId) == null)
                 {
                     _db.NoteTypes.Add(n);
+                }
+            }
+
+            _db.SaveChanges();
+        }
+        private void SeedStudentNotes()
+        {
+            ApplicationUser user = _db.ApplicationUser.FirstOrDefault(u => u.Email == "kevinmclennan@mail.weber.edu");
+            DateTime seedDate1 = new DateTime(1970, 1, 1);
+            DateTime seedDate2 = new DateTime(1970, 1, 2);
+            /*ApplicationUser AppUser = _db.ApplicationUser.Get(u => u.Id == userID);*/
+
+            var StudentNote = new List<StudentNote>
+            {
+                new StudentNote{
+                    Text = "<p>This is an admin note seeded into the database which can only be seen by users with the Admin Role.<p>",
+                    CreatedDate = seedDate1,
+                    Priority = SD.PriorityLow,
+                    StudentId = 1,
+                    NoteTypeId = 1,
+                    ApplicationUser = user},
+                new StudentNote{
+                    Text = "<p>This is a general note seeded into the database which can be see by multiple roles setup through Note Type under Admin.<p>",
+                    CreatedDate = seedDate2,
+                    Priority = SD.PriorityComplete,
+                    StudentId = 2,
+                    NoteTypeId = 2,
+                    ApplicationUser = user}
+            };
+
+            foreach (var sn in StudentNote)
+            {
+                if (_db.StudentNotes.FirstOrDefault(sn => sn.CreatedDate == seedDate1) == null || 
+                    _db.StudentNotes.FirstOrDefault(sn => sn.CreatedDate == seedDate2) == null)
+                {
+                    _db.StudentNotes.Add(sn);
                 }
             }
 
