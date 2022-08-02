@@ -54,6 +54,7 @@ namespace NPAU.Controllers
                 return View(studentVM);
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Details(StudentVM obj)

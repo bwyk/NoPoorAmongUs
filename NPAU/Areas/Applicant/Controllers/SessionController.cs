@@ -103,7 +103,7 @@ namespace NPAU.Controllers
                 if (obj.CourseSession.Id == 0)
                 {
                     _unitOfWork.CourseSession.Add(obj.CourseSession);
-                    _unitOfWork.Save();
+                    _unitOfWork.Save(); // breaks here
                 }
                 else
                 {
@@ -162,9 +162,9 @@ namespace NPAU.Controllers
                 }
 
 
-                // Check if any relationships were removed
+                // Check if any enrollments were removed
                 foreach (CourseEnrollment e in enrollments)
-                    // If there are not any entered guardians that match an existing relationship
+                    // If there are not any entered enrollments that match a previous
                     if (!enteredStudents.Any(s => s.Id == e.StudentId))
                     {
                         if (!newStudentEnrollments.Any(s => s.Id == e.StudentId))
@@ -180,6 +180,9 @@ namespace NPAU.Controllers
             }
 
             obj.PotentialStudents = _unitOfWork.Student.GetAll();
+            // TODO filter >.<
+
+
             return View(obj);
         }
 
