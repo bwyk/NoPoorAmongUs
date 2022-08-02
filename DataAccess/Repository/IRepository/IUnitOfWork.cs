@@ -27,6 +27,7 @@ namespace DataAccess.Repository.IRepository
         IStudentNoteRepository StudentNote { get; }
         ISubjectRepository Subject { get; }
         IApplicationUserRepository ApplicationUser { get; }
+        IRelationshipRepository Relationship { get; }
         void Save();
     }
 }

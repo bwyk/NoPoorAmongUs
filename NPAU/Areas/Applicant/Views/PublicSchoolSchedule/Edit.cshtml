@@ -1,0 +1,51 @@
+﻿@using Utilities;
+@model Models.ViewModels.PublicSchoolScheduleVM
+
+<h2 class="text-primary">Update Public School Session</h2>
+
+<form method="post">
+    <input asp-for="Student.Id" hidden readonly />
+    <input asp-for="Student.Address" hidden readonly />
+    <input asp-for="Student.Birthday" hidden readonly />
+    <input asp-for="Student.ComputerLevel " hidden readonly />
+    <input asp-for="Student.EnglishLevel" hidden readonly />
+    <input asp-for="Student.FirstName" hidden readonly />
+    <input asp-for="Student.LastName" hidden readonly />
+    <input asp-for="Student.Village" hidden readonly />
+    <input asp-for="Student.Status" hidden readonly />
+    <input asp-for="Student.FullName" hidden readonly />
+
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-2 row">
+                <div class="mb-3 col-4">
+                    <label asp-for="PublicSchoolSchedules.StartTime"></label>
+                    <input asp-for="PublicSchoolSchedules.StartTime" class="form-control" />
+                </div>
+                <div class="mb-3 col-4">
+                    <label asp-for="PublicSchoolSchedules.EndTime"></label>
+                    <input asp-for="PublicSchoolSchedules.EndTime" class="form-control" />
+                </div>
+                <div class="mb-3 form-check-inline">
+                    @foreach (var weekday in Enum.GetValues(typeof(SD.Weekdays)))  
+                    {
+                        if (Model.PublicSchoolSchedules.Weekday == weekday)
+                        {
+                            <input type="radio" name="weekday" asp-for="PublicSchoolSchedules.Weekday" checked="checked" value="@weekday">@weekday<br />
+                        }
+                        else
+                        {
+                            <input type="radio" name="weekday" asp-for="PublicSchoolSchedules.Weekday" value="@weekday">@weekday<br />                            
+                        }
+                    } 
+                </div>
+                <div class="d-flex justify-content-start" role="group">
+                    <input type="submit" class="btn btn-primary">
+                    <a asp-controller="PublicSchoolSchedule" asp-action="Schedule" asp-route-id="@Model.Student.Id" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

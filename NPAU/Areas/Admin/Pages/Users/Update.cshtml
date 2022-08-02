@@ -33,13 +33,14 @@
                     @{
                         if (Model.UsersRoles.Contains(r))
                         {
-                            <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r" checked>
                             <label class="form-check-label">@r</label>
+                            <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r" checked>
+                            
                         }
                         else
                         {
-                            <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r">
                             <label class="form-check-label">@r</label>
+                            <input class="form-check-input" name="roles" type="checkbox" id="@r" value="@r">                       
                         }
                     }
                 </div>

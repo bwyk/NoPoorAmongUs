@@ -22,5 +22,10 @@ namespace DataAccess.Repository
         {
             _db.NoteTypes.Update(obj);
         }
+
+        public void UpdateRange(IEnumerable<NoteType> entities)
+        {
+            _db.NoteTypes.UpdateRange(entities);
+        }
     }
 }

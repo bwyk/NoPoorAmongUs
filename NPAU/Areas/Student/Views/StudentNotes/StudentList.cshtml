@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Student Notes";
+    ViewData["Title"] = "Student List for Notes";
 }
 <div class="container">
     <div class="row pt-4">
@@ -7,7 +7,7 @@
             <h2 class="text-primary">Student Notes</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="StudentNotes" asp-action="Upsert" class="btn btn-primary">
+            <a asp-controller="Student List For Notes" asp-action="Upsert" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> &nbsp; Create Note
             </a>
         </div>
@@ -17,18 +17,10 @@
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
-                <th>Date Created</th>
-                <th>Priority Level</th>
-                <th>Author</th>
                 <th>First Name</th>
                 <th>Last Name</th>
-                <th>Note Type</th>
                 <th>Actions</th>
             </tr>
         </thead>
     </table>
 </div>
-
-@section Scripts{
-    <script src="~/js/student-notes.js"></script>
-}

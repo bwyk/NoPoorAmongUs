@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Models
 {
     public class Rating
@@ -31,7 +30,8 @@ namespace Models
         [Required]
         [Range(1, 5, ErrorMessage = "Distance Rating must be between 1 to 5")]
         public int Distance { get; set; }
-
+        public string ApplicationUserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
         public int StudentId { get; set; }
         [ValidateNever]
         [ForeignKey("StudentId")]

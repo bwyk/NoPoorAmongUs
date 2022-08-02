@@ -1,7 +1,10 @@
 ﻿using DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models.Academic;
 using Models.ViewModels;
+using System.Diagnostics;
 using Utilities;
 
 namespace NPAU.Areas.Admin.Controllers
@@ -10,79 +13,175 @@ namespace NPAU.Areas.Admin.Controllers
     public class NoteTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public NoteTypeController(IUnitOfWork unitOfWork)
+        public NoteTypeController(IUnitOfWork unitOfWork, RoleManager<IdentityRole> roleManager)
         {
             _unitOfWork = unitOfWork;
+            _roleManager = roleManager;
         }
-        public IActionResult Index()
+        public ViewResult Index()
         {
-            return View();
-        }
-        public IActionResult Upsert(int? id)
-        {
-            NoteType noteType = new();
+            List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
+            Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
 
-            if (id == null || id == 0)
+            foreach (var nt in noteTypes)
             {
-                return View(noteType);
+                List<string> rolesToAdd = new List<string>();
+                rolesToAdd = _unitOfWork.NoteType.GetAll(u => u.Type == nt, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+                allData.Add(nt, rolesToAdd);
+            }
+
+            NoteTypeVM noteTypeVM = new NoteTypeVM()
+            {
+                NoteRoles = allData
+            };
+            return View(noteTypeVM);
+        }
+
+        [HttpGet]
+        public IActionResult Upsert(string? type)
+        {
+            NoteTypeVM noteTypeVM = new NoteTypeVM()
+            {
+                NoteType = new(),
+                RoleList = _roleManager.Roles.Select(r => r.Name).ToList()
+            };
+
+            if (type == null)
+            {
+                return View(noteTypeVM);
             }
             else
             {
-                noteType= _unitOfWork.NoteType.GetFirstOrDefault(u => u.Id == id);
-                return View(noteType);
+                List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
+                Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
 
+                foreach (var nt in noteTypes)
+                {
+                    List<string> rolesToAdd = new List<string>();
+                    rolesToAdd = _unitOfWork.NoteType.GetAll(u => u.Type == nt, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+                    allData.Add(nt, rolesToAdd);
+                }
+
+                noteTypeVM.NoteRoles = allData;
+                noteTypeVM.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(t => t.Type == type);
+                noteTypeVM.RoleList = _roleManager.Roles.Select(r => r.Name).ToList();
+
+                return View(noteTypeVM);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(NoteType obj)
+        public IActionResult Upsert(NoteTypeVM obj)
         {
-            if (ModelState.IsValid)
+            var checkedRoles = Request.Form["roles"].ToList();
+            var roleIds = new List<string>();
+            List<NoteType> notetypes = new List<NoteType>();
+
+            //New NoteType
+            if (obj.NoteType.Id == 0)
             {
-                if (obj.Id == 0)
+                foreach (var item in checkedRoles)
                 {
-                    _unitOfWork.NoteType.Add(obj);
-                    TempData["success"] = "Note Type Created Successfully";
-
+                    obj.NoteType.Role = _roleManager.Roles.FirstOrDefault(r => r.Name == item);
+                    NoteType nt = new NoteType();
+                    nt.Type = obj.NoteType.Type;
+                    nt.Role = obj.NoteType.Role;
+                    notetypes.Add(nt);
                 }
-                else
-                {
-                    _unitOfWork.NoteType.Update(obj);
-                    TempData["success"] = "Note Type Updated Successfully";
 
-                }
+                _unitOfWork.NoteType.AddRange(notetypes);
                 _unitOfWork.Save();
+                TempData["success"] = "Note Type created successfully";
                 return RedirectToAction("Index");
             }
+            //Update Notetype
+            else
+            {
+                //Update the Type first.
+                obj.RoleList = _unitOfWork.NoteType.GetAll(nt => nt.Type == obj.NoteType.Type, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+                var oldTypeName = _unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Id == obj.NoteType.Id, includeProperties: "Role");
+                List<string> oldRoles = _unitOfWork.NoteType.GetAll(nt => nt.Type == oldTypeName.Type, includeProperties: "Role").Select(n => n.Role.Name).ToList();
 
-            return View(obj);
+                List<NoteType> noteTypeUpdates = _unitOfWork.NoteType.GetAll(nt => nt.Type == oldTypeName.Type).ToList();
+                foreach (NoteType nt in noteTypeUpdates)
+                {
+                    nt.Type = obj.NoteType.Type;
+                }
+
+                _unitOfWork.NoteType.UpdateRange(noteTypeUpdates);
+                _unitOfWork.Save();
+
+                
+                List<NoteType> rolesToRemove = new List<NoteType>();
+                List<NoteType> rolesToAdd = new List<NoteType>();
+                //See what roles need to be removed.
+                foreach (string s in oldRoles.Except(checkedRoles))
+                {
+                    NoteType remove = _unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Type == obj.NoteType.Type && nt.Role.Name == s, includeProperties: "Role");
+                    rolesToRemove.Add(remove);
+                }
+                //See what roles need to be added.
+                foreach (string s in checkedRoles.Except(oldRoles))
+                {
+                    NoteType add = new NoteType();
+                    add.Type = obj.NoteType.Type;
+                    add.Role = _roleManager.Roles.FirstOrDefault(r => r.Name == s);
+                    rolesToAdd.Add(add);
+                }
+                //Add roles in and then remove roles.
+                _unitOfWork.NoteType.AddRange(rolesToAdd);
+                _unitOfWork.NoteType.RemoveRange(rolesToRemove);
+                _unitOfWork.Save();
+
+                TempData["success"] = "Note Type updated successfully";
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Delete(string? type)
+        {
+            List<string> noteTypes = _unitOfWork.NoteType.GetAll().Select(n => n.Type).Distinct().ToList();
+            Dictionary<string, List<string>> allData = new Dictionary<string, List<string>>();
+
+            foreach (var nt in noteTypes)
+            {
+                List<string> rolesToAdd = new List<string>();
+                rolesToAdd = _unitOfWork.NoteType.GetAll(u => u.Type == nt, includeProperties: "Role").Select(n => n.Role.Name).ToList();
+                allData.Add(nt, rolesToAdd);
+            }
+
+            NoteTypeVM noteTypeVM = new NoteTypeVM()
+            {
+                NoteRoles = allData,
+                NoteType = _unitOfWork.NoteType.GetFirstOrDefault(t => t.Type == type),
+                RoleList = _roleManager.Roles.Select(r => r.Name).ToList()
+            };
+            return View(noteTypeVM);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePost(NoteTypeVM obj)
+        {
+            NoteType incomingNT = _unitOfWork.NoteType.GetFirstOrDefault(nt => nt.Id == obj.NoteType.Id, includeProperties: "Role");
+            IEnumerable<NoteType> foundNoteTypes = _unitOfWork.NoteType.GetAll(t => t.Type == incomingNT.Type);
+
+            _unitOfWork.NoteType.RemoveRange(foundNoteTypes);
+            _unitOfWork.Save();
+            TempData["success"] = "Note Type deleted successfully";
+            return RedirectToAction("Index");
         }
 
         #region API CALLS 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var noteTypeList = _unitOfWork.NoteType.GetAll();
+            var noteTypeList = _unitOfWork.NoteType.GetAll(includeProperties: "Role");
             return Json(new { data = noteTypeList });
         }
-
-        [HttpDelete]
-        public IActionResult Delete(int? id)
-        {
-            var obj = _unitOfWork.NoteType.GetFirstOrDefault(u => u.Id == id);
-            if (obj == null)
-            {
-                return Json(new { success = false, message = "Error while deleting" });
-            }
-
-            _unitOfWork.NoteType.Remove(obj);
-            _unitOfWork.Save();
-            return Json(new { success = true, message = "Note Type Deleted Successfully" });
-
-        }
-
         #endregion
     }
 }

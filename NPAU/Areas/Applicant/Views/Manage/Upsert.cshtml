@@ -1,0 +1,254 @@
+﻿@using Models.ViewModels
+@model StudentVM
+@{
+    ViewData["Title"] = @Model.Student?.FullName ?? "New Applicant";
+}
+
+@{
+
+    var status = Context.Request.Query["status"];
+    var pending = "text-primary";
+    var student = "text-primary";
+    var rejected = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "student":
+            student = "active text-white";
+            break;
+        case "pending":
+            pending = "active text-white";
+            break;
+        case "rejected":
+            rejected = "active text-white";
+            break;
+        default:
+            all = "active text-white";
+            break;
+    }
+}
+
+<div class="modal fade" id="relationshipModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Guardian</h4>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label asp-for="Relationship.RelationshipType"></label>
+                    <select id="guardian-relationship" asp-for="Relationship.RelationshipType" asp-items="@Model.GuardianRelationshipList" class="form-select">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="save" class="btn btn-primary">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="border p-3 mt-4">
+    <div class="row">
+        <div class="col-md">
+            <form method="post" id="applicant-form" enctype="multipart/form-data">
+                <input id="studentId" hidden asp-for="Student.Id" class="studentEdit" />
+                <input asp-for="Student.EnglishLevel" hidden value="1" class="studentEdit form-control" />
+                <input asp-for="Student.ComputerLevel" hidden value="1" class="studentEdit form-control" />
+                <input asp-for="GuardianJSON" hidden id="guardianJSON" class="studentEdit form-control" />
+                <span asp-validation-for="GuardianJSON" class="text-danger"></span>
+                <div>
+                    @if (Model.Student.Id != 0)
+                    {
+                        <h2 class="text-primary">
+                            <span class="col-10">Student Information</span>
+                            <button type="button" id="btnEditTrue" class="btn btn-secondary float-end student-edit-hide" onclick="toggleEditable()">Edit</button>
+                            <button type="button" id="btnEditTrue" class="btn btn-secondary float-end student-edit-show" onclick="cancelEdit()">Cancel Edit</button>
+                        </h2>
+                    }
+                    else
+                    {
+                        <h2 class="text-primary">Applicant Information</h2>
+                    }
+                    <hr />
+                    <div class="mb-3">
+                        @if (Model.Student.Id != 0)
+                        {
+                            <label asp-for="Student.Status"></label>
+                            <input asp-for="Student.Status" readonly class="student-edit-hide  form-control" />
+                            <select asp-for="Student.Status" asp-items="@Model.StudentStatusList" class="student-edit-show form-select">
+                            </select>
+                            <span asp-validation-for="Student.Status" class="text-danger"></span>
+                        }
+                        else
+                        {
+                            <label asp-for="Student.Status"></label>
+                            <input asp-for="Student.Status" readonly value=@Utilities.SD.StudentStatusPending class="form-control" />
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Student.FirstName"></label>
+                        <input asp-for="Student.FirstName" class="student-edit-input form-control" />
+                        <span asp-validation-for="Student.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Student.LastName"></label>
+                        <input asp-for="Student.LastName" class="student-edit-input form-control" />
+                        <span asp-validation-for="Student.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Student.Birthday"></label>
+                        <input asp-for="Student.Birthday" class="student-edit-input form-control" />
+                        <span asp-validation-for="Student.Birthday" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Student.Address"></label>
+                        <input asp-for="Student.Address" class="student-edit-input form-control" />
+                        <span asp-validation-for="Student.Address" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Student.Village"></label>
+                        <input asp-for="Student.Village" class="student-edit-input form-control" />
+                        <span asp-validation-for="Student.Village" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-8">
+                    @if (Model.Student.Id != 0)
+                    {
+                        <button id="btn-add-applicant" type="submit" class="btn btn-primary student-edit-show" style="width:150px">Update</button>
+                    }
+                    else
+                    {
+                        <button id="btn-add-applicant" type="submit" class="btn btn-primary student-edit-show" style="width:150px">Create</button>
+                    }
+                    <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="col-md">
+            <form id="form-rating" onsubmit="saveRating(); return false;">
+                <input id="studentId" hidden asp-for="Rating.StudentId" value="@Model.Student.Id"class="studentEdit" />
+                <input hidden asp-for="Rating.Student" value="@Model.Student"class="studentEdit" />
+                <input hidden asp-for="Rating" value="@Model.Rating"class="studentEdit" />
+                <input hidden asp-for="Rating.Id" value="@Model.Rating?.Id"class="studentEdit" />
+
+                <h2 class="text-primary">
+                    <span class="col-10">Applicant Rating</span>
+                    @if (Model.Student.Id != 0)
+                    {
+                        <button type="button" class="btn btn-secondary float-end rating-edit-hide" onclick="ratingToggleEditable()">Edit</button>
+                        <button type="button" class="btn btn-secondary float-end rating-edit-show" onclick="ratingCancelEdit()">Cancel Edit</button>
+                    }
+                </h2>
+
+                <hr />
+                <div class="mb-3">
+                    <label asp-for="Rating.Age"></label>
+                    <input asp-for="Rating.Age" class="form-control rating-edit-input " />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Rating.Academics"></label>
+                    <input asp-for="Rating.Academics" class="form-control rating-edit-input " />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Rating.AnnualIncome"></label>
+                    <input asp-for="Rating.AnnualIncome" class="form-control rating-edit-input " />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Rating.FamilySupport"></label>
+                    <input asp-for="Rating.FamilySupport" class="form-control rating-edit-input " />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Rating.Distance"></label>
+                    <input asp-for="Rating.Distance" class="form-control rating-edit-input " />
+                </div>
+                <button type="submit" id="ratingSubmit" class="btn btn-primary  rating-edit-show" style="width:150px">Save Ratings</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="border p-3 mt-4">
+
+    <div class="row">
+
+        <div class="col-md">
+            <div class="p-2">
+                <h2 class="text-primary text-start">Current Guardians</h2>
+            </div>
+            <br />
+            <table id="tblDataCurrentGuardians" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Relationship</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="row student-edit-guardian" hidden>
+            <hr />
+            <div class="col-md">
+                <div class="p-2">
+                    <h2 class="text-primary text-start">Potential Guardians</h2>
+                    <hr />
+                </div>
+                <table id="tblDataPotentialGuardians" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-md">
+                <form id="form-guardian" onsubmit="addGuardian(); return false;">
+                    <div class="p-2">
+                        <h2 class="text-primary">Add New Guardian</h2>
+                        <hr />
+                    </div>
+                    <div>
+                        <h5 class="text-primary">Guardian Information</h5>
+                        <div class="mb-3">
+                            <label asp-for="Guardian.FirstName"></label>
+                            <input id="guardian-first-name" asp-for="Guardian.FirstName" class="form-control" />
+                            <span asp-validation-for="Guardian.FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Guardian.LastName"></label>
+                            <input id="guardian-last-name" asp-for="Guardian.LastName" class="form-control" />
+                            <span asp-validation-for="Guardian.LastName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Relationship.RelationshipType"></label>
+                            <select id="guardian-relationship" asp-for="Relationship.RelationshipType" asp-items="@Model.GuardianRelationshipList" class="form-select">
+                            </select>
+                            <span asp-validation-for="Relationship.RelationshipType" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <button id="btn-add-guardian" type="submit" class="btn btn-primary" style="width:150px">Add Guardian</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script src="~/js/guardianFilter.js"></script>
+}
