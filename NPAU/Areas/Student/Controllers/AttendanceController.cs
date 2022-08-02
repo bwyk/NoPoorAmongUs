@@ -37,8 +37,12 @@ namespace NPAU.Controllers
 
         public IActionResult SessionSelect(int courseId)
         {
-            IEnumerable<CourseSession> sessionList = _unitOfWork.CourseSession.GetAll(s => s.CourseId == courseId);
-            return View(sessionList);
+            CourseSessionSelectVM courseSessionSelectVM = new()
+            {
+                CourseId = courseId,
+                SessionList = _unitOfWork.CourseSession.GetAll(s => s.CourseId == courseId).ToList()
+            };
+            return View(courseSessionSelectVM);
         }
 
         public IActionResult ViewSessionSelect(int courseId)
