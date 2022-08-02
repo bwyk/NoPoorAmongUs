@@ -16,6 +16,7 @@ namespace DataAccess.Repository.IRepository
         ITermsRepository Term { get; }
         IAssessmentsRepository Assessment { get; }
         IAttendanceRepository Attendance { get; }
+        ISessionAttendanceRepository SessionAttendance { get; }
         ICourseEnrollmentsRepository CourseEnrollment { get; }
         ICourseSessionsRepository CourseSession { get; }
         IDocTypeRepository DocType { get; }

@@ -12,7 +12,7 @@
     </div>
     <br /><br />
     <h3 class="text-secondary">Choose a session to view attendance:</h3>
-    <table>
+    <table class="table table-bordered table-striped">
 
         <tr>
             <th>Course Name</th>
@@ -24,7 +24,7 @@
     @foreach (var obj in Model)
     {
         <tr>
-            <td>@obj.CourseName</td>
+            <td width="20%">@obj.CourseName</td>
             <td>@obj.Day</td>
             <td>@obj.StartTime</td>
             <td>@obj.EndTime</td>

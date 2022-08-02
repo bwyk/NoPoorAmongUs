@@ -7,10 +7,11 @@
         </div>
     </div>
     <br /><br />
-    <table cclass="table table-bordered table-striped" style="width:100%">
+    <table class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
                 <th>Student</th>
+                <th>Date</th>
                 <th>Marked</th>
                 <th>Excused</th>
                 <th></th>
@@ -22,34 +23,62 @@
                 <tr>
                     <td>
                         <label>@Model.AttendanceList[i].CourseEnrollment.Student.FullName</label>
-                        <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Student.Id name=@Model.AttendanceList[i].CourseEnrollment.Student.Id>
+                        <input type="hidden" id="attendanceId" asp-for=@Model.AttendanceList[i].Id name=@Model.AttendanceList[i].Id>
+                        <input type="hidden" id="courseEnrId" asp-for="@Model.AttendanceList[i].CourseEnrollmentId" name="@Model.AttendanceList[i].CourseEnrollmentId">
                     </td>
                     <td>
-                        @if (Model.AttendanceList[i].Present == true)
-                        {
-                            <p>Present</p>
-                        }
-                        else if (Model.AttendanceList[i].Absent == true)
-                        {
-                            <p>Absent</p>
-                        }
-                        else
-                        {
-                            <p>Tardy</p>
-                        }
+                        <label>@Model.AttendanceList[i].DateTaken</label>
+                        <input type="hidden" asp-for=@Model.AttendanceList[i].DateTaken name=@Model.AttendanceList[i].DateTaken />
+                    </td>
+                    <td>
+                        <div>
+                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Present")@Html.Label("Present")
+                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Absent")@Html.Label("Absent")
+                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Tardy")@Html.Label("Tardy")
+                        </div>
                     </td>
                     <td>
                         @if (Model.AttendanceList[i].Excused == true)
                         {
-                            <p>Excused</p>
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused" checked/>
+                        }
+                        else
+                        {
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused" />
                         }
                     </td>
                     <td>
-                        <a asp-controller="Attendance" asp-action="ViewSessionSelect" asp-route-courseId="@Model.AttendanceList[i].Id"
+                        <a onclick="toggleEdit()" asp-controller="Attendance" asp-action="Edit" asp-route-Id="@Model.AttendanceList[i].Id"
                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
                     </td>
                 </tr>
-            }
+            }"
         </tbody>
     </table>
 </div>
+@*<div class="border p-3 mt-4">
+    <div class="row">
+        <div class="col-md">
+            <div class="p-2">
+                <h2 class="text-primary text-start">Change Student Attendance</h2>
+            </div>
+            <br />
+            <table id="tblChangeAttendance" class="table table-bordered table-striped">
+                <thead>
+                <th>Student Name</th>
+                <th>Attendance</th>
+                <th>Excused</th>
+                <th></th>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>*@
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    @*<script src="~/js/viewAttendance.js"></script>*@
+}
