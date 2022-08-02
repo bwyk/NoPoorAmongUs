@@ -571,8 +571,9 @@ namespace DataAccess.Migrations
                         name: "FK_Grades_CourseEnrollments_CourseEnrollmentId",
                         column: x => x.CourseEnrollmentId,
                         principalTable: "CourseEnrollments",
-                        principalColumn: "Id");
-                });
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+        });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

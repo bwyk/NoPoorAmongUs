@@ -8,30 +8,41 @@
 
     </div>
     <br /><br />
-    <h3 class="text-secondary">Choose an assessment to grade in COURSE NAME HERE:</h3>
+    <h3 class="text-secondary">Choose an assessment to grade:</h3>
     <table>
 
         <tr>
             <th>Course Name</th>
         </tr>
-    
-    @foreach (var obj in Model)
-    {
-        <tr>
-            <td>@obj.Name</td>
-            <td>
-                <a asp-controller="Grading" asp-action="GradingTable" asp-route-assessmentId="@obj.Id"
-               class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Grade Assessments</a>
-            </td>
-        </tr>
-    }
-    </table>
-    <br />
-    <a asp-controller="Grading" asp-action="CourseSelect"
+        @if (Model.Count == 0)
+        {
+            <tr>
+                <td>There are no assessments to grade for this course.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var obj in Model)
+            {
+                <tr>
+                    <td>@obj.Name</td>
+                    <td>
+                        <a asp-controller="Grading" asp-action="GradingTable" asp-route-assessmentId="@obj.Id"
+                   class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Grade Assessments</a>
+                    </td>
+                </tr>
+            }
+        }
+        
+
+        </table>
+
+        <br />
+        <a asp-controller="Grading" asp-action="CourseSelect"
        class="btn btn-secondary mx-2">Back to Course Select</a>
 
 
 
 
-</div>
+    </div>
 
