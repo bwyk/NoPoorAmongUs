@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Collections.Generic;
 using Models.ViewModels;
+using System.Data;
 
 namespace NPAU.Controllers
 {
@@ -20,10 +21,21 @@ namespace NPAU.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        public ViewResult Index()
+        {
+            List<RatingVM> ratingVMList = new List<RatingVM>();       
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Age", typeof(double));
+            dt.Columns.Add("Academics", typeof(double));
+            dt.Columns.Add("Finances", typeof(double));
+            dt.Columns.Add("Support", typeof(double));
+            dt.Columns.Add("Distance", typeof(double));
+            dt.Columns.Add("Average", typeof(double));
 
-        public IActionResult Index()
-        {    
-            List<RatingVM> ratingVMList = new List<RatingVM>();          
+            IEnumerable<Rating> Ratings = _unitOfWork.Rating.GetAll();
+            IEnumerable<Student> Students = _unitOfWork.Student.GetAll(s => s.Status == "Pending");
+
 
             double counter = 0.0;
             //This number is for the amount of ratings we have can be scaled up or down.
