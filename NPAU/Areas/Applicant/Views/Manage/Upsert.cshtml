@@ -142,6 +142,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Relationship</th>
+                        <th>Phone Number</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -182,6 +183,11 @@
                             <label asp-for="Guardian.LastName"></label>
                             <input id="guardian-last-name" asp-for="Guardian.LastName" class="form-control" />
                             <span id="last-guardian-error" asp-validation-for="Guardian.LastName" class="text-danger guardian-error"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Guardian.PhoneNumber"></label>
+                            <input id="guardian-phone" asp-for="Guardian.PhoneNumber" class="form-control" />
+                            <span id="phone-guardian-error" asp-validation-for="Guardian.PhoneNumber" class="text-danger guardian-error"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="Relationship.RelationshipType"></label>

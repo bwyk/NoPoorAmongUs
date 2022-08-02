@@ -44,8 +44,6 @@ $(document).ready(function () {
                 }
                 studentDetails("Rater")
             }
-
-
             else {
                 if (url.includes("student")) {
                     loadDataTable("student");
@@ -287,12 +285,10 @@ function loadDataTable2(status) {
             var propertyList = [];
             if (json.data.length == 0) {
                 var keys = Object.keys(json.data).filter(key => wantedFields.includes(key));
-            } else {
-                var keys = Object.keys(json.data[0]).filter(key => wantedFields.includes(key));
-
             }
-
-
+            else {
+                var keys = Object.keys(json.data[0]).filter(key => wantedFields.includes(key));
+            }
             keys.forEach((key) => {
                 if (key != "id")
                     columnList.push({ 'data': key })
@@ -303,7 +299,6 @@ function loadDataTable2(status) {
                 },
                 "width": "22%"
             })
-
             for (var i = 0; i < json.data.length; i++) {
                 //unwantedFields.forEach(f => delete json.data[i][f])
                 propertyList[i] = json.data[i]
