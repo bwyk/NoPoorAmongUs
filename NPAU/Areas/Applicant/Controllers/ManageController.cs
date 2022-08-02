@@ -33,10 +33,11 @@ namespace NPAU.Controllers
             return View();
         }
 
-        public IActionResult Upsert(int? id)
+        public IActionResult Upsert(int? id, string status)
         {
             StudentVM studentVM = new()
             {
+                Status = status,
                 StudentStatusList = SD.StudentStatusList,
                 GuardianRelationshipList = SD.GuardianRelationshipList
             };
