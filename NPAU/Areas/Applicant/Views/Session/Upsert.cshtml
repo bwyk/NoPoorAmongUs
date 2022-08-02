@@ -1,4 +1,5 @@
-﻿@using Models.ViewModels
+﻿@using Utilities;
+@using Models.ViewModels
 @model SessionVM
 @{
     ViewData["Title"] = @Model.CourseSession?.CourseName ?? "New Course Session";
@@ -28,21 +29,21 @@
                         <input readonly class="course-session-edit-input form-control" asp-for="CourseSession.CourseName"/>
                         <span asp-validation-for="CourseSession.CourseName" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="CourseSession.Day"></label>
-                        <input asp-for="CourseSession.Day" class="course-session-edit-input form-control" />
-                        <span asp-validation-for="CourseSession.Day" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="CourseSession.StartTime"></label>
-                        <input asp-for="CourseSession.StartTime" class="course-session-edit-input form-control" />
-                        <span asp-validation-for="CourseSession.StartTime" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="CourseSession.EndTime"></label>
-                        <input asp-for="CourseSession.EndTime" class="course-session-edit-input form-control" />
-                        <span asp-validation-for="CourseSession.EndTime" class="text-danger"></span>
-                    </div>
+                    <div class="mb-3 col-4">
+                    <label asp-for="CourseSession.StartTime"></label>
+                    <input asp-for="CourseSession.StartTime" asp-format="H:mm" class="form-control" />
+                </div>
+                <div class="mb-3 col-4">
+                    <label asp-for="CourseSession.EndTime"></label>
+                    <input asp-for="CourseSession.EndTime" asp-format="H:mm" class="form-control" />
+                </div>
+                <div class="mb-3 form-check-inline">
+                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Monday)@Html.Label("Monday")<br />
+                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Tuesday)@Html.Label("Tuesday")<br />
+                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Wednesday)@Html.Label("Wednesday")<br />
+                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Thursday)@Html.Label("Thursday")<br />
+                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Friday)@Html.Label("Friday")<br />
+                </div>
                 </div>
 
                 <div class="col-8">
