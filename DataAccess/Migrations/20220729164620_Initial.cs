@@ -572,7 +572,7 @@ namespace DataAccess.Migrations
                         column: x => x.CourseEnrollmentId,
                         principalTable: "CourseEnrollments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
         });
 
             migrationBuilder.CreateIndex(

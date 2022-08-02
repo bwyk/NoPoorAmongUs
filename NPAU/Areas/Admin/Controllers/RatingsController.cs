@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Collections.Generic;
 using Models.ViewModels;
+using System.Data;
 
 namespace NPAU.Controllers
 {
@@ -22,7 +23,7 @@ namespace NPAU.Controllers
 
         public ViewResult Index()
         {
-           List<RatingVM> ratingVMList = new List<RatingVM>();       
+            List<RatingVM> ratingVMList = new List<RatingVM>();       
             DataTable dt = new DataTable();
             dt.Columns.Add("Name", typeof(string));
             dt.Columns.Add("Age", typeof(double));
