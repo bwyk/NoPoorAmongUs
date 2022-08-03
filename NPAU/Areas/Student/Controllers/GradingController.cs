@@ -117,7 +117,7 @@ namespace NPAU.Areas.Student.Controllers
                 string comment = "";
                 Models.Student student = cE.Student;
 
-                Grade oldGrade = _unitOfWork.Grade.GetFirstOrDefault(g => g.CourseEnrollmentId == cE.Id );
+                Grade oldGrade = _unitOfWork.Grade.GetFirstOrDefault(g => g.CourseEnrollmentId == cE.Id && g.AssessmentId == targetAssessment.Id );
 
                 if(oldGrade != null)
                 {
