@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccess.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -484,8 +484,8 @@ namespace DataAccess.Migrations
                     Day = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     CourseName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EndTime = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -525,16 +525,36 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SessionAttendances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateTaken = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CourseSessionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SessionAttendances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SessionAttendances_CourseSessions_CourseSessionId",
+                        column: x => x.CourseSessionId,
+                        principalTable: "CourseSessions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Attendances",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Present = table.Column<bool>(type: "bit", nullable: false),
-                    Absent = table.Column<bool>(type: "bit", nullable: false),
-                    Tardy = table.Column<bool>(type: "bit", nullable: false),
+                    MarkedAttendance = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Excused = table.Column<bool>(type: "bit", nullable: false),
-                    CourseEnrollmentId = table.Column<int>(type: "int", nullable: false)
+                    DateTaken = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CourseEnrollmentId = table.Column<int>(type: "int", nullable: false),
+                    SessionAttendanceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -699,6 +719,11 @@ namespace DataAccess.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SessionAttendances_CourseSessionId",
+                table: "SessionAttendances",
+                column: "CourseSessionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudentDocs_DocTypeId",
                 table: "StudentDocs",
                 column: "DocTypeId");
@@ -755,6 +780,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Relationships");
+
+            migrationBuilder.DropTable(
+                name: "SessionAttendances");
 
             migrationBuilder.DropTable(
                 name: "StudentDocs");
