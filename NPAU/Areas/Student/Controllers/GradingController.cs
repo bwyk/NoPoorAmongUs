@@ -4,6 +4,8 @@ using Models;
 using Models.Academic;
 using Models.ViewModels;
 using System.Collections.Generic;
+using Utilities;
+using static Utilities.SD;
 
 namespace NPAU.Areas.Student.Controllers
 {
@@ -24,9 +26,18 @@ namespace NPAU.Areas.Student.Controllers
 
         public IActionResult CourseSelect()
         {
-            
-            IEnumerable<Course> courseList = _unitOfWork.Course.GetAll(c => c.Term.IsActive == true);
-            return View(courseList);
+            if (User.IsInRole(Role_Admin))
+            {
+                IEnumerable<Course> courseList = _unitOfWork.Course.GetAll(c => c.Term.IsActive == true);
+                return View(courseList);
+            } else if(User.IsInRole(Role_Instructor))
+            {
+                string userId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+                IEnumerable<Course> courseList = _unitOfWork.Course.GetAll(c => (c.Term.IsActive == true) && (c.InstructorId == userId));
+                return View(courseList);
+            }
+
+            return View();
         }
 
         public IActionResult AssessmentSelect(int courseId)

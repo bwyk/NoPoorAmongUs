@@ -1,6 +1,10 @@
 ﻿@using Models.ViewModels
 @model StudentAssessmentGradesVM
 
+@{
+    var totalEarnedScore = 0;
+    var totalPossibleScore = 0;
+}
 
 <div class="container p-3">
     <div class="row pt-4">
@@ -40,11 +44,19 @@
                     <td>
                         <input type="text" value="@(Model.Grades[i].Comment)" class="form-control" disabled />
                     </td>
-
+                    
                 </tr>
+
+                totalEarnedScore += Model.Grades[i].Score;
+                totalPossibleScore += Model.Assessments[i].MaxScore;
             }
             
-
+            <tr>
+                <td>Total Grade:</td>
+                <td>@totalEarnedScore</td>
+                <td>@totalPossibleScore</td>
+                <td></td>
+            </tr>
 
         </table>
         <br />
