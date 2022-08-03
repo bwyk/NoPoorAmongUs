@@ -65,8 +65,8 @@ namespace DataAccess.Repository
             //SeedGuardians();
             //SeedCourses();
             SeedRelationships();
-            //SeedCourseSessionAsync();
-            //SeedCourseEnrollmentAsync();
+            SeedCourseSessionAsync();
+            SeedCourseEnrollmentAsync();
             SeedNoteTypes().GetAwaiter().GetResult();
             SeedStudentNotes();
         }
