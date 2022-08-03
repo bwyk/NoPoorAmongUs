@@ -24,19 +24,24 @@ namespace Utilities
         public const string StudentStatusRejected = "Rejected";
         public const string StudentStatusAccepted = "Student";
         public const string StudentStatusPending = "Pending";
+        public const string StudentStatusWaitlist = "Waitlisted";
+        public const string StudentStatusWithdrawn = "Withdrawn";
 
-        private static SelectListItem pending = new SelectListItem(SD.StudentStatusPending, SD.StudentStatusPending);
-        private static SelectListItem accepted = new SelectListItem(SD.StudentStatusAccepted, SD.StudentStatusAccepted);
-        private static SelectListItem rejected = new SelectListItem(SD.StudentStatusRejected, SD.StudentStatusRejected);
-        public static IEnumerable<SelectListItem> StudentStatusList = new List<SelectListItem>() { pending, accepted, rejected };
+        private static SelectListItem pending = new SelectListItem(StudentStatusPending, StudentStatusPending);
+        private static SelectListItem accepted = new SelectListItem(StudentStatusAccepted, StudentStatusAccepted);
+        private static SelectListItem rejected = new SelectListItem(StudentStatusRejected, StudentStatusRejected);
+        private static SelectListItem waitlisted = new SelectListItem(StudentStatusWaitlist, StudentStatusWaitlist);
+        private static SelectListItem withdrawn = new SelectListItem(StudentStatusWithdrawn, StudentStatusWithdrawn);
+        public static IEnumerable<SelectListItem> StudentStatusList = new List<SelectListItem>() { pending, accepted, rejected, waitlisted, withdrawn };
 
         // Doc Types
-        private static SelectListItem all = new SelectListItem(SD.StudentStatusPending, SD.StudentStatusPending);
-        private static SelectListItem instructor = new SelectListItem(SD.StudentStatusAccepted, SD.StudentStatusAccepted);
+        private static SelectListItem all = new SelectListItem(StudentStatusPending, StudentStatusPending);
+        private static SelectListItem instructor = new SelectListItem(StudentStatusAccepted, StudentStatusAccepted);
         public static IEnumerable<SelectListItem> DocTypeList = new List<SelectListItem>() { all, instructor};
 
         // Schools
-        public const string PublicSchool = "Public School";
+        public const string SchoolPublic = "Public School";
+        public const string SchoolBoanne = "Boanne";
 
         // Guardian relationship types
         public const string GuardianRelationFather = "Father";

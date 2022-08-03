@@ -45,7 +45,6 @@ $(document).ready(function () {
 });
 
 function setup() {
-
     reloadTables();
     toggleEditable();
     ratingToggleEditable()
@@ -104,46 +103,29 @@ function ratingToggleEditable() {
     ratingIsEditable = !ratingIsEditable;
 }
 
-
-//function saveRating() {
-//    var age = document.getElementById("rating-age").value;
-//    var academics = document.getElementById("rating-academics").value;
-//    var income = document.getElementById("rating-income").value;
-//    var family = document.getElementById("rating-family").value;
-//    var distance = document.getElementById("rating-distance").value;
-
-//    $("#form-rating")[0].reset();
-//    if (age && academics && income && fami) {
-//        document.getElementById("guardian-first-name").value = "";
-//        document.getElementById("guardian-last-name").value = "";
-//        var relationship = document.getElementById("guardian-relationship").value;
-//        document.getElementById("guardian-relationship").selectedIndex = 0;
-//        dataTableCurrent.row.add({
-//            "id": -1,
-//            "firstName": firstName,
-//            "lastName": lastName,
-//            "relationship": relationship
-//        });
-//        dataTableCurrent.draw();
-//    }
-//}
 function resetForm(id) {
     $('#' + id).val(function () {
         return this.defaultValue;
     });
 }
+
 //TODO validation only works the first time
 function addGuardian() {
     
     var firstName = document.getElementById("guardian-first-name").value;
     var lastName = document.getElementById("guardian-last-name").value;
+    var phoneNumber = document.getElementById("guardian-phone").value;
     var relationship = $("#guardian-relationship").val();
 
+    // Manually show the guardian form errors
     if (!firstName) {
         $("#first-guardian-error").show()
     }
     if (!lastName) {
         $("#last-guardian-error").show()
+    }
+    if (!phoneNumber) {
+        $("#phone-guardian-error").show()
     }
     if (!relationship) {
         $("#rel-guardian-error").show()
@@ -152,7 +134,7 @@ function addGuardian() {
 
     if (firstName && lastName && relationship) {
         $("#form-guardian")[0].reset();
-        $("#form-guardian").prop("isvalid", true)
+        $("#form-guardian").prop("isvalid", true) // Reset Form validation
         //var validator = $("#form-guardian").validate();
         //validator.resetForm();
         //$("#form-guardian").validate().css("display", "none");
@@ -165,6 +147,7 @@ function addGuardian() {
             "id": -1,
             "firstName": firstName,
             "lastName": lastName,
+            "phoneNumber": phoneNumber,
             "relationship": relationship
         });
         dataTableCurrent.draw();
@@ -184,9 +167,22 @@ function loadDataTableCurrent() {
             "url": ajaxCall + studentId
         },
         "columns": [
-            { "data": test, "width": "5%" },
-            { "data": "lastName", "width": "5%" },
-            { "data": "relationship", "width": "5%" },
+            { "data": test, "width": "20%" },
+            { "data": "lastName", "width": "20%" },
+            { "data": "relationship", "width": "10%" },
+            //{ "data": "phoneNumber", "width": "5%" },
+            {
+                "data": "phoneNumber",
+                "render": function (data) {
+                    if (!data) {
+                        return "No Phone Number Found"
+                    }
+                    else {
+                        return data
+                    }
+                },
+                "width": "25%"
+            },
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {
@@ -196,7 +192,7 @@ function loadDataTableCurrent() {
                         </div>
                         `
                 },
-                "width": "2%"
+                "width": "10%"
             }
         ]
     });

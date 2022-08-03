@@ -23,6 +23,7 @@ namespace DataAccess.Repository
             Term = new TermsRepository(_db);
             Assessment = new AssessmentsRepository(_db);
             Attendance = new AttendanceRepository(_db);
+            SessionAttendance = new SessionAttendanceRepository(_db);
             CourseEnrollment = new CourseEnrollmentRepository(_db);
             CourseSession = new CourseSessionsRepository(_db);
             DocType = new DocTypeRepository(_db);
@@ -45,6 +46,7 @@ namespace DataAccess.Repository
         public ITermsRepository Term { get; private set; }
         public IAssessmentsRepository Assessment { get; private set; }
         public IAttendanceRepository Attendance { get; private set; }
+        public ISessionAttendanceRepository SessionAttendance { get; private set; }
         public ICourseEnrollmentsRepository CourseEnrollment { get; private set; }
         public ICourseSessionsRepository CourseSession { get; private set; }
         public IDocTypeRepository DocType { get; private set; }

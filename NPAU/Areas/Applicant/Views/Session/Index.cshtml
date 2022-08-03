@@ -1,0 +1,84 @@
+﻿@using Utilities
+@{
+    ViewData["Title"] = "Course Session List";
+}
+
+@{
+    var status = Context.Request.Query["status"];
+    if (status.Count == 0 || status[0].Contains("all"))
+        status = "all";
+    else if (status[0].Contains("your") || status[0].Contains("Your"))
+        status = "yourSessions";
+    else if (status[0].Contains("public") || status[0].Contains("Public"))
+        status = "publicSessions";
+    else if (status[0].Contains("private") || status[0].Contains("Private"))
+        status = "privateSessions";
+
+    var yourSessions = "text-primary";
+    var publicSessions = "text-primary";
+    var privateSessions = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "yourSessions":
+            yourSessions = "active text-white";
+            break;
+        case "publicSessions":
+            publicSessions = "active text-white";
+            break;
+        case "privateSessions":
+            privateSessions = "active text-white";
+            break;
+        default:
+            all = "active text-white";
+            break;
+    }
+}
+
+<div class="container p-3">
+    <div class="d-flex justify-content-between pt-4 row-cols-2">
+        <div class="p-2">
+            <h2 class="text-primary text-start">Session List</h2>
+        </div>
+        <div class="p-2 col-6 text-end">
+            <a asp-area="Applicant" asp-controller="Session" asp-action="Upsert" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> &nbsp; New Session
+            </a>
+        </div>
+    </div>
+    <br />
+    <div class="d-flex justify-content-between pt-4 row-cols-2">
+        <div class="p-2">
+            <ul class="list-group list-group-horizontal-sm">
+                @if (User.IsInRole(SD.Role_Instructor) || User.IsInRole(SD.Role_Admin) )
+                {
+                    <a style="text-decoration:none" id="all" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_all")">
+                    <li class="list-group-item @all">All</li>
+                    </a>
+                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_your")">
+                    <li class="list-group-item @yourSessions">Your</li>
+                    </a>
+                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_public")">
+                    <li class="list-group-item @publicSessions">Public</li>
+                    </a>
+                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_private")">
+                    <li class="list-group-item @privateSessions">Boanne</li>
+                    </a>
+                }
+            </ul>
+           
+        </div>
+    </div>
+
+    <br />
+
+    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
+        <thead id="table-row-container">
+
+        </thead>
+    </table>
+</div>
+@section Scripts{
+    <script src="~/js/courseEnrollmentFilter.js"></script>
+}

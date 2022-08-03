@@ -23,53 +23,86 @@ namespace NPAU.Controllers
             return View();
         }
 
-        public IActionResult CourseSelect()
+        public IActionResult MarkAttendance(int sessionId, int? attendanceId, string? status)
         {
-            IEnumerable<Course> courseList = _unitOfWork.Course.GetAll();
-            return View(courseList);
-        }
+            // DateTime.Now.Date to standardize the time so we can match off of the date.
+            DateTime date = DateTime.Now.Date.AddDays(1); //TODO remove hardcoding and pass in date/sessionAttendanceId dynamically
+            SessionAttendance sessionAttendance = null;
+            bool fromEdit;
+            // If we are not editing an already existing record
+            if (attendanceId == null)
+            {
+                fromEdit = false; // Flag for returning the user after post 
+                // SessionAttendance is just a way to group attendances so you can pull all attendances for a given session and date
+                sessionAttendance = _unitOfWork.SessionAttendance.GetFirstOrDefault(sa => sa.CourseSessionId == sessionId && sa.DateTaken == date, includeProperties: "CourseSession");
+            }
+            else {
+                fromEdit = true; // Flag for returning the user after post 
+                sessionAttendance = _unitOfWork.SessionAttendance.GetFirstOrDefault(sa => sa.Id == attendanceId, includeProperties: "CourseSession");
+                sessionId = sessionAttendance.CourseSessionId;
+            }
 
-        public IActionResult ViewCourseSelect()
-        {
-            IEnumerable<Course> courseList = _unitOfWork.Course.GetAll();
-            return View(courseList);
-        }
-
-        public IActionResult SessionSelect(int courseId)
-        {
-            IEnumerable<CourseSession> sessionList = _unitOfWork.CourseSession.GetAll(s => s.CourseId == courseId);
-            return View(sessionList);
-        }
-
-        public IActionResult ViewSessionSelect(int courseId)
-        {
-            IEnumerable<CourseSession> sessionList = _unitOfWork.CourseSession.GetAll(s => s.CourseId == courseId);
-            return View(sessionList);
-        }
-
-        public IActionResult AttendanceTable(int sessionId)
-        {
             CourseSession targetSession = _unitOfWork.CourseSession.GetFirstOrDefault(cS => cS.Id == sessionId);
             List<CourseEnrollment> cEList = _unitOfWork.CourseEnrollment.GetAll((cE => cE.CourseSession.CourseId == targetSession.CourseId), includeProperties: "Student").ToList();
 
-            //Blank list so we can add an Attendance for each enrolled student.
-            List<Attendance> attendance = new List<Attendance>();
 
-            //Loop through the number of students that are enrolled for this SessionID.
-            //For each enrolled student, create a new Attendance and update their CourseEnrollmentId so we know who they are.
-            //Add it to List of Attendance objects which we can set our viewmodel with.
-            for (int i = 0; i < cEList.Count(); i++)
+            List<Attendance> attendance = new();
+
+            // If attendance has not been taken for the given session on the given date
+            if (sessionAttendance == null)
             {
-                Attendance newAttendance = new Attendance();
-                newAttendance.CourseEnrollmentId = cEList[i].Id;
-                newAttendance.CourseEnrollment = _unitOfWork.CourseEnrollment.GetFirstOrDefault(ce => ce.Id == cEList[i].Id, includeProperties: "CourseSession,Student");
-                attendance.Add(newAttendance);
+                sessionAttendance = new SessionAttendance()
+                {
+                    CourseSessionId = sessionId,
+                    CourseSession = targetSession,
+                    DateTaken = date, // note needs to be "DateTime.Now.Date;" or you will not be able to match it from the db E.g. '{8/1/2022 12:00:00 AM} != {8/1/2022 12:00:01 AM}'
+                };
+                _unitOfWork.SessionAttendance.Add(sessionAttendance);
+                _unitOfWork.Save();
+                sessionAttendance = _unitOfWork.SessionAttendance.GetFirstOrDefault(sa => sa.CourseSessionId == sessionId && sa.DateTaken == date, includeProperties: "CourseSession");
+
+                //Loop through the number of students that are enrolled for this SessionID.
+                //For each enrolled student, create a new Attendance and update their CourseEnrollmentId so we know who they are.
+                //Add it to List of Attendance objects which we can set our viewmodel with.
+                for (int i = 0; i < cEList.Count(); i++)
+                {
+                    Attendance newAttendance = new Attendance()
+                    {
+                        CourseEnrollmentId = cEList[i].Id,
+                        CourseEnrollment = _unitOfWork.CourseEnrollment.GetFirstOrDefault(ce => ce.Id == cEList[i].Id, includeProperties: "CourseSession,Student"),
+                        DateTaken = date,
+                        SessionAttendanceId = sessionAttendance.Id
+                    };
+
+                    attendance.Add(newAttendance);
+                }
+                _unitOfWork.Attendance.AddRange(attendance);
+                _unitOfWork.Save();
+                attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
+            }
+            else
+            {
+                attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
+                foreach(Attendance a in attendance)
+                {
+                    for (int i = 0; i < cEList.Count; i++)
+                    {
+                        if (a.CourseEnrollment.Id == cEList[i].Id)
+                        {
+                            a.CourseEnrollment = cEList[i];
+                            cEList.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+                
             }
 
-            //May not need an CourseEnrollment list now as we have a tie in with AttendanceList holding an ID for it.
             attendanceVM = new AttendanceVM()
             {
-                //CourseEnrollmentList = cEList,  //Might be able to remove.
+                Status = status,
+                isFromEdit = fromEdit,
+                SessionAttendance = sessionAttendance,
                 AttendanceList = attendance
             };
 
@@ -78,69 +111,93 @@ namespace NPAU.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AttendanceTable(AttendanceVM obj)
+        public IActionResult MarkAttendance(AttendanceVM obj)
         {
-            //AttendanceVM is a list of Attendance objects where each one has a CourseEnrollmentID and their checkbox data.
-            //Loop through AttendanceVM and query CourseEnrollment with the id obj.CourseEnrollmentID including CourseSession and Student similar to newAttendance in the HttpGet.
-            //Then do obj.CourseEnrollment = result of that query for each one which should give us a filled out Attendance object which can be added.
 
             if (ModelState.IsValid)
             {
                 foreach(var a in obj.AttendanceList)
                 {
-                    a.CourseEnrollment = _unitOfWork.CourseEnrollment.GetFirstOrDefault(ce => ce.Id == a.CourseEnrollmentId);
-                    if(a.Id == 0)
-                    {
-                        Attendance newAttendance = new Attendance()
-                        {
-                            CourseEnrollmentId = a.CourseEnrollment.Id,
-                            CourseEnrollment = a.CourseEnrollment,
-                            Present = a.Present,
-                            Absent = a.Absent,
-                            Tardy = a.Tardy,
-                            Excused = a.Excused
-                        };
-                        _unitOfWork.Attendance.Add(newAttendance);
-                        _unitOfWork.Save();
-                    }
-                    else
-                    {
-                        _unitOfWork.Attendance.Update(a);
-                        _unitOfWork.Save();
-                    }
+                    // Only update as they were all made in the get
+                    _unitOfWork.Attendance.Update(a);
+                    _unitOfWork.Save();
                 }
-                return RedirectToAction("CourseSelect");
+                if (obj.isFromEdit)
+                    return RedirectToAction("ViewAttendance", new { sessionId = obj.SessionAttendance.CourseSessionId, status = obj.Status });
+                else
+                    return RedirectToAction("Index", "Session", new { area = "Applicant", status = obj.Status});
             }
             return View(obj);
         }
 
-        public IActionResult ViewAttendance(int sessionId)
+        [HttpGet]
+        public IActionResult ViewAttendance(int sessionId, string? status)
         {
-            CourseSession targetSession = _unitOfWork.CourseSession.GetFirstOrDefault(cS => cS.Id == sessionId);
-            CourseEnrollment cEList = _unitOfWork.CourseEnrollment.GetFirstOrDefault((cE => cE.CourseSession.CourseId == targetSession.CourseId), includeProperties: "Student");
-
-            //Blank list so we can add an Attendance for each enrolled student.
-            IEnumerable<Attendance> attendance = _unitOfWork.Attendance.GetAll(a => a.Id == cEList.Id, includeProperties: "CourseEnrollment");
-
-            //Loop through the number of students that are enrolled for this SessionID.
-            //For each enrolled student, create a new Attendance and update their CourseEnrollmentId so we know who they are.
-            //Add it to List of Attendance objects which we can set our viewmodel with.
-            //for (int i = 0; i < cEList.Count(); i++)
-            //{
-            //    Attendance newAttendance = new Attendance();
-            //    newAttendance.CourseEnrollmentId = cEList[i].Id;
-            //    newAttendance.CourseEnrollment = _unitOfWork.CourseEnrollment.GetFirstOrDefault(ce => ce.Id == cEList[i].Id, includeProperties: "CourseSession,Student");
-            //    attendance.Add(newAttendance);
-            //}
-
-            //May not need an CourseEnrollment list now as we have a tie in with AttendanceList holding an ID for it.
-            attendanceVM = new AttendanceVM()
+            AllAttendanceVM allAttendanceVM = new()
             {
-                //CourseEnrollmentList = cEList,  //Might be able to remove.
-                AttendanceList = attendance.ToList()
-            };
+                //AllSessionAttendance = sessionAttendances,
+                AllSessionAttendance = new(),
 
-            return View(attendanceVM);
+            };
+            List<SessionAttendance> sessionAttendances = _unitOfWork.SessionAttendance.GetAll(sa => sa.CourseSessionId == sessionId).ToList();
+            CourseSession targetSession = _unitOfWork.CourseSession.GetFirstOrDefault(cS => cS.Id == sessionId);
+
+            foreach (SessionAttendance sa in sessionAttendances)
+            {
+                AttendanceVM attendanceVM = new AttendanceVM();
+                attendanceVM.Status = status;
+                attendanceVM.SessionAttendance = sa;
+                attendanceVM.AttendanceList = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sa.Id).ToList();
+                List<CourseEnrollment> cEList = _unitOfWork.CourseEnrollment.GetAll((cE => cE.CourseSession.CourseId == targetSession.CourseId), includeProperties: "Student").ToList();
+
+                foreach (var attendance in attendanceVM.AttendanceList)
+                {
+                    for(int i = 0; i < cEList.Count; i++)
+                    {
+                        if (attendance.CourseEnrollment.Id == cEList[i].Id)
+                        {
+                            attendance.CourseEnrollment = cEList[i];
+                            cEList.RemoveAt(i);
+                            break;
+                        }
+                    }
+                    
+                };
+                allAttendanceVM.AllSessionAttendance.Add(attendanceVM);
+            }
+
+            return View(allAttendanceVM);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var attendanceFromDb = _unitOfWork.Attendance.GetFirstOrDefault(a => a.Id == id);
+            
+            if(attendanceFromDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(attendanceFromDb);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Attendance obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Attendance.Update(obj);
+                _unitOfWork.Save();
+                TempData["success"] = "Attendance Updated!";
+                return RedirectToAction("Index");
+            }
+            return View(obj);
         }
 
         #region API CALLS
@@ -148,6 +205,12 @@ namespace NPAU.Controllers
         {
             var attendanceList = _unitOfWork.Attendance.GetAll();
             return Json(new {data = attendanceList});
+        }
+
+        private Attendance GetStudent(int id)
+        {
+            var attendance = _unitOfWork.Attendance.GetFirstOrDefault(a => a.Id == id);
+            return attendance;
         }
         #endregion
 

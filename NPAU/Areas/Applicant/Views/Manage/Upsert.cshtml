@@ -4,33 +4,12 @@
     ViewData["Title"] = @Model.Student?.FullName ?? "New Applicant";
 }
 
-@*<div class="modal fade" id="relationshipModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add Guardian</h4>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label asp-for="Relationship.RelationshipType"></label>
-                    <select id="guardian-relationship" asp-for="Relationship.RelationshipType" asp-items="@Model.GuardianRelationshipList" class="form-select">
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" id="save" class="btn btn-primary">Save changes</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->*@
-
-
 <div class="border p-3 mt-4">
     <div class="row">
         <div class="col-md">
             <form method="post" id="applicant-form" enctype="multipart/form-data">
                 <input id="studentId" hidden asp-for="Student.Id" class="studentEdit" />
+                <input hidden asp-for="Status"/>
                 <input asp-for="Student.EnglishLevel" hidden value="1" class="studentEdit form-control" />
                 <input asp-for="Student.ComputerLevel" hidden value="1" class="studentEdit form-control" />
                 <input asp-for="GuardianJSON" hidden id="guardianJSON" class="studentEdit form-control" />
@@ -100,7 +79,7 @@
                     {
                         <button id="btn-add-applicant" type="submit" class="btn btn-primary student-edit-show" style="width:150px">Create</button>
                     }
-                    <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                    <a  id="back-button" asp-route-status="@Model.Status" asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
                         Back to List
                     </a>
                 </div>
@@ -163,6 +142,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Relationship</th>
+                        <th>Phone Number</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -203,6 +183,11 @@
                             <label asp-for="Guardian.LastName"></label>
                             <input id="guardian-last-name" asp-for="Guardian.LastName" class="form-control" />
                             <span id="last-guardian-error" asp-validation-for="Guardian.LastName" class="text-danger guardian-error"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Guardian.PhoneNumber"></label>
+                            <input id="guardian-phone" asp-for="Guardian.PhoneNumber" class="form-control" />
+                            <span id="phone-guardian-error" asp-validation-for="Guardian.PhoneNumber" class="text-danger guardian-error"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="Relationship.RelationshipType"></label>

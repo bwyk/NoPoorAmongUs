@@ -33,10 +33,11 @@ namespace NPAU.Controllers
             return View();
         }
 
-        public IActionResult Upsert(int? id)
+        public IActionResult Upsert(int? id, string status)
         {
             StudentVM studentVM = new()
             {
+                Status = status,
                 StudentStatusList = SD.StudentStatusList,
                 GuardianRelationshipList = SD.GuardianRelationshipList
             };
@@ -53,6 +54,7 @@ namespace NPAU.Controllers
                 return View(studentVM);
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Details(StudentVM obj)
@@ -73,12 +75,11 @@ namespace NPAU.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpsertAsync(StudentVM obj)
+        public IActionResult Upsert(StudentVM obj)
         {
             if (ModelState.IsValid)
             {
                 bool match;
-                bool saveChanges = false;
                 var enteredGuardians = new List<Guardian>();
                 if (!string.IsNullOrEmpty(obj.GuardianJSON))
                 {

@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Attendance";
+}
+@using Models.ViewModels
+@model AttendanceVM
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Attendance for @DateTime.Now.Date</h2>
+        </div>
+    </div>
+    <br /><br />
+    <h4>Attendance for Class</h4>
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" readonly asp-for=isFromEdit>
+        <input type="hidden" readonly asp-for=Status>
+        <input type="hidden" readonly asp-for=SessionAttendance.Id>
+        <input type="hidden" readonly asp-for=SessionAttendance.CourseSessionId>
+
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Attendance</th>
+                    <th>Excused</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.AttendanceList.Count(); i++)
+                {
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].SessionAttendanceId>
+                    <tr>
+                        <td width="20%">
+                            <label>@(Model.AttendanceList[i].CourseEnrollment.Student?.FullName ?? "No name found")</label>
+                        </td>
+                        <td width="25%">
+                            <div>
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Present")@Html.Label("Present")
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Absent")@Html.Label("Absent")
+                                @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Tardy")@Html.Label("Tardy")
+                            </div>
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused">
+                        </td>
+                    </tr>
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].Id >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].SessionAttendanceId >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollmentId >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.StudentId >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.CourseSessionId >
+                    <input type="hidden" asp-for=@Model.AttendanceList[i].CourseEnrollment.Id >
+                }
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary" style="width: 150px">Accept Attendance</button>
+        @if (Model.isFromEdit)
+        {
+            <a asp-controller="Attendance" asp-action="ViewAttendance" asp-route-status="@Model.Status" asp-route-sessionId="@Model.SessionAttendance.CourseSessionId" class="btn btn-secondary">Back to Attendance</a>
+        }
+            <a asp-area="Applicant" asp-controller="Session" asp-action="Index" asp-route-status="@Model.Status" class="btn btn-secondary">Back to Sessions</a>
+        
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    }

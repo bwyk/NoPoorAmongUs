@@ -13,9 +13,9 @@ var roleFilter
 $(document).ready(function () {
     var url = window.location.search;
     if (url.includes("Instructor")) {
-        if (url.includes("allStudents")) {
+        if (url.includes("all")) {
             status = "Instructor_all"
-        } else if(url.includes("yourStudents")) {
+        } else if(url.includes("your")) {
             status = "Instructor_your"
         }
         studentDetails("Instructor")
@@ -44,8 +44,6 @@ $(document).ready(function () {
                 }
                 studentDetails("Rater")
             }
-
-
             else {
                 if (url.includes("student")) {
                     loadDataTable("student");
@@ -197,7 +195,7 @@ function studentDetails(filter) {
     loadDataTable2(status);
 }
 
-function getButtons(data) {
+function getButtons(data, status) {
     switch (roleFilter) {
         case "Social":
             var buttons = `<div class="btn-group mb-1" role="group">
@@ -215,7 +213,7 @@ function getButtons(data) {
                     <hr/>
                     <div class="btn-group" role="group">
                         <div class="btn-group mx-1" role="group">
-                            <a href="/Applicant/Manage/Upsert?id=${data}"
+                            <a href="/Applicant/Manage/Upsert?id=${data}&status=${status}"
                             class="btn btn-primary"> <i class="bi bi-info-circle"></i>Details</a>
                         </div>
                         <div class="btn-group mx-1" role="group">
@@ -261,7 +259,7 @@ function getButtons(data) {
                     <hr/>
                     <div class="btn-group" role="group">
                         <div class="btn-group mx-1" role="group">
-                            <a href="/Applicant/Manage/Upsert?id=${data}"
+                            <a href="/Applicant/Manage/Upsert?id=${data}&status=${status}"
                             class="btn btn-primary"> <i class="bi bi-info-circle"></i>Details</a>
                         </div>
                         <div class="btn-group mx-1" role="group">
@@ -272,6 +270,9 @@ function getButtons(data) {
             break;
     }
     return buttons
+}
+function getStatus() {
+    return status;
 }
 
 function loadDataTable2(status) {
@@ -284,35 +285,32 @@ function loadDataTable2(status) {
             var propertyList = [];
             if (json.data.length == 0) {
                 var keys = Object.keys(json.data).filter(key => wantedFields.includes(key));
-            } else {
-                var keys = Object.keys(json.data[0]).filter(key => wantedFields.includes(key));
-
             }
-
-
-                keys.forEach((key) => {
-                    if (key != "id")
-                        columnList.push({ 'data': key })
-                })
-                columnList.push({
-                    'data': 'id', "render": function (data) {
-                        return getButtons(data)
-                    },
-                    "width": "22%"
-                })
-
-                for (var i = 0; i < json.data.length; i++) {
-                    //unwantedFields.forEach(f => delete json.data[i][f])
-                    propertyList[i] = json.data[i]
-                }
-                dataTable = $('#tblData').DataTable({
-                    language: {
-                        "emptyTable": "No Students Found"
-                    },
-                    data: propertyList,
-                    columns: columnList
-                });
-                addHeaders(keys);
+            else {
+                var keys = Object.keys(json.data[0]).filter(key => wantedFields.includes(key));
+            }
+            keys.forEach((key) => {
+                if (key != "id")
+                    columnList.push({ 'data': key })
+            })
+            columnList.push({
+                'data': 'id', "render": function (data) {
+                    return getButtons(data, getStatus())
+                },
+                "width": "22%"
+            })
+            for (var i = 0; i < json.data.length; i++) {
+                //unwantedFields.forEach(f => delete json.data[i][f])
+                propertyList[i] = json.data[i]
+            }
+            dataTable = $('#tblData').DataTable({
+                language: {
+                    "emptyTable": "No Students Found"
+                },
+                data: propertyList,
+                columns: columnList
+            });
+            addHeaders(keys);
             $('tbody').attr("id", "student-table-body")
         }
     });
