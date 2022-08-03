@@ -1,4 +1,5 @@
 ﻿using DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,6 +25,8 @@ namespace NPAU.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
+
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             //Need to check what Role I'm logged in as.
