@@ -17,9 +17,7 @@ namespace Models.ViewModels
         public string? CourseEnrollmentStudentsJSON { get; set; }
         [ValidateNever]
         public IEnumerable<Student>? PotentialStudents { get; set; }
-        //[ValidateNever]
-        //public IEnumerable<SelectListItem> StudentStatusList { get; set; }
-        //[ValidateNever]
-        //public IEnumerable<SelectListItem> GuardianRelationshipList { get; set; }
+        [ValidateNever]
+        public IEnumerable<SelectListItem>? Courses { get; set; }
     }
 }

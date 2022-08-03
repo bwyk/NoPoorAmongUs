@@ -442,8 +442,8 @@ namespace DataAccess.Repository
                         Course = coursePublic,
                         CourseName = coursePublic.Name,
                         Day = SD.Weekdays.Thursday.ToString(),
-                        EndTime = "11:30",
-                        StartTime = "1:30"
+                        EndTime = new DateTime(2022, 08, 02, 10, 30, 00),
+                        StartTime = new DateTime(2022, 08, 02, 11, 30, 00),
                     }
                 );
                 saveChanges = true;
@@ -457,8 +457,8 @@ namespace DataAccess.Repository
                         Course = courseEnglish1,
                         CourseName = courseEnglish1.Name,
                         Day = SD.Weekdays.Monday.ToString(),
-                        EndTime = "11:30",
-                        StartTime = "1:30"
+                        EndTime = new DateTime(2022, 08, 02, 12, 30, 00),
+                        StartTime = new DateTime(2022, 08, 02, 14, 30, 00),
                     }
                 );
                 saveChanges = true;
@@ -472,8 +472,8 @@ namespace DataAccess.Repository
                         Course = courseComputers1,
                         CourseName = courseComputers1.Name,
                         Day = SD.Weekdays.Tuesday.ToString(),
-                        EndTime = "11:30",
-                        StartTime = "1:30"
+                        EndTime = new DateTime(2022, 08, 02, 15, 00, 00),
+                        StartTime = new DateTime(2022, 08, 02, 17, 30, 00),
 
                     }
                 );

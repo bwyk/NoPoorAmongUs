@@ -13,9 +13,9 @@ var roleFilter
 $(document).ready(function () {
     var url = window.location.search;
     if (url.includes("Instructor")) {
-        if (url.includes("allStudents")) {
+        if (url.includes("all")) {
             status = "Instructor_all"
-        } else if(url.includes("yourStudents")) {
+        } else if(url.includes("your")) {
             status = "Instructor_your"
         }
         studentDetails("Instructor")

@@ -1,84 +1,64 @@
 ﻿@using Models.ViewModels
-@model AttendanceVM
-<div class="container p-3">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-primary">Attendance</h2>
-        </div>
-    </div>
-    <br /><br />
-    <table class="table table-bordered table-striped" style="width:100%">
-        <thead>
-            <tr>
-                <th>Student</th>
-                <th>Date</th>
-                <th>Marked</th>
-                <th>Excused</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.AttendanceList.Count(); i++)
-            {
+@model AllAttendanceVM
+<div class="border p-3 mt-4">
+@for (int i = 0; i < Model.AllSessionAttendance.Count(); i++)
+    {
+        if (i != 0)
+        {
+            <hr />
+        }
+        <h2 class="text-primary">
+            <span class="col-10">Attendance for @Model.AllSessionAttendance[i].SessionAttendance.DateTaken.ToShortDateString()</span>
+            <a asp-controller="Attendance" asp-action="MarkAttendance" asp-route-status="@Model.AllSessionAttendance[i].Status" asp-route-fromEdit="1" asp-route-attendanceId="@Model.AllSessionAttendance[i].SessionAttendance.Id"
+                class="btn btn-primary mx-2 float-end"> <i class="bi bi-pencil-square"></i>Edit</a>
+        </h2>
+                    
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
                 <tr>
-                    <td>
-                        <label>@Model.AttendanceList[i].CourseEnrollment.Student.FullName</label>
-                        <input type="hidden" id="attendanceId" asp-for=@Model.AttendanceList[i].Id name=@Model.AttendanceList[i].Id>
-                        <input type="hidden" id="courseEnrId" asp-for="@Model.AttendanceList[i].CourseEnrollmentId" name="@Model.AttendanceList[i].CourseEnrollmentId">
-                    </td>
-                    <td>
-                        <label>@Model.AttendanceList[i].DateTaken</label>
-                        <input type="hidden" asp-for=@Model.AttendanceList[i].DateTaken name=@Model.AttendanceList[i].DateTaken />
-                    </td>
-                    <td>
-                        <div>
-                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Present")@Html.Label("Present")
-                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Absent")@Html.Label("Absent")
-                            @Html.RadioButtonFor(Model => Model.AttendanceList[i].MarkedAttendance, "Tardy")@Html.Label("Tardy")
-                        </div>
-                    </td>
-                    <td>
-                        @if (Model.AttendanceList[i].Excused == true)
-                        {
-                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused" checked/>
-                        }
-                        else
-                        {
-                            <input type="checkbox" asp-for="@Model.AttendanceList[i].Excused" />
-                        }
-                    </td>
-                    <td>
-                        <a onclick="toggleEdit()" asp-controller="Attendance" asp-action="Edit" asp-route-Id="@Model.AttendanceList[i].Id"
-                       class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
-                    </td>
+                    <th>Student</th>
+                    <th>Date</th>
+                    <th>Marked</th>
+                    <th>Excused</th>
                 </tr>
-            }"
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @for (int j = 0; j < Model.AllSessionAttendance[i].AttendanceList.Count(); j++)
+                {
+                    <input type="hidden" readonly asp-for="@Model.AllSessionAttendance[i].Status">
+                    <tr>
+                        <td>
+                            <label>@Model.AllSessionAttendance[i].AttendanceList[j].CourseEnrollment.Student?.FullName</label>
+                            <input type="hidden" readonly id="attendanceId" asp-for=@Model.AllSessionAttendance[i].AttendanceList[j].Id name=@Model.AllSessionAttendance[i].AttendanceList[j].Id>
+                            <input type="hidden" readonly id="courseEnrId" asp-for="@Model.AllSessionAttendance[i].AttendanceList[j].CourseEnrollmentId" name="@Model.AllSessionAttendance[i].AttendanceList[j].CourseEnrollmentId">
+                        </td>
+                        <td>
+                            <label>@Model.AllSessionAttendance[i].AttendanceList[j].DateTaken</label>
+                            <input type="hidden" asp-for=@Model.AllSessionAttendance[i].AttendanceList[j].DateTaken name=@Model.AllSessionAttendance[i].AttendanceList[j].DateTaken />
+                        </td>
+                        <td>
+                            <div>
+                                @Html.RadioButtonFor(Model => Model.AllSessionAttendance[i].AttendanceList[j].MarkedAttendance, "Present")@Html.Label("Present")
+                                @Html.RadioButtonFor(Model => Model.AllSessionAttendance[i].AttendanceList[j].MarkedAttendance, "Absent")@Html.Label("Absent")
+                                @Html.RadioButtonFor(Model => Model.AllSessionAttendance[i].AttendanceList[j].MarkedAttendance, "Tardy")@Html.Label("Tardy")
+                            </div>
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="@Model.AllSessionAttendance[i].AttendanceList[j].Excused" onclick="return false;"/>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
 </div>
-@*<div class="border p-3 mt-4">
-    <div class="row">
-        <div class="col-md">
-            <div class="p-2">
-                <h2 class="text-primary text-start">Change Student Attendance</h2>
-            </div>
-            <br />
-            <table id="tblChangeAttendance" class="table table-bordered table-striped">
-                <thead>
-                <th>Student Name</th>
-                <th>Attendance</th>
-                <th>Excused</th>
-                <th></th>
-                </thead>
-            </table>
-        </div>
-    </div>
-</div>*@
 
 @section Scripts{
     @{
         <partial name="_ValidationScriptsPartial" />
     }
 
-    @*<script src="~/js/viewAttendance.js"></script>*@
-}
+    <script src="~/js/viewAttendance.js"></script>
+    }

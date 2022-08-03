@@ -12,6 +12,8 @@
     <br /><br />
     <h4>Attendance for Class</h4>
     <form method="post" enctype="multipart/form-data">
+        <input type="hidden" readonly asp-for=isFromEdit>
+        <input type="hidden" readonly asp-for=Status>
         <input type="hidden" readonly asp-for=SessionAttendance.Id>
         <input type="hidden" readonly asp-for=SessionAttendance.CourseSessionId>
 
@@ -52,7 +54,12 @@
             </tbody>
         </table>
         <button type="submit" class="btn btn-primary" style="width: 150px">Accept Attendance</button>
-        <a asp-controller="Attendance" asp-action="SessionSelect" asp-route-courseId="" class="btn btn-secondary">Back to Sessions</a>
+        @if (Model.isFromEdit)
+        {
+            <a asp-controller="Attendance" asp-action="ViewAttendance" asp-route-status="@Model.Status" asp-route-sessionId="@Model.SessionAttendance.CourseSessionId" class="btn btn-secondary">Back to Attendance</a>
+        }
+            <a asp-area="Applicant" asp-controller="Session" asp-action="Index" asp-route-status="@Model.Status" class="btn btn-secondary">Back to Sessions</a>
+        
     </form>
 </div>
 

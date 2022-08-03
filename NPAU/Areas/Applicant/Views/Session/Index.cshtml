@@ -53,16 +53,16 @@
             <ul class="list-group list-group-horizontal-sm">
                 @if (User.IsInRole(SD.Role_Instructor) || User.IsInRole(SD.Role_Admin) )
                 {
-                    <a style="text-decoration:none" id="all" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_allSessions")">
+                    <a style="text-decoration:none" id="all" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_all")">
                     <li class="list-group-item @all">All</li>
                     </a>
-                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_yourSessions")">
+                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_your")">
                     <li class="list-group-item @yourSessions">Your</li>
                     </a>
-                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_publicSessions")">
+                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_public")">
                     <li class="list-group-item @publicSessions">Public</li>
                     </a>
-                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_privateSessions")">
+                    <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_private")">
                     <li class="list-group-item @privateSessions">Boanne</li>
                     </a>
                 }
@@ -75,19 +75,7 @@
 
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">
         <thead id="table-row-container">
-      @*      <tr id="table-row-container">
-    @*            <th id="col-1"></th>
-                <th id="col-2"></th>
-                <th id="col-3"></th>
-                <th id="col-4"></th>
-                <th id="col-5"></th>
-                <th id="col-6"></th>
-                <th id="col-7"></th>
-                <th id="col-8"></th>
-                <th id="col-9"></th>
-                <th id="col-10"></th>
-                <th id="col-11"></th>
-            </tr>*@
+
         </thead>
     </table>
 </div>

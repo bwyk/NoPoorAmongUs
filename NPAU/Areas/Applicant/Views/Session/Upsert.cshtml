@@ -10,8 +10,6 @@
         <div class="col-md">
             <form method="post" id="course-session-form" enctype="multipart/form-data">
                 <input id="course-session-id" hidden asp-for="CourseSession.Id" class="course-session-edit" />
-                <input asp-for="CourseSession.Course" hidden class="course-session-edit form-control" />
-                <input asp-for="CourseSession.CourseId" hidden class="course-session-edit form-control" />
                 <input asp-for="CourseEnrollmentStudentsJSON" hidden id="course-session-students-json" class="course-session-edit form-control" />
                 <span asp-validation-for="CourseEnrollmentStudentsJSON" class="text-danger"></span>
                 <div>
@@ -24,26 +22,30 @@
                         }
                     </h2>
                     <hr />
+                    <label asp-for="CourseSession.Course"></label>
+                    <select asp-for="CourseSession.CourseId" asp-items="@Model.Courses" class="student-edit-show form-select">
+                    </select>
+                    <span asp-validation-for="CourseSession.CourseId" class="text-danger"></span>
                     <div class="mb-3">
                         <label asp-for="CourseSession.CourseName"></label>
-                        <input readonly class="course-session-edit-input form-control" asp-for="CourseSession.CourseName"/>
+                        <input readonly class="course-session-edit-input form-control" asp-for="CourseSession.CourseName" />
                         <span asp-validation-for="CourseSession.CourseName" class="text-danger"></span>
                     </div>
                     <div class="mb-3 col-4">
-                    <label asp-for="CourseSession.StartTime"></label>
-                    <input asp-for="CourseSession.StartTime" asp-format="H:mm" class="form-control" />
-                </div>
-                <div class="mb-3 col-4">
-                    <label asp-for="CourseSession.EndTime"></label>
-                    <input asp-for="CourseSession.EndTime" asp-format="H:mm" class="form-control" />
-                </div>
-                <div class="mb-3 form-check-inline">
-                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Monday)@Html.Label("Monday")<br />
-                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Tuesday)@Html.Label("Tuesday")<br />
-                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Wednesday)@Html.Label("Wednesday")<br />
-                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Thursday)@Html.Label("Thursday")<br />
-                    @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Friday)@Html.Label("Friday")<br />
-                </div>
+                        <label asp-for="CourseSession.StartTime"></label>
+                        <input asp-for="CourseSession.StartTime" asp-format="H:mm" class="form-control" />
+                    </div>
+                    <div class="mb-3 col-4">
+                        <label asp-for="CourseSession.EndTime"></label>
+                        <input asp-for="CourseSession.EndTime" asp-format="H:mm" class="form-control" />
+                    </div>
+                    <div class="mb-3 form-check-inline">
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Monday)@Html.Label("Monday")<br />
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Tuesday)@Html.Label("Tuesday")<br />
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Wednesday)@Html.Label("Wednesday")<br />
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Thursday)@Html.Label("Thursday")<br />
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Friday)@Html.Label("Friday")<br />
+                    </div>
                 </div>
 
                 <div class="col-8">

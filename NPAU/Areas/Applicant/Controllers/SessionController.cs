@@ -21,7 +21,6 @@ namespace NPAU.Controllers
         }
         public IActionResult Index()
         {
-
             return View();
         }
         [HttpGet]
@@ -47,17 +46,18 @@ namespace NPAU.Controllers
                 {
                     case "your":
                         course = _unitOfWork.Course.GetAll(c => c.InstructorId == userId);
-                        courseSessions = _unitOfWork.CourseSession.GetAll(s => course.Select(c => c.Id).Contains(s.CourseId));
+                        courseSessions = _unitOfWork.CourseSession.GetAll(s => course.Select(c => c.Id).Contains(s.CourseId), includeProperties: "Course");
+                        //TODO add school name
                         break;
                     case "public":
                         var publicSchools = _unitOfWork.School.GetAll(s => s.Name != SD.SchoolBoanne);
                         course = _unitOfWork.Course.GetAll(c => publicSchools.Select(s => s.Id).Contains(c.Id));
-                        courseSessions = _unitOfWork.CourseSession.GetAll(s => course.Select(c => c.Id).Contains(s.CourseId));
+                        courseSessions = _unitOfWork.CourseSession.GetAll(s => course.Select(c => c.Id).Contains(s.CourseId), includeProperties: "Course");
                         break;
                     case "private":
                         var boanneSchool = _unitOfWork.School.GetFirstOrDefault(s => s.Name == SD.SchoolBoanne);
                         course = _unitOfWork.Course.GetAll(c => c.SchoolId == boanneSchool.Id);
-                        courseSessions = _unitOfWork.CourseSession.GetAll(s => course.Select(c => c.Id).Contains(s.CourseId));
+                        courseSessions = _unitOfWork.CourseSession.GetAll(s => course.Select(c => c.Id).Contains(s.CourseId), includeProperties: "Course");
                         break;
                     default://case "all":
                         courseSessions = _unitOfWork.CourseSession.GetAll();
@@ -72,7 +72,11 @@ namespace NPAU.Controllers
         public IActionResult Upsert(int? id)
         {
             SessionVM pubScheduleVM = new();
-
+            pubScheduleVM.Courses = _unitOfWork.Course.GetAll().Select(c => new SelectListItem()
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            });
 
             if (id == null || id == 0)
             {
@@ -91,6 +95,8 @@ namespace NPAU.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(SessionVM obj)
         {
+            //if(obj.CourseSession.Course != null)
+            //    obj.CourseSession.Course = _unitOfWork.Course.GetFirstOrDefault(c => c.Id == obj.CourseSession.CourseId);
             if (ModelState.IsValid)
             {
                 bool match;

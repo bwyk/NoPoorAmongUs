@@ -58,21 +58,26 @@
                 @if (User.IsInRole(SD.Role_Instructor) || User.IsInRole(SD.Role_Admin) )
                 {
                     <ul class="list-group list-group-horizontal-sm">
-                        <a style="text-decoration:none" asp-controller="Session" asp-action="Index")">
+                        <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_your")">
                             <li class="list-group-item @all">View Course Session</li>
                         </a>
 
-                        <a style="text-decoration:none" id="all" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_allStudents")">
+                        <a style="text-decoration:none" id="all" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_all")">
                         <li class="list-group-item @all">All Students</li>
                         </a>
-                        <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_yourStudents")">
+                        <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_your")">
                         <li class="list-group-item @students">Your Students</li>
                         </a>
                     </ul>
                 }
                 @if (User.IsInRole(SD.Role_Social) || User.IsInRole(SD.Role_Admin))
                 {
-                    <ul class="list-group list-group-horizontal-sm">
+                if (User.IsInRole(SD.Role_Admin))
+                {
+                    <hr/>
+                    
+                }
+                <ul class="list-group list-group-horizontal-sm">
                         <a style="text-decoration:none" id="all" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_all")">
                             <li class="list-group-item @all">All</li>
                         </a>

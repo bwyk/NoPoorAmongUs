@@ -24,7 +24,7 @@ namespace Utilities
         public const string StudentStatusRejected = "Rejected";
         public const string StudentStatusAccepted = "Student";
         public const string StudentStatusPending = "Pending";
-        public const string StudentStatusWaitlist = "Waitlist";
+        public const string StudentStatusWaitlist = "Waitlisted";
         public const string StudentStatusWithdrawn = "Withdrawn";
 
         private static SelectListItem pending = new SelectListItem(StudentStatusPending, StudentStatusPending);

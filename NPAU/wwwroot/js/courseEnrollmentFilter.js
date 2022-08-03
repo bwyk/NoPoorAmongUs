@@ -13,17 +13,19 @@ var roleFilter
 $(document).ready(function () {
     var url = window.location.search;
     if (url.includes("Instructor")) {
-        if (url.includes("allSessions")) {
+        if (url.includes("Instructor_all")) {
             status = "Instructor_all"
-        } else if(url.includes("yourSessions")) {
-            status = "Instructor_your"
-        } else if (url.includes("privateSessions")) {
+        } else if (url.includes("Instructor_private")) {
             status = "Instructor_private"
-        } else if (url.includes("publicSessions")) {
+        } else if (url.includes("Instructor_public")) {
             status = "Instructor_public"
+        } else if (url.includes("Instructor_your")) {
+            status = "Instructor_your"
         }
         studentDetails("Instructor")
-    } 
+    } else {
+        status = "Instructor_all" //TODO remove default and have it filter on role
+    }
 });
 
 $('#all').click(function () {
@@ -79,6 +81,7 @@ function studentDetails(filter) {
     switch (filter) {
         case "Instructor":
             wantedProps[0] = "schoolType";
+            //wantedProps[1] = "course.School";
             wantedProps[1] = "courseName";
             wantedProps[2] = "day";
             wantedProps[3] = "startTime";
@@ -93,17 +96,25 @@ function studentDetails(filter) {
     loadDataTable(status);
 }
 
-function getButtons(data) {
+function getButtons(data, status) {
     switch (roleFilter) {
         case "Instructor":
-            var buttons = `<div class="btn-group mb-1" role="group">
-                               <div class="btn-group" role="group">
-                                   <a href="/Applicant/Session/Upsert?id=${data}"
+            var buttons = `
+                            <div class="btn-group btn-group-sm mb-1" role="group">
+                                <a href="/Student/Attendance/MarkAttendance?sessionId=${data}&status=${status}"
+                                class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; Mark Attendance</a>
+                                <a href="/Student/Attendance/ViewAttendance?sessionId=${data}&status=${status}"
+                                class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; View Attendance</a>
+                           </div>
+                           <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                           <div class="btn-group btn-group-sm mx-1" role="group">
+                                <div class="btn-group btn-group-sm" role="group">
+                                   <a href="/Applicant/Session/Upsert?id=${data}&status=${status}"
                                    class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; Details</a>
                                </div>
-                           </div>
-                           <div class="btn-group mx-1" role="group">
-                                   <a href="/Applicant/Session/DeleteEnrollment?id=${data}"
+                                
+                                <div class="btn-group btn-group-sm mx-1" role="group">
+                                   <a href="/Applicant/Session/DeleteEnrollment?id=${data}&status=${status}"
                                    class="btn btn-danger"> <i class="bi bi-trash-fill"></i>Delete</a>
                                </div>                   
                            </div>`
@@ -111,7 +122,9 @@ function getButtons(data) {
     }
     return buttons
 }
-
+function getStatus() {
+    return status;
+}
 function loadDataTable(status) {
     $.ajax({
         url: ajaxCall + status,
@@ -134,7 +147,7 @@ function loadDataTable(status) {
                 })
                 columnList.push({
                     'data': 'id', "render": function (data) {
-                        return getButtons(data)
+                        return getButtons(data, getStatus())
                     },
                     "width": "22%"
                 })
