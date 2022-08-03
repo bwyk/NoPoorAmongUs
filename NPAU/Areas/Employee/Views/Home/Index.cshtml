@@ -1,8 +1,124 @@
-﻿@{
+﻿@using Utilities
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <h1 class="display-4">Welcome To the S.M.A.R.T System</h1>
+    @if(User.IsInRole(SD.Role_Admin))
+    {
+      <div class="container p-3">       
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Manage Users</th>
+                    <th>Manage Roles</th>
+                </tr>
+            </thead>
+            <tbody>
+               <tr>
+                   <td>
+                       <a asp-area="Admin" asp-page="/Users/Index">
+                        <button type="button" class="btn btn-primary" style="width:150px;" >Manage Users</button>
+                        </a>
+                   </td>
+                   <td>
+                       <a asp-area="Admin" asp-page="/Roles/Index">
+                        <button type="button" class="btn btn-primary" style="width:150px;" >Manage Roles</button>
+                        </a>
+                   </td>
+               </tr>
+
+            </tbody>
+        </table>
+    </div>       
+    }
+
+    @if(User.IsInRole(SD.Role_Rater))
+    {
+      <div class="container p-3">       
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Ratings</th>
+                    <th>Rate Student</th>
+                </tr>
+            </thead>
+            <tbody>
+               <tr>
+                   <td>
+                       <a asp-area="Admin" asp-controller="Ratings" asp-action="Index">
+                        <button type="button" class="btn btn-primary" style="width:150px;" >Ratings</button>
+                        </a>
+                   </td>
+                   <td>
+                       <a asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="pending">
+                        <button type="button" class="btn btn-primary" style="width:150px;" >Students to Rate</button>
+                        </a>
+                   </td>
+               </tr>
+
+            </tbody>
+        </table>
+    </div>       
+    }
+    @if(User.IsInRole(SD.Role_Social))
+    {
+      <div class="container p-3">       
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Notes</th>
+                    <th>Documents</th>
+                </tr>
+            </thead>
+            <tbody>
+               <tr>
+                   <td>
+                       <a asp-area="Student" asp-controller="StudentNotes" asp-action="Index">
+                        <button type="button" class="btn btn-primary" style="width:150px;" >Add Student Notes</button>
+                        </a>
+                   </td>
+                   <td>
+                       <a asp-area="Student" asp-controller="StudentDocs" asp-action="Index">
+                        <button type="button" class="btn btn-primary" style="width:150px;" >Add Student Document</button>
+                        </a>
+                   </td>
+               </tr>
+
+            </tbody>
+        </table>
+    </div>       
+    }
+    @if(User.IsInRole(SD.Role_Instructor))
+    {
+      <div class="container p-3">       
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Attendance</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+               <tr>
+                   <td>
+                       <a asp-area="Student" asp-controller="Attendance" asp-action="Index">
+                        <button type="button" class="btn btn-primary" style="width:150px;" >Attendance</button>
+                        </a>
+                   </td>
+                   <td>
+                       <a asp-area="Student" asp-controller="Grading" asp-action="CourseSelect">
+                        <button type="button" class="btn btn-primary" style="width:150px;" >Grading</button>
+                        </a>
+                   </td>
+               </tr>
+
+            </tbody>
+        </table>
+    </div>       
+    }
+
+ </div>
+
