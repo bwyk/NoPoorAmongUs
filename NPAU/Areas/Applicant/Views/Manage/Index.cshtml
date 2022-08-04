@@ -8,7 +8,7 @@
     if (status.Count == 0 || status[0].Contains("all"))
         status = "all";
     else if (status[0].Contains("students") || status[0].Contains("Students"))
-        status = "student";
+        status = "students";
     else if (status[0].Contains("pending"))
         status = "pending";
     else if (status[0].Contains("rejected"))
@@ -28,7 +28,7 @@
 
     switch (status)
     {
-        case "student":
+        case "students":
             students = "active text-white";
             break;
         case "pending":
@@ -55,7 +55,7 @@
     <div class="d-flex justify-content-between pt-4 row-cols-2">
         <div class="p-2">
             
-                @if (User.IsInRole(SD.Role_Instructor) || User.IsInRole(SD.Role_Admin) )
+                @if (User.IsInRole(SD.Role_Instructor))
                 {
                     <ul class="list-group list-group-horizontal-sm">
                         
@@ -70,11 +70,6 @@
                 }
                 @if (User.IsInRole(SD.Role_Social) || User.IsInRole(SD.Role_Admin))
                 {
-                if (User.IsInRole(SD.Role_Admin))
-                {
-                    <hr/>
-                    
-                }
                 <ul class="list-group list-group-horizontal-sm">
                         <a style="text-decoration:none" id="all" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_all")">
                             <li class="list-group-item @all">All</li>
@@ -93,16 +88,20 @@
                 }
                 @if (User.IsInRole(SD.Role_Rater) || User.IsInRole(SD.Role_Admin))
                 {
-                    <hr/>
-                    <ul class="list-group list-group-horizontal-sm">
-                        <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Rater+"rating_incomplete")">
-                            <li class="list-group-item @rating_incomplete">Rating Pending</li>
-                        </a>
-                        <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Rater+"rating_completed")">
-                            <li class="list-group-item @rating_complete">Rating Completed</li>
-                        </a>
-                    </ul>
+                    @if(status.Contains("rating_completed") || status.Contains("rating_incomplete") || status.Contains("pending"))
+                    {
+                        <hr/>
+                        <ul class="list-group list-group-horizontal-sm">
+                            <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Rater+"rating_incomplete")">
+                                <li class="list-group-item @rating_incomplete">Rating Pending</li>
+                            </a>
+                            <a style="text-decoration:none" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Rater+"rating_completed")">
+                                <li class="list-group-item @rating_complete">Rating Completed</li>
+                            </a>
+                        </ul>
+                    }
                 }
+                
         </div>
     </div>
 
@@ -111,7 +110,7 @@
         <div class="p-2">
             @switch (status)
             {
-                case "student":
+                case "students":
                     <h2 class="text-primary text-start">Students</h2>
                     break;
                 case "pending":
@@ -131,11 +130,21 @@
                     break;
             }
         </div>
+        @if (User.IsInRole(SD.Role_Social) || User.IsInRole(SD.Role_Admin))
+        {
         <div class="p-2 col-6 text-end">
-            <a asp-area="Applicant" asp-controller="Manage" asp-action="Upsert" class="btn btn-primary">
+            <a asp-area="Applicant" asp-controller="Manage" asp-action="Upsert" asp-route-status="@(SD.Role_Social + "_" + status)" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> &nbsp; New Applicant
             </a>
         </div>
+        }else @if (User.IsInRole(SD.Role_Instructor))
+        {
+        <div class="p-2 col-6 text-end">
+            <a asp-area="Applicant" asp-controller="Manage" asp-action="Upsert" asp-route-status="@(SD.Role_Instructor + "_" + status)" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> &nbsp; New Applicant
+            </a>
+        </div>
+        }
     </div>
 
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">

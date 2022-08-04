@@ -36,7 +36,7 @@
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Rater</a>
                                 <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="Ratings" asp-action="Index">Rating</a>
-                                <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="pending">Students Pending to Rate</a>
+                                <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Rater+"rating_incomplete")">Students Pending to Rate</a>
                             </div>
                             </li>
                         }
@@ -87,7 +87,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Applicant</a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="pending">Applications</a>
+                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_pending")">Applications</a>
                                     <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Upsert">New Application</a>
                                 </div>
                             </li>
@@ -99,7 +99,8 @@
                                 <div class="dropdown-menu">
                                    
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Course" asp-action="Index">Course</a>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a> 
+                                    @*<a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a> *@
+                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_all")">Course Session</a>
                                     <div class="dropdown-divider"> </div>
                                     <a class="dropdown-item" asp-area="Student" asp-controller="Grade" asp-action="Index">Grade</a>
 
@@ -110,7 +111,7 @@
                                  
 
                                     <div class="dropdown-divider"> </div>
-                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index">Student List</a>
+                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_students")">Student List</a> 
                                     <a class="dropdown-item" asp-area="Student" asp-controller="Guardian" asp-action="Index">Guardian</a>                        
                              
                                     <div class="dropdown-divider"> </div>

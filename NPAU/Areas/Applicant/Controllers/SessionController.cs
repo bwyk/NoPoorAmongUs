@@ -97,8 +97,13 @@ namespace NPAU.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(SessionVM obj)
         {
+            Course course = _unitOfWork.Course.GetFirstOrDefault(c => c.Id == obj.CourseSession.CourseId);
+
+            obj.CourseSession.CourseName = course.Name ?? "";
             //if(obj.CourseSession.Course != null)
             //    obj.CourseSession.Course = _unitOfWork.Course.GetFirstOrDefault(c => c.Id == obj.CourseSession.CourseId);
+            ModelState.Clear();
+            TryValidateModel(obj);
             if (ModelState.IsValid)
             {
                 bool match;

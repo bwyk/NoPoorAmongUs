@@ -5,28 +5,42 @@ var isEditable;
 var ratingIsEditable;
 var studentId;
 var row;
+var status;
 var col1;
 var col2;
 var col3;
 var col4;
 var col5;
 $(document).ready(function () {
+    var url = window.location.search;
+
+    if (url.includes("all")) {
+        status = "Instructor_all"
+    } else if (url.includes("private")) {
+        status = "Instructor_private"
+    } else if (url.includes("public")) {
+        status = "Instructor_public"
+    } else if (url.includes("your")) {
+        status = "Instructor_your"
+    } else {
+        status = "Instructor_all" //TODO remove default and have it filter on role
+    }
+
     $("#ratingSubmit").click(function (e) {
         ratingToggleEditable();
-
+        var s  =getStatus()
         //Serialize the form datas.   
         var valdata = $("#form-rating").serialize();
         $.ajax({
-            url: "/Applicant/Manage/SaveRatings?studentId=" + studentId,
+            url: "/Applicant/Manage/SaveRatings?studentId=" + studentId + "&status=" + s,
             type: "POST",
             dataType: 'json',
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             data: valdata,
-            success: function () {
-                location.reload();
-            }
+           
         });
     });  
+
 
 
     document.getElementById('applicant-form').onsubmit = function () {      // Process the guardians table after form is submitted
@@ -43,6 +57,10 @@ $(document).ready(function () {
     ratingIsEditable = false;
     setup();
 });
+
+function getStatus() {
+    return status;
+}
 
 function setup() {
     reloadTables();

@@ -96,10 +96,11 @@ function studentDetails(filter) {
     loadDataTable(status);
 }
 
-function getButtons(data, status) {
+function getButtons(data, status, isPrivate) {
     switch (roleFilter) {
         case "Instructor":
-            var buttons = `
+            if (isPrivate) {
+                var buttons = `
                             <div class="btn-group btn-group-sm mx-1" role="group">
                                 <a href="/Student/Attendance/MarkAttendance?sessionId=${data}&status=${status}"
                                 class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; Mark Attendance</a>
@@ -118,12 +119,34 @@ function getButtons(data, status) {
                                     class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                                </div>                   
                            </div>`
+            } else {
+                var buttons = `
+                           <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                           <div class="btn-group btn-group-sm mx-1" role="group">
+                                <div class="btn-group btn-group-sm" role="group">
+                                   <a href="/Applicant/Session/Upsert?id=${data}&status=${status}"
+                                   class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; Details And Enrollment</a>
+                               </div>
+                               </div>
+                                <div class="btn-group btn-group-sm mx-1" role="group">
+                                    <a onClick=Delete('/Applicant/Session/Delete/${data}')
+                                    class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                               </div>                   
+                           </div>`
+            }
+
+            
             break;
     }
     return buttons
 }
 function getStatus() {
     return status;
+}
+function isPrivate() {
+    var s  = getStatus()
+    var isPrivate = s == "Instructor_private"
+    return isPrivate;
 }
 function loadDataTable(status) {
     $.ajax({
@@ -146,7 +169,7 @@ function loadDataTable(status) {
             })
             columnList.push({
                 'data': 'id', "render": function (data) {
-                    return getButtons(data, getStatus())
+                    return getButtons(data, getStatus(), isPrivate())
                 },
                 "width": "30%"
             })

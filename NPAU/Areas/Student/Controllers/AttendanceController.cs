@@ -47,7 +47,7 @@ namespace NPAU.Controllers
             List<CourseEnrollment> cEList = _unitOfWork.CourseEnrollment.GetAll((cE => cE.CourseSessionId == targetSession.Id), includeProperties: "Student").ToList();
 
 
-            List<Attendance> attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
+            List<Attendance> attendance = new();
 
             // If attendance has not been taken for the given session on the given date
             if (sessionAttendance == null)
@@ -80,6 +80,7 @@ namespace NPAU.Controllers
             }
             else
             {
+                attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
                 List<Attendance> newAttendances = new();
                 List<Attendance> matchlessAtendances = new List<Attendance>(attendance);
                 // Check each enrollment for a matching attendance
@@ -198,7 +199,11 @@ namespace NPAU.Controllers
                     }
                     
                 };
-                allAttendanceVM.AllSessionAttendance.Add(attendanceVM);
+                if(attendanceVM.AttendanceList.Count > 0)
+                    allAttendanceVM.AllSessionAttendance.Add(attendanceVM);
+                else { 
+                    _unitOfWork.SessionAttendance.Remove(sa);
+                }
             }
 
             return View(allAttendanceVM);
