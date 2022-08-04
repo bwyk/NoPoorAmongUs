@@ -65,11 +65,12 @@
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Instructor</a>
                                 <div class="dropdown-menu">
 
-                                   
-                                    <a class="dropdown-item" asp-area="Course" asp-controller="StudentEnrollment" asp-action="Index">Student Enrollment</a>                                 
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a>
-                                    <div class="dropdown-divider"> </div>
-                                    <a class="dropdown-item" asp-area="Student" asp-controller="Attendance" asp-action="Index">Attendance</a>
+                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_students")">Student List</a> 
+                                    @*<a class="dropdown-item" asp-area="Course" asp-controller="StudentEnrollment" asp-action="Index">Student Enrollment</a>                                 
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a>*@
+                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_your")">Course Session</a>
+                                    @*<div class="dropdown-divider"> </div>
+                                    <a class="dropdown-item" asp-area="Student" asp-controller="Attendance" asp-action="ViewAttendance">Attendance</a>*@
 
                                     <div class="dropdown-divider"> </div>
                                     <a class="dropdown-item" asp-area="Student" asp-controller="Assessment" asp-action="Index">Assessment</a>                                    

@@ -12,20 +12,20 @@ var ajaxCall = "/Applicant/Session/GetAllSessions?status="
 var roleFilter
 $(document).ready(function () {
     var url = window.location.search;
-    if (url.includes("Instructor")) {
-        if (url.includes("Instructor_all")) {
-            status = "Instructor_all"
-        } else if (url.includes("Instructor_private")) {
-            status = "Instructor_private"
-        } else if (url.includes("Instructor_public")) {
-            status = "Instructor_public"
-        } else if (url.includes("Instructor_your")) {
-            status = "Instructor_your"
-        }
-        studentDetails("Instructor")
+
+    if (url.includes("all")) {
+        status = "Instructor_all"
+    } else if (url.includes("private")) {
+        status = "Instructor_private"
+    } else if (url.includes("public")) {
+        status = "Instructor_public"
+    } else if (url.includes("your")) {
+        status = "Instructor_your"
     } else {
         status = "Instructor_all" //TODO remove default and have it filter on role
     }
+    studentDetails("Instructor")
+   
 });
 
 $('#all').click(function () {
@@ -100,7 +100,7 @@ function getButtons(data, status) {
     switch (roleFilter) {
         case "Instructor":
             var buttons = `
-                            <div class="btn-group btn-group-sm mb-1" role="group">
+                            <div class="btn-group btn-group-sm mx-1" role="group">
                                 <a href="/Student/Attendance/MarkAttendance?sessionId=${data}&status=${status}"
                                 class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; Mark Attendance</a>
                                 <a href="/Student/Attendance/ViewAttendance?sessionId=${data}&status=${status}"
@@ -110,12 +110,12 @@ function getButtons(data, status) {
                            <div class="btn-group btn-group-sm mx-1" role="group">
                                 <div class="btn-group btn-group-sm" role="group">
                                    <a href="/Applicant/Session/Upsert?id=${data}&status=${status}"
-                                   class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; Details</a>
+                                   class="btn btn-primary"> <i class="bi bi-info-circle"></i>&nbsp; Details And Enrollment</a>
                                </div>
-                                
+                               </div>
                                 <div class="btn-group btn-group-sm mx-1" role="group">
-                                   <a href="/Applicant/Session/DeleteEnrollment?id=${data}&status=${status}"
-                                   class="btn btn-danger"> <i class="bi bi-trash-fill"></i>Delete</a>
+                                    <a onClick=Delete('/Applicant/Session/Delete/${data}')
+                                    class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                                </div>                   
                            </div>`
             break;
@@ -140,32 +140,60 @@ function loadDataTable(status) {
 
             }
 
+            keys.forEach((key) => {
+                if (key != "id")
+                    columnList.push({ 'data': key })
+            })
+            columnList.push({
+                'data': 'id', "render": function (data) {
+                    return getButtons(data, getStatus())
+                },
+                "width": "30%"
+            })
 
-                keys.forEach((key) => {
-                    if (key != "id")
-                        columnList.push({ 'data': key })
-                })
-                columnList.push({
-                    'data': 'id', "render": function (data) {
-                        return getButtons(data, getStatus())
-                    },
-                    "width": "22%"
-                })
-
-                for (var i = 0; i < json.data.length; i++) {
-                    //unwantedFields.forEach(f => delete json.data[i][f])
-                    propertyList[i] = json.data[i]
-                }
-                dataTable = $('#tblData').DataTable({
-                    language: {
-                        "emptyTable": "No Sessions Found"
-                    },
-                    data: propertyList,
-                    columns: columnList
-                });
-                addHeaders(keys);
+            for (var i = 0; i < json.data.length; i++) {
+                //unwantedFields.forEach(f => delete json.data[i][f])
+                propertyList[i] = json.data[i]
+            }
+            dataTable = $('#tblData').DataTable({
+                language: {
+                    "emptyTable": "No Sessions Found"
+                },
+                data: propertyList,
+                columns: columnList
+            });
+            addHeaders(keys);
             $('tbody').attr("id", "session-table-body")
         }
     });
 }
 
+function Delete(url) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function (data) {
+                    if (data.success) {
+                        //dataTable.ajax.reload();
+                        dataTable.clear().destroy()
+                        loadDataTable(getStatus());
+                        toastr.success(data.message);
+                    }
+                    else {
+                        toastr.error(data.message);
+                    }
+                }
+            })
+        }
+    })
+}

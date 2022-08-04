@@ -11,6 +11,7 @@
             <form method="post" id="course-session-form" enctype="multipart/form-data">
                 <input id="course-session-id" hidden asp-for="CourseSession.Id" class="course-session-edit" />
                 <input asp-for="CourseEnrollmentStudentsJSON" hidden id="course-session-students-json" class="course-session-edit form-control" />
+                <input asp-for="Status" hidden class="course-session-edit form-control" />
                 <span asp-validation-for="CourseEnrollmentStudentsJSON" class="text-danger"></span>
                 <div>
                     <h2 class="text-primary">
@@ -26,18 +27,13 @@
                     <select asp-for="CourseSession.CourseId" asp-items="@Model.Courses" class="student-edit-show form-select">
                     </select>
                     <span asp-validation-for="CourseSession.CourseId" class="text-danger"></span>
-                    <div class="mb-3">
-                        <label asp-for="CourseSession.CourseName"></label>
-                        <input readonly class="course-session-edit-input form-control" asp-for="CourseSession.CourseName" />
-                        <span asp-validation-for="CourseSession.CourseName" class="text-danger"></span>
-                    </div>
                     <div class="mb-3 col-4">
                         <label asp-for="CourseSession.StartTime"></label>
-                        <input asp-for="CourseSession.StartTime" asp-format="H:mm" class="form-control" />
+                        <input asp-for="CourseSession.StartTime"  class="form-control" />
                     </div>
                     <div class="mb-3 col-4">
                         <label asp-for="CourseSession.EndTime"></label>
-                        <input asp-for="CourseSession.EndTime" asp-format="H:mm" class="form-control" />
+                        <input asp-for="CourseSession.EndTime"  class="form-control" />
                     </div>
                     <div class="mb-3 form-check-inline">
                         @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Monday)@Html.Label("Monday")<br />
@@ -57,7 +53,7 @@
                     {
                         <button type="submit" class="btn btn-primary course-session-edit-show" style="width:150px">Create</button>
                     }
-                    <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                    <a asp-controller="Session" asp-action="Index" asp-route-status="@Model.Status" class="btn btn-secondary" style="width:150px">
                         Back to List
                     </a>
                 </div>

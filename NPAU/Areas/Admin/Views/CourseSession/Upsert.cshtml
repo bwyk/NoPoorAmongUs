@@ -1,0 +1,64 @@
+﻿@using Models.ViewModels
+@model CourseSessionVM
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <input asp-for="CourseSession.Id" hidden />
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    @if (Model.CourseSession.Id != 0)
+                    {
+                        <h2 class="text-primary">Update Course Session</h2>
+                    }
+                    else
+                    {
+                        <h2 class="text-primary">Create Course Session</h2>
+                    }
+                    <hr />
+                </div>
+                <div class="mb-3 col-6" hidden>
+                    <label asp-for="CourseSession.CourseId"></label>
+                    <input asp-for="CourseSession.CourseId" class="form-control"/>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="CourseSession.CourseName"></label>
+                    <select asp-for="CourseSession.CourseName" asp-items="@Model.CourseList" class="form-select">
+                        <option disabled selected>--Select Course--</option>
+                    </select>
+                </div>
+                <br />
+                <div class="mb-3 col-6">
+                    <label asp-for="CourseSession.Day"></label>
+                    <input asp-for="CourseSession.Day" class="form-control" />
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="CourseSession.StartTime"></label>
+                    <input asp-for="CourseSession.StartTime" class="form-control" />
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="CourseSession.EndTime"></label>
+                    <input asp-for="CourseSession.EndTime" class="form-control" />
+                </div>
+                <div class="col-12">
+                    @if (Model.CourseSession.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+                    }
+                    <a asp-controller="CourseSession" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+}
