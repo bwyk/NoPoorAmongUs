@@ -19,8 +19,9 @@ namespace NPAU.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? status)
         {
+
             return View();
         }
         [HttpGet]
@@ -69,9 +70,10 @@ namespace NPAU.Controllers
         }
 
 
-        public IActionResult Upsert(int? id)
+        public IActionResult Upsert(int? id, string? status)
         {
             SessionVM pubScheduleVM = new();
+            pubScheduleVM.Status = status;
             pubScheduleVM.Courses = _unitOfWork.Course.GetAll().Select(c => new SelectListItem()
             {
                 Value = c.Id.ToString(),
@@ -126,23 +128,10 @@ namespace NPAU.Controllers
                 var students = _unitOfWork.Student.GetAll(s => enrollments.Select(enrollments => enrollments.StudentId).Contains(s.Id));
 
                 List<Student> newStudentEnrollments = new();
-                // Check for existing or new relationships
                 foreach (Student s in enteredStudents ?? Enumerable.Empty<object>()) // If null do nothing
                 {
                     match = false;
-                    //// If this is a new guardian
-                    //if (s.Id == -1)
-                    //{
-                    //    _unitOfWork.Guardian.Add(new Guardian()
-                    //    {
-                    //        FirstName = g.FirstName,
-                    //        LastName = g.LastName,
-                    //        Relationship = g.Relationship
-                    //    });
-                    //    _unitOfWork.Save();
-                    //}
-
-                    // check for any existing student enrollment
+                    // Check for a matching enrollment
                     foreach (var enrollment in enrollments)
                         if (enrollment.StudentId == s.Id)
                         {
@@ -167,22 +156,30 @@ namespace NPAU.Controllers
                     }
                 }
 
-
-                // Check if any enrollments were removed
-                foreach (CourseEnrollment e in enrollments)
-                    // If there are not any entered enrollments that match a previous
-                    if (!enteredStudents.Any(s => s.Id == e.StudentId))
+                // If all enrollments were removed
+                if (enteredStudents.Count() == 0)
+                {
+                    _unitOfWork.CourseEnrollment.RemoveRange(enrollments);
+                }
+                else
+                {
+                    // Check if any enrollments were removed
+                    foreach (CourseEnrollment e in enrollments)
                     {
-                        if (!newStudentEnrollments.Any(s => s.Id == e.StudentId))
-                            _unitOfWork.CourseEnrollment.Remove(e);
+                        // If there are not any entered enrollments that match a previous
+                        if (!enteredStudents.Any(s => s.Id == e.StudentId))
+                        {
+                            if (!newStudentEnrollments.Any(s => s.Id == e.StudentId))
+                                _unitOfWork.CourseEnrollment.Remove(e);
+                        }
                     }
-
+                        
+                }
 
                 TempData["success"] = "Course enrollments updated successfully!";
 
-
                 _unitOfWork.Save();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index",  new { status = obj.Status });
             }
 
             obj.PotentialStudents = _unitOfWork.Student.GetAll();
@@ -211,6 +208,20 @@ namespace NPAU.Controllers
             var students = _unitOfWork.Student.GetAll(s => enrollments.Select(enrollments => enrollments.StudentId).Contains(s.Id));
 
             return Json(new { data = students });
+        }
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var obj = _unitOfWork.CourseSession.GetFirstOrDefault(u => u.Id == id);
+            if (obj == null)
+            {
+                return Json(new { success = false, message = "Error While Deleting" });
+            }
+
+            _unitOfWork.CourseSession.Remove(obj);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Course Deleted Successfully" });
+
         }
     }
 }
