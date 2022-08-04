@@ -32,6 +32,11 @@ namespace NPAU.Areas.Admin.Controllers
                 allData.Add(nt, rolesToAdd);
             }
 
+            foreach (KeyValuePair<string, List<string>> entry in allData)
+            {
+                entry.Value.Sort();
+            }
+
             NoteTypeVM noteTypeVM = new NoteTypeVM()
             {
                 NoteRoles = allData
@@ -47,6 +52,7 @@ namespace NPAU.Areas.Admin.Controllers
                 NoteType = new(),
                 RoleList = _roleManager.Roles.Select(r => r.Name).ToList()
             };
+            noteTypeVM.RoleList.Sort();
 
             if (type == null)
             {
@@ -67,6 +73,7 @@ namespace NPAU.Areas.Admin.Controllers
                 noteTypeVM.NoteRoles = allData;
                 noteTypeVM.NoteType = _unitOfWork.NoteType.GetFirstOrDefault(t => t.Type == type);
                 noteTypeVM.RoleList = _roleManager.Roles.Select(r => r.Name).ToList();
+                noteTypeVM.RoleList.Sort();
 
                 return View(noteTypeVM);
             }

@@ -48,10 +48,7 @@
                                 <div class="dropdown-menu">
                                     
                                     
-                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index">Student List</a>
-                                    <div class="dropdown-divider"> </div>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="DocType" asp-action="Index">Add Document Type</a>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="NoteType" asp-action="Index">Add Note Type</a>
+                                    <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Social+"_students")">Student List</a>                                    
 
                                     <div class="dropdown-divider"> </div>
                                     <a class="dropdown-item" asp-area="Student" asp-controller="StudentNotes" asp-action="Index">Create Student Notes</a>
@@ -69,14 +66,13 @@
                                 <div class="dropdown-menu">
 
                                    
-                                    <a class="dropdown-item" asp-area="Course" asp-controller="StudentEnrollment" asp-action="Index">Student Enrollment</a>
-
+                                    <a class="dropdown-item" asp-area="Course" asp-controller="StudentEnrollment" asp-action="Index">Student Enrollment</a>                                 
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a>
                                     <div class="dropdown-divider"> </div>
                                     <a class="dropdown-item" asp-area="Student" asp-controller="Attendance" asp-action="Index">Attendance</a>
 
                                     <div class="dropdown-divider"> </div>
-                                    <a class="dropdown-item" asp-area="Student" asp-controller="Assessment" asp-action="Index">Assessment</a>
-                                    <a class="dropdown-item" asp-area="Student" asp-controller="Grade" asp-action="Index">Grade</a>
+                                    <a class="dropdown-item" asp-area="Student" asp-controller="Assessment" asp-action="Index">Assessment</a>                                    
                                     <a class="dropdown-item" asp-area="Student" asp-controller="Grading" asp-action="CourseSelect">Grading</a>
 
                                     <div class="dropdown-divider"> </div>
@@ -102,9 +98,9 @@
                                 <div class="dropdown-menu">
                                    
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Course" asp-action="Index">Course</a>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CourseEnrollment" asp-action="Index">Course Enrollment</a>
-                             
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CourseSession" asp-action="Index">Course Session</a> 
+                                    <div class="dropdown-divider"> </div>
+                                    <a class="dropdown-item" asp-area="Student" asp-controller="Grade" asp-action="Index">Grade</a>
 
                                     <div class="dropdown-divider"> </div>
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Term" asp-action="Index">Term</a>
@@ -116,9 +112,9 @@
                                     <a class="dropdown-item" asp-area="Applicant" asp-controller="Manage" asp-action="Index">Student List</a>
                                     <a class="dropdown-item" asp-area="Student" asp-controller="Guardian" asp-action="Index">Guardian</a>                        
                              
-                                    
                                     <div class="dropdown-divider"> </div>
-                                    <a class="dropdown-item" asp-area="Employee" asp-controller="Instructor" asp-action="Index">Employee</a>                                          
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="DocType" asp-action="Index">Add Document Type</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="NoteType" asp-action="Index">Add Note Type</a>                                                                      
 
 
                                     <div class="dropdown-divider"></div>

@@ -1,0 +1,72 @@
+﻿@using Models.ViewModels
+@model StudentAssessmentGradesVM
+
+@{
+    var totalEarnedScore = 0;
+    var totalPossibleScore = 0;
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Grading</h2>
+        </div>
+
+    </div>
+    <br /><br />
+    <h4>Assessment Table for @(Model.Student.FirstName) @(Model.Student.LastName), for @(Model.Course.Name)</h4>
+    <h6>Click the student's name to see their grades for this course.</h6>
+    
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+
+                    <th style="width:20%">Assessment Name</th>
+                    <th style="width:10%">Earned Points</th>
+                    <th style="width:10%">Maximum Points</th>
+                    <th style="width:60%">Comment</th>
+                </tr>
+            </thead>
+
+            @for (int i = 0; i < Model.Assessments.Count(); i++)
+            {
+
+                <tr>
+                    <td>
+                    <a asp-controller="Grading" asp-action="GradingTable" asp-route-assessmentId="@Model.Assessments[i].Id">@Model.Assessments[i].Name</a>
+                </td>
+                    <td>
+                        <input type="number" value="@(Model.Grades[i].Score)" class="form-control" disabled />
+                       
+                        
+                    </td>
+                    <td>@Model.Assessments[i].MaxScore</td>
+                    <td>
+                        <input type="text" value="@(Model.Grades[i].Comment)" class="form-control" disabled />
+                    </td>
+                    
+                </tr>
+
+                totalEarnedScore += Model.Grades[i].Score;
+                totalPossibleScore += Model.Assessments[i].MaxScore;
+            }
+            
+            <tr>
+                <td>Total Grade:</td>
+                <td>@totalEarnedScore</td>
+                <td>@totalPossibleScore</td>
+                <td></td>
+            </tr>
+
+        </table>
+        <br />
+        
+    <br />
+    <a asp-controller="Grading" asp-action="CourseSelect"
+       class="btn btn-secondary mx-2">Back to Course Select</a>
+
+
+</div>
+
+
+

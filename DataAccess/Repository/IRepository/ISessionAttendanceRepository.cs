@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.Academic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository.IRepository
 {
-    public interface IInstructorRepository : IRepository<Instructor>
+    public interface ISessionAttendanceRepository : IRepository<SessionAttendance>
     {
-        void Update(Instructor obj);
+        void Update(SessionAttendance obj);
     }
 }

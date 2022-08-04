@@ -5,19 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Models.People;
 using Models.Academic;
 
 namespace Models.ViewModels
 {
-    public class StudentEnrollmentVM
+    public class SessionVM
     {
-        public CourseSession courseSession { get; set; }
+        public CourseSession CourseSession { get; set; }
         [ValidateNever]
-        public List<CourseEnrollment> courseEnrollment { get; set; }
+        public string? CourseEnrollmentStudentsJSON { get; set; }
         [ValidateNever]
-        public List<Student> UnEnrolledStudents { get; set; }
+        public IEnumerable<Student>? PotentialStudents { get; set; }
         [ValidateNever]
-        public List<Student> EnrolledStudents { get; set; }
+        public IEnumerable<SelectListItem>? Courses { get; set; }
     }
-
 }

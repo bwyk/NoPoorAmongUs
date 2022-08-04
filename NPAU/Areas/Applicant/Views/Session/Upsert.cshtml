@@ -1,0 +1,114 @@
+﻿@using Utilities;
+@using Models.ViewModels
+@model SessionVM
+@{
+    ViewData["Title"] = @Model.CourseSession?.CourseName ?? "New Course Session";
+}
+
+<div class="border p-3 mt-4">
+    <div class="row">
+        <div class="col-md">
+            <form method="post" id="course-session-form" enctype="multipart/form-data">
+                <input id="course-session-id" hidden asp-for="CourseSession.Id" class="course-session-edit" />
+                <input asp-for="CourseEnrollmentStudentsJSON" hidden id="course-session-students-json" class="course-session-edit form-control" />
+                <span asp-validation-for="CourseEnrollmentStudentsJSON" class="text-danger"></span>
+                <div>
+                    <h2 class="text-primary">
+                        <span class="col-10">Session Information</span>
+                        @if (Model.CourseSession?.Id != 0)
+                        {
+                            <button type="button" id="btnEditTrue" class="btn btn-secondary float-end course-session-edit-hide" onclick="toggleEditable()">Edit</button>
+                            <button type="button" id="btnEditTrue" class="btn btn-secondary float-end course-session-edit-show" onclick="cancelEdit()">Cancel Edit</button>
+                        }
+                    </h2>
+                    <hr />
+                    <label asp-for="CourseSession.Course"></label>
+                    <select asp-for="CourseSession.CourseId" asp-items="@Model.Courses" class="student-edit-show form-select">
+                    </select>
+                    <span asp-validation-for="CourseSession.CourseId" class="text-danger"></span>
+                    <div class="mb-3">
+                        <label asp-for="CourseSession.CourseName"></label>
+                        <input readonly class="course-session-edit-input form-control" asp-for="CourseSession.CourseName" />
+                        <span asp-validation-for="CourseSession.CourseName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3 col-4">
+                        <label asp-for="CourseSession.StartTime"></label>
+                        <input asp-for="CourseSession.StartTime" asp-format="H:mm" class="form-control" />
+                    </div>
+                    <div class="mb-3 col-4">
+                        <label asp-for="CourseSession.EndTime"></label>
+                        <input asp-for="CourseSession.EndTime" asp-format="H:mm" class="form-control" />
+                    </div>
+                    <div class="mb-3 form-check-inline">
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Monday)@Html.Label("Monday")<br />
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Tuesday)@Html.Label("Tuesday")<br />
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Wednesday)@Html.Label("Wednesday")<br />
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Thursday)@Html.Label("Thursday")<br />
+                        @Html.RadioButtonFor(w => w.CourseSession.Day, SD.Weekdays.Friday)@Html.Label("Friday")<br />
+                    </div>
+                </div>
+
+                <div class="col-8">
+                    @if (Model.CourseSession?.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-primary course-session-edit-show" style="width:150px">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary course-session-edit-show" style="width:150px">Create</button>
+                    }
+                    <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="border p-3 mt-4">
+    <div class="row">
+        <div class="col-md">
+            <div class="p-2">
+                <h2 class="text-primary text-start">Current Enrollments</h2>
+            </div>
+            <br />
+            <table id="tblDataCurrentEnrollments" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="row course-session-edit-enrollments" hidden>
+            <hr />
+            <div class="col-md">
+                <div class="p-2">
+                    <h2 class="text-primary text-start">Potential Enrollments</h2>
+                    <hr />
+                </div>
+                <table id="tblDataPotentialEnrollments" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script src="~/js/sessionFilter.js"></script>
+}

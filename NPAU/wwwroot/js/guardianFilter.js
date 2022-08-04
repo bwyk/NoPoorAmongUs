@@ -5,6 +5,11 @@ var isEditable;
 var ratingIsEditable;
 var studentId;
 var row;
+var col1;
+var col2;
+var col3;
+var col4;
+var col5;
 $(document).ready(function () {
     $("#ratingSubmit").click(function (e) {
         ratingToggleEditable();
@@ -40,7 +45,6 @@ $(document).ready(function () {
 });
 
 function setup() {
-
     reloadTables();
     toggleEditable();
     ratingToggleEditable()
@@ -82,6 +86,7 @@ function toggleEditable() {
     $(".student-edit-show").each(function () {
         $(this).prop('hidden', !isEditable);
     })
+    
     isEditable = !isEditable;
 }
 
@@ -98,48 +103,60 @@ function ratingToggleEditable() {
     ratingIsEditable = !ratingIsEditable;
 }
 
+function resetForm(id) {
+    $('#' + id).val(function () {
+        return this.defaultValue;
+    });
+}
 
-//function saveRating() {
-//    var age = document.getElementById("rating-age").value;
-//    var academics = document.getElementById("rating-academics").value;
-//    var income = document.getElementById("rating-income").value;
-//    var family = document.getElementById("rating-family").value;
-//    var distance = document.getElementById("rating-distance").value;
-
-//    $("#form-rating")[0].reset();
-//    if (age && academics && income && fami) {
-//        document.getElementById("guardian-first-name").value = "";
-//        document.getElementById("guardian-last-name").value = "";
-//        var relationship = document.getElementById("guardian-relationship").value;
-//        document.getElementById("guardian-relationship").selectedIndex = 0;
-//        dataTableCurrent.row.add({
-//            "id": -1,
-//            "firstName": firstName,
-//            "lastName": lastName,
-//            "relationship": relationship
-//        });
-//        dataTableCurrent.draw();
-//    }
-//}
-
+//TODO validation only works the first time
 function addGuardian() {
+    
     var firstName = document.getElementById("guardian-first-name").value;
     var lastName = document.getElementById("guardian-last-name").value;
-    if (firstName && lastName) {
-        document.getElementById("guardian-first-name").value = "";
-        document.getElementById("guardian-last-name").value = "";
-        var relationship = document.getElementById("guardian-relationship").value;
-        document.getElementById("guardian-relationship").selectedIndex = 0;
+    var phoneNumber = document.getElementById("guardian-phone").value;
+    var relationship = $("#guardian-relationship").val();
+
+    // Manually show the guardian form errors
+    if (!firstName) {
+        $("#first-guardian-error").show()
+    }
+    if (!lastName) {
+        $("#last-guardian-error").show()
+    }
+    if (!phoneNumber) {
+        $("#phone-guardian-error").show()
+    }
+    if (!relationship) {
+        $("#rel-guardian-error").show()
+
+    }
+
+    if (firstName && lastName && relationship) {
+        $("#form-guardian")[0].reset();
+        $("#form-guardian").prop("isvalid", true) // Reset Form validation
+        //var validator = $("#form-guardian").validate();
+        //validator.resetForm();
+        //$("#form-guardian").validate().css("display", "none");
+        $(".guardian-error").each(function () {
+            //$(this).prop('hidden', true);
+            $(this).hide();
+        })
+        //ValidatorUpdateDisplay(validator);
         dataTableCurrent.row.add({
             "id": -1,
             "firstName": firstName,
             "lastName": lastName,
+            "phoneNumber": phoneNumber,
             "relationship": relationship
         });
         dataTableCurrent.draw();
+    } else {
+
     }
 }
-
+var test = "firstName"
+var ajaxCall = "/Applicant/Manage/GetCurrentGuardians?studentId="
 function loadDataTableCurrent() {
     dataTableCurrent = $('#tblDataCurrentGuardians').DataTable({
         "bAutoWidth": false,
@@ -147,12 +164,25 @@ function loadDataTableCurrent() {
             "emptyTable": "No Guardians Found"
         },
         "ajax": {
-            "url": "/Applicant/Manage/GetCurrentGuardians?studentId=" + studentId
+            "url": ajaxCall + studentId
         },
         "columns": [
-            { "data": "firstName", "width": "5%" },
-            { "data": "lastName", "width": "5%" },
-            { "data": "relationship", "width": "5%" },
+            { "data": test, "width": "20%" },
+            { "data": "lastName", "width": "20%" },
+            { "data": "relationship", "width": "10%" },
+            //{ "data": "phoneNumber", "width": "5%" },
+            {
+                "data": "phoneNumber",
+                "render": function (data) {
+                    if (!data) {
+                        return "No Phone Number Found"
+                    }
+                    else {
+                        return data
+                    }
+                },
+                "width": "25%"
+            },
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {
@@ -162,7 +192,7 @@ function loadDataTableCurrent() {
                         </div>
                         `
                 },
-                "width": "2%"
+                "width": "10%"
             }
         ]
     });
@@ -225,10 +255,10 @@ $('#save').click(function () {                              // If saved process 
 });
 
 
-$('#distance-slider').mdbRange({
-    single: {
-        active: true,
-        counting: true,
-        countingTarget: '#distance'
-    }
-});
+//$('#distance-slider').mdbRange({
+//    single: {
+//        active: true,
+//        counting: true,
+//        countingTarget: '#distance'
+//    }
+//});

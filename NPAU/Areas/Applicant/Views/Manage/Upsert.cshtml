@@ -4,64 +4,18 @@
     ViewData["Title"] = @Model.Student?.FullName ?? "New Applicant";
 }
 
-@{
-
-    var status = Context.Request.Query["status"];
-    var pending = "text-primary";
-    var student = "text-primary";
-    var rejected = "text-primary";
-    var all = "text-primary";
-
-    switch (status)
-    {
-        case "student":
-            student = "active text-white";
-            break;
-        case "pending":
-            pending = "active text-white";
-            break;
-        case "rejected":
-            rejected = "active text-white";
-            break;
-        default:
-            all = "active text-white";
-            break;
-    }
-}
-
-<div class="modal fade" id="relationshipModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add Guardian</h4>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label asp-for="Relationship.RelationshipType"></label>
-                    <select id="guardian-relationship" asp-for="Relationship.RelationshipType" asp-items="@Model.GuardianRelationshipList" class="form-select">
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" id="save" class="btn btn-primary">Save changes</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
 <div class="border p-3 mt-4">
     <div class="row">
         <div class="col-md">
             <form method="post" id="applicant-form" enctype="multipart/form-data">
                 <input id="studentId" hidden asp-for="Student.Id" class="studentEdit" />
+                <input hidden asp-for="Status"/>
                 <input asp-for="Student.EnglishLevel" hidden value="1" class="studentEdit form-control" />
                 <input asp-for="Student.ComputerLevel" hidden value="1" class="studentEdit form-control" />
                 <input asp-for="GuardianJSON" hidden id="guardianJSON" class="studentEdit form-control" />
                 <span asp-validation-for="GuardianJSON" class="text-danger"></span>
                 <div>
-                    @if (Model.Student.Id != 0)
+                    @if (Model.Student?.Id != 0)
                     {
                         <h2 class="text-primary">
                             <span class="col-10">Student Information</span>
@@ -75,10 +29,10 @@
                     }
                     <hr />
                     <div class="mb-3">
-                        @if (Model.Student.Id != 0)
+                        @if (Model.Student?.Id != 0)
                         {
                             <label asp-for="Student.Status"></label>
-                            <input asp-for="Student.Status" readonly class="student-edit-hide  form-control" />
+                            <input readonly class="student-edit-hide form-control" value="@Model.Student?.Status"/>
                             <select asp-for="Student.Status" asp-items="@Model.StudentStatusList" class="student-edit-show form-select">
                             </select>
                             <span asp-validation-for="Student.Status" class="text-danger"></span>
@@ -117,7 +71,7 @@
                 </div>
 
                 <div class="col-8">
-                    @if (Model.Student.Id != 0)
+                    @if (Model.Student?.Id != 0)
                     {
                         <button id="btn-add-applicant" type="submit" class="btn btn-primary student-edit-show" style="width:150px">Update</button>
                     }
@@ -125,7 +79,7 @@
                     {
                         <button id="btn-add-applicant" type="submit" class="btn btn-primary student-edit-show" style="width:150px">Create</button>
                     }
-                    <a asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                    <a  id="back-button" asp-route-status="@Model.Status" asp-controller="Manage" asp-action="Index" class="btn btn-secondary" style="width:150px">
                         Back to List
                     </a>
                 </div>
@@ -133,14 +87,14 @@
         </div>
         <div class="col-md">
             <form id="form-rating" onsubmit="saveRating(); return false;">
-                <input id="studentId" hidden asp-for="Rating.StudentId" value="@Model.Student.Id"class="studentEdit" />
+                <input id="studentId" hidden asp-for="Rating.StudentId" value="@Model.Student?.Id"class="studentEdit" />
                 <input hidden asp-for="Rating.Student" value="@Model.Student"class="studentEdit" />
                 <input hidden asp-for="Rating" value="@Model.Rating"class="studentEdit" />
                 <input hidden asp-for="Rating.Id" value="@Model.Rating?.Id"class="studentEdit" />
 
                 <h2 class="text-primary">
                     <span class="col-10">Applicant Rating</span>
-                    @if (Model.Student.Id != 0)
+                    @if (Model.Student?.Id != 0)
                     {
                         <button type="button" class="btn btn-secondary float-end rating-edit-hide" onclick="ratingToggleEditable()">Edit</button>
                         <button type="button" class="btn btn-secondary float-end rating-edit-show" onclick="ratingCancelEdit()">Cancel Edit</button>
@@ -188,6 +142,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Relationship</th>
+                        <th>Phone Number</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -222,18 +177,23 @@
                         <div class="mb-3">
                             <label asp-for="Guardian.FirstName"></label>
                             <input id="guardian-first-name" asp-for="Guardian.FirstName" class="form-control" />
-                            <span asp-validation-for="Guardian.FirstName" class="text-danger"></span>
+                            <span id="first-guardian-error" asp-validation-for="Guardian.FirstName" class="text-danger guardian-error"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="Guardian.LastName"></label>
                             <input id="guardian-last-name" asp-for="Guardian.LastName" class="form-control" />
-                            <span asp-validation-for="Guardian.LastName" class="text-danger"></span>
+                            <span id="last-guardian-error" asp-validation-for="Guardian.LastName" class="text-danger guardian-error"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Guardian.PhoneNumber"></label>
+                            <input id="guardian-phone" asp-for="Guardian.PhoneNumber" class="form-control" />
+                            <span id="phone-guardian-error" asp-validation-for="Guardian.PhoneNumber" class="text-danger guardian-error"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="Relationship.RelationshipType"></label>
                             <select id="guardian-relationship" asp-for="Relationship.RelationshipType" asp-items="@Model.GuardianRelationshipList" class="form-select">
                             </select>
-                            <span asp-validation-for="Relationship.RelationshipType" class="text-danger"></span>
+                            <span id="rel-guardian-error" asp-validation-for="Relationship.RelationshipType" class="text-danger guardian-error"></span>
                         </div>
                     </div>
 

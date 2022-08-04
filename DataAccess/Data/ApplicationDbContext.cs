@@ -19,11 +19,11 @@ namespace DataAccess.Data
         public DbSet<Subject> Subjects => Set<Subject>();
         public DbSet<Rating> Ratings => Set<Rating>();
         public DbSet<Term> Terms => Set<Term>();
-        public DbSet<Instructor> Instructors => Set<Instructor>();
         public DbSet<Guardian> Guardians => Set<Guardian>();
         public DbSet<Student> Students => Set<Student>();
         public DbSet<Assessment> Assessments => Set<Assessment>();
         public DbSet<Attendance> Attendances => Set<Attendance>();
+        public DbSet<SessionAttendance> SessionAttendances => Set<SessionAttendance>();
         public DbSet<CourseEnrollment> CourseEnrollments => Set<CourseEnrollment>();
         public DbSet<CourseSession> CourseSessions => Set<CourseSession>();
         public DbSet<DocType> DocTypes => Set<DocType>();

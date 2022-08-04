@@ -2,48 +2,89 @@
 @model StudentEnrollmentVM
 @{
     ViewData["Title"] = "Available Student List";
-    
+
+
 }
 
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
             <h2 class="text-primary">Available Student List</h2>
+            <h3>@(Model.courseSession.CourseName)</h3>
+            <h3>@(Model.courseSession.Day)</h3>
+            <h3>@(Model.courseSession.StartTime) - @(Model.courseSession.EndTime)</h3>
         </div>
         <div class="col-6 text-end">
         </div>
     </div>
     <br /><br />
-<table class="table table-bordered table-striped" style="width:100%">
-    <thead>
-        <tr>
-            <th>
-               First Name
-            </th>
-            <th>
-               Last Name
-            </th>
-            <th>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var obj in Model.Student)
-        {
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
             <tr>
-                <td width="10%">
-                    @obj.FirstName
-                </td>
-                <td width="10%">
-                    @obj.LastName
-                </td>
-                <td width="10%">
-                    <div class="d-flex justify-content-center" role="group">
-                        <a href="@Url.Action("Add", "StudentEnrollment", new { studentId =  @obj.Id, sessionID = Model.courseSession.Id})" class="btn btn-success mx-2"> <i class="bi bi-plus-square"></i> Enroll Student</a>
-                    </div>
-                </td>
+                <th>
+                    First Name
+                </th>
+                <th>
+                    Last Name
+                </th>
+                <th>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model.UnEnrolledStudents)
+            {
+                <tr>
+                    <td width="10%">
+                        @obj.FirstName
+                    </td>
+                    <td width="10%">
+                        @obj.LastName
+                    </td>
+                    <td width="10%">
+                        <div class="d-flex justify-content-center" role="group">
+                            <a href="@Url.Action("Add", "StudentEnrollment", new { studentId =  @obj.Id, sessionID = Model.courseSession.Id})" class="btn btn-success mx-2"> <i class="bi bi-plus-square"></i> Enroll Student</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h2 class="text-primary">Currently Enrolled Student List</h2>
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    First Name
+                </th>
+                <th>
+                    Last Name
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model.EnrolledStudents)
+            {
+                <tr>
+                    <td width="10%">
+                        @obj.FirstName
+                    </td>
+                    <td width="10%">
+                        @obj.LastName
+                    </td>
+                    <td width="10%">
+                        <div class="d-flex justify-content-center" role="group">
+                            <a href="@Url.Action("Remove", "StudentEnrollment", new { studentId =  @obj.Id, sessionID = Model.courseSession.Id})" class="btn btn-danger"> <i class="bi bi-x-square-fill"></i> Remove Student</a>
+                        </div>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <a asp-controller="StudentEnrollment" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        Back to List
+    </a>
 </div>

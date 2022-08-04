@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -18,8 +19,15 @@ namespace Models.Academic
         [ForeignKey("CourseId")]
         public Course? Course { get; set; }
         public string CourseName { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-        
+        [Required]
+        [DataType(DataType.Time)]
+        [DisplayName("Start Time")]
+        public DateTime StartTime { get; set; }
+
+        [Required]
+        [DataType(DataType.Time)]
+        [DisplayName("End Time")]
+        public DateTime EndTime { get; set; }
+
     }
 }
