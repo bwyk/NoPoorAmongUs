@@ -26,11 +26,6 @@
                     <select asp-for="CourseSession.CourseId" asp-items="@Model.Courses" class="student-edit-show form-select">
                     </select>
                     <span asp-validation-for="CourseSession.CourseId" class="text-danger"></span>
-                    <div class="mb-3">
-                        <label asp-for="CourseSession.CourseName"></label>
-                        <input readonly class="course-session-edit-input form-control" asp-for="CourseSession.CourseName" />
-                        <span asp-validation-for="CourseSession.CourseName" class="text-danger"></span>
-                    </div>
                     <div class="mb-3 col-4">
                         <label asp-for="CourseSession.StartTime"></label>
                         <input asp-for="CourseSession.StartTime" asp-format="H:mm" class="form-control" />
