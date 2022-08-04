@@ -11,6 +11,7 @@ namespace Models.ViewModels
 {
     public class StudentVM
     {
+        [ValidateNever]
         public string Status { get; set; }
         public Student Student { get; set; }
         [ValidateNever]

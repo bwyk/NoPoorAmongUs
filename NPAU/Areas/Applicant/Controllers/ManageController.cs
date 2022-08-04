@@ -50,7 +50,18 @@ namespace NPAU.Controllers
             else
             {
                 studentVM.Student = _unitOfWork.Student.GetFirstOrDefault(s => s.Id == id);
-                studentVM.Rating = _unitOfWork.Rating.GetFirstOrDefault(r => r.StudentId == id);
+                string userId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
+                Rating rating = _unitOfWork.Rating.GetFirstOrDefault(r => r.StudentId == id && r.ApplicationUserId == userId);
+                if(rating == null)
+                {
+                    rating = new Rating()
+                    {
+                        StudentId = studentVM.Student.Id,
+                        Student = studentVM.Student,
+                        ApplicationUserId = userId
+                    };
+                }
+                studentVM.Rating = rating; 
                 return View(studentVM);
             }
         }
@@ -160,7 +171,9 @@ namespace NPAU.Controllers
 
 
                 _unitOfWork.Save();
-                return RedirectToAction("Index");
+                if (obj.Status == "" || obj.Status == null)
+                    obj.Status = SD.Role_Social + "_all";
+                return RedirectToAction("Index", new { status = obj.Status });
             }
 
             obj.PotentialGuardians = _unitOfWork.Guardian.GetAll();
@@ -208,7 +221,7 @@ namespace NPAU.Controllers
         }
 
         [HttpPost, ActionName("SaveRatings")]
-        public IActionResult SaveRatings(Rating rating, int? studentId)
+        public IActionResult SaveRatings(Rating rating, int? studentId, string? status)
         {
             string result;
             rating.ApplicationUserId = ClaimsPrincipalExtensions.GetLoggedInUserId<string>(User);
@@ -231,8 +244,8 @@ namespace NPAU.Controllers
                 result = "updated";
             }
             _unitOfWork.Save();
-            TempData["success"] = "Rating " + result + " successfully";            
-            return Json(new { success = true});
+            TempData["success"] = "Rating " + result + " successfully";
+            return RedirectToAction("Upsert", new { id = studentId, status = status });
         }
         
         [HttpPost, ActionName("Delete")]

@@ -35,9 +35,9 @@ namespace Models
         [DisplayName("Date of Birth")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
-        [Required]
+        //[Required]
         public string Village { get; set; }
-        [Required]
+        //[Required]
         public string Address { get; set; }
 
         [Required]
