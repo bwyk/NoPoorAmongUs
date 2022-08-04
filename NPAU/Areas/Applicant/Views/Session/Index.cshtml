@@ -42,7 +42,7 @@
             <h2 class="text-primary text-start">Session List</h2>
         </div>
         <div class="p-2 col-6 text-end">
-            <a asp-area="Applicant" asp-controller="Session" asp-action="Upsert" class="btn btn-primary">
+            <a asp-area="Applicant" asp-controller="Session" asp-action="Upsert" asp-route-status="@status" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> &nbsp; New Session
             </a>
         </div>

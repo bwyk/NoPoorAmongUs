@@ -75,5 +75,10 @@ namespace Utilities
         public const string PriorityHigh = "High";
         public const string PriorityComplete = "Complete";
         public static List<string> PriorityList = new List<string>() { PriorityLow, PriorityMedium, PriorityHigh, PriorityComplete };
+
+        // Attendance status
+        public const string AttendancePresent = "Present";
+        public const string AttendanceAbsent = "Absent";
+        public const string AttendanceTardy = "Tardy";
     }
 }

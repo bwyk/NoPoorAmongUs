@@ -58,9 +58,7 @@
                 @if (User.IsInRole(SD.Role_Instructor) || User.IsInRole(SD.Role_Admin) )
                 {
                     <ul class="list-group list-group-horizontal-sm">
-                        <a style="text-decoration:none" asp-controller="Session" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_your")">
-                            <li class="list-group-item @all">View Course Session</li>
-                        </a>
+                        
 
                         <a style="text-decoration:none" id="all" asp-controller="Manage" asp-action="Index" asp-route-status="@(SD.Role_Instructor+"_all")">
                         <li class="list-group-item @all">All Students</li>

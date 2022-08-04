@@ -9,6 +9,8 @@ namespace Models.ViewModels
     {
         //[BindProperty]
         public List<AttendanceVM> AllSessionAttendance { get; set; }
+        [ValidateNever]
+        public string? Status { get; set; }
 
     }
 }

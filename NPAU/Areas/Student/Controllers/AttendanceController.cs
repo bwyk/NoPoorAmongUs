@@ -11,6 +11,8 @@ namespace NPAU.Controllers
     {
         [BindProperty]
         private AttendanceVM attendanceVM { get; set; }
+        private SessionAttendance sessionAttendance;
+        private DateTime date;
 
         private readonly IUnitOfWork _unitOfWork;
         public AttendanceController(IUnitOfWork unitOfWork)
@@ -26,8 +28,7 @@ namespace NPAU.Controllers
         public IActionResult MarkAttendance(int sessionId, int? attendanceId, string? status)
         {
             // DateTime.Now.Date to standardize the time so we can match off of the date.
-            DateTime date = DateTime.Now.Date.AddDays(1); //TODO remove hardcoding and pass in date/sessionAttendanceId dynamically
-            SessionAttendance sessionAttendance = null;
+            date = DateTime.Now.Date.AddDays(1); //TODO remove hardcoding and pass in date/sessionAttendanceId dynamically
             bool fromEdit;
             // If we are not editing an already existing record
             if (attendanceId == null)
@@ -43,10 +44,10 @@ namespace NPAU.Controllers
             }
 
             CourseSession targetSession = _unitOfWork.CourseSession.GetFirstOrDefault(cS => cS.Id == sessionId);
-            List<CourseEnrollment> cEList = _unitOfWork.CourseEnrollment.GetAll((cE => cE.CourseSession.CourseId == targetSession.CourseId), includeProperties: "Student").ToList();
+            List<CourseEnrollment> cEList = _unitOfWork.CourseEnrollment.GetAll((cE => cE.CourseSessionId == targetSession.Id), includeProperties: "Student").ToList();
 
 
-            List<Attendance> attendance = new();
+            List<Attendance> attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
 
             // If attendance has not been taken for the given session on the given date
             if (sessionAttendance == null)
@@ -61,9 +62,7 @@ namespace NPAU.Controllers
                 _unitOfWork.Save();
                 sessionAttendance = _unitOfWork.SessionAttendance.GetFirstOrDefault(sa => sa.CourseSessionId == sessionId && sa.DateTaken == date, includeProperties: "CourseSession");
 
-                //Loop through the number of students that are enrolled for this SessionID.
-                //For each enrolled student, create a new Attendance and update their CourseEnrollmentId so we know who they are.
-                //Add it to List of Attendance objects which we can set our viewmodel with.
+                
                 for (int i = 0; i < cEList.Count(); i++)
                 {
                     Attendance newAttendance = new Attendance()
@@ -78,26 +77,62 @@ namespace NPAU.Controllers
                 }
                 _unitOfWork.Attendance.AddRange(attendance);
                 _unitOfWork.Save();
-                attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
             }
             else
             {
-                attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
-                foreach(Attendance a in attendance)
+                List<Attendance> newAttendances = new();
+                List<Attendance> matchlessAtendances = new List<Attendance>(attendance);
+                // Check each enrollment for a matching attendance
+                foreach (CourseEnrollment e in cEList)
                 {
-                    for (int i = 0; i < cEList.Count; i++)
+                    // If there are attendance records
+                    if (attendance.Count > 0)
                     {
-                        if (a.CourseEnrollment.Id == cEList[i].Id)
+                        bool match = false;
+
+                        foreach (Attendance a in attendance)
                         {
-                            a.CourseEnrollment = cEList[i];
-                            cEList.RemoveAt(i);
-                            break;
+                            if (a.CourseEnrollment.Id == e.Id)
+                            {
+                                a.CourseEnrollment = e;
+                                matchlessAtendances.Remove(a);
+                                match = true;
+                                break;
+                            }
+                            
+                        }
+                        // If no match was found make a new attendance
+                        if (!match)
+                        {
+                            Attendance newAttendance = new Attendance()
+                            {
+                                CourseEnrollmentId = e.Id,
+                                CourseEnrollment = e,
+                                DateTaken = date,
+                                SessionAttendanceId = sessionAttendance.Id
+                            };
+                            newAttendances.Add(newAttendance);
                         }
                     }
+                    else // If there are no attendance records
+                    {
+                        Attendance newAttendance = new Attendance()
+                        {
+                            CourseEnrollmentId = e.Id,
+                            CourseEnrollment = e,
+                            DateTaken = date,
+                            SessionAttendanceId = sessionAttendance.Id
+                        };
+                        newAttendances.Add(newAttendance);
+                    }
                 }
-                
+                if (matchlessAtendances.Count > 0)
+                    _unitOfWork.Attendance.RemoveRange(matchlessAtendances);
+                if (newAttendances.Count > 0)
+                    _unitOfWork.Attendance.AddRange(newAttendances);
+                _unitOfWork.Save();
             }
-
+            attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
             attendanceVM = new AttendanceVM()
             {
                 Status = status,
@@ -135,7 +170,7 @@ namespace NPAU.Controllers
         {
             AllAttendanceVM allAttendanceVM = new()
             {
-                //AllSessionAttendance = sessionAttendances,
+                Status = status,
                 AllSessionAttendance = new(),
 
             };
