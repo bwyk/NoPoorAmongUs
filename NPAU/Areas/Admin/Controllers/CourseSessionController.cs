@@ -49,10 +49,26 @@ public class CourseSessionController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpsertAsync(CourseSessionVM obj)
     {
+        obj.CourseList = _unitOfWork.Course.GetAll().Select(i => new SelectListItem
+        {
+            Text = i.Name,
+            Value = i.Id.ToString()
+        });
         if (ModelState.IsValid)
         {
             if (obj.CourseSession.Id == 0)
             {
+                var array = obj.CourseList.ToArray();
+                var name = "";
+                if (int.Parse(obj.CourseSession.CourseName) != 0)
+                {
+                    name = array[int.Parse(obj.CourseSession.CourseName) - 1].Text;
+                }
+                var course = _unitOfWork.Course.GetFirstOrDefault(u => u.Name == name);
+                var id = course.Id;
+                obj.CourseSession.Course = course;
+                obj.CourseSession.CourseId = course.Id;
+                obj.CourseSession.CourseName = name;
                 _unitOfWork.CourseSession.Add(obj.CourseSession);
                 TempData["success"] = "Course Created Successfully";
 
@@ -66,12 +82,6 @@ public class CourseSessionController : Controller
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
-        obj.CourseList = _unitOfWork.Course.GetAll().Select(i => new SelectListItem
-        {
-            Text = i.Name,
-            Value = i.Id.ToString()
-        });
-
         return View(obj);
     }
 
