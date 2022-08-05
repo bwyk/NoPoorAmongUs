@@ -28,7 +28,8 @@ namespace NPAU.Controllers
         public IActionResult MarkAttendance(int sessionId, int? attendanceId, string? status)
         {
             // DateTime.Now.Date to standardize the time so we can match off of the date.
-            date = DateTime.Now.Date.AddDays(1); //TODO remove hardcoding and pass in date/sessionAttendanceId dynamically
+            date = DateTime.Now.Date;
+
             bool fromEdit;
             // If we are not editing an already existing record
             if (attendanceId == null)
@@ -58,9 +59,9 @@ namespace NPAU.Controllers
                     CourseSession = targetSession,
                     DateTaken = date, // note needs to be "DateTime.Now.Date;" or you will not be able to match it from the db E.g. '{8/1/2022 12:00:00 AM} != {8/1/2022 12:00:01 AM}'
                 };
-                _unitOfWork.SessionAttendance.Add(sessionAttendance);
-                _unitOfWork.Save();
-                sessionAttendance = _unitOfWork.SessionAttendance.GetFirstOrDefault(sa => sa.CourseSessionId == sessionId && sa.DateTaken == date, includeProperties: "CourseSession");
+                //_unitOfWork.SessionAttendance.Add(sessionAttendance);
+                //_unitOfWork.Save();
+                //sessionAttendance = _unitOfWork.SessionAttendance.GetFirstOrDefault(sa => sa.CourseSessionId == sessionId && sa.DateTaken == date, includeProperties: "CourseSession");
 
                 
                 for (int i = 0; i < cEList.Count(); i++)
@@ -70,17 +71,17 @@ namespace NPAU.Controllers
                         CourseEnrollmentId = cEList[i].Id,
                         CourseEnrollment = _unitOfWork.CourseEnrollment.GetFirstOrDefault(ce => ce.Id == cEList[i].Id, includeProperties: "CourseSession,Student"),
                         DateTaken = date,
-                        SessionAttendanceId = sessionAttendance.Id
                     };
 
                     attendance.Add(newAttendance);
                 }
-                _unitOfWork.Attendance.AddRange(attendance);
-                _unitOfWork.Save();
+                //_unitOfWork.Attendance.AddRange(attendance);
+                //_unitOfWork.Save();
             }
             else
             {
-                attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
+                attendance = RemoveDuplicateRecords(sessionAttendance.Id);
+
                 List<Attendance> newAttendances = new();
                 List<Attendance> matchlessAtendances = new List<Attendance>(attendance);
                 // Check each enrollment for a matching attendance
@@ -144,6 +145,15 @@ namespace NPAU.Controllers
 
             return View(attendanceVM);
         }
+        private List<Attendance> RemoveDuplicateRecords(int sessionId)
+        {
+            List<Attendance> attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionId).ToList();
+            List<Attendance> singleAttendances = attendance.GroupBy(x => x.CourseEnrollmentId).Select(x => x.First()).ToList();
+            List<Attendance> dupAttendance = attendance.Where(x => !singleAttendances.Select(sa => sa.Id).Contains(x.Id)).ToList();
+            _unitOfWork.Attendance.RemoveRange(dupAttendance);
+            _unitOfWork.Save();
+            return _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionId).ToList();
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -152,18 +162,87 @@ namespace NPAU.Controllers
 
             if (ModelState.IsValid)
             {
-                foreach(var a in obj.AttendanceList)
+                // Check to see if there is an already record for the date and session
+                SessionAttendance sessionAttendance = _unitOfWork.SessionAttendance.GetFirstOrDefault(sa => sa.DateTaken == obj.SessionAttendance.DateTaken
+                        && sa.CourseSessionId == obj.SessionAttendance.CourseSessionId);
+                if (sessionAttendance == null)
                 {
-                    // Only update as they were all made in the get
-                    _unitOfWork.Attendance.Update(a);
+                    // If no record exists make a new one
+                    SessionAttendance newAttendance = new SessionAttendance()
+                    {
+                        DateTaken = obj.SessionAttendance.DateTaken,
+                        CourseSessionId = obj.SessionAttendance.CourseSessionId,
+                        CourseSession = obj.SessionAttendance.CourseSession,
+                    };
+                    _unitOfWork.SessionAttendance.Add(newAttendance);
                     _unitOfWork.Save();
+                    sessionAttendance = _unitOfWork.SessionAttendance.GetFirstOrDefault(sa => sa.DateTaken == obj.SessionAttendance.DateTaken 
+                        && sa.CourseSessionId ==  obj.SessionAttendance.CourseSessionId);
+                    // var dupes = RemoveDuplicateRecords(sessionAttendance.Id);
+                    foreach (var a in obj.AttendanceList)
+                    {
+                        // Only update as they were all made in the get
+                        a.DateTaken = sessionAttendance.DateTaken;
+                        a.SessionAttendanceId = sessionAttendance.Id;
+                        _unitOfWork.Attendance.Update(a);
+                        _unitOfWork.Save();
+                    }
+
                 }
+                else
+                {
+                    List<Attendance> attendance = _unitOfWork.Attendance.GetAll(a => a.SessionAttendanceId == sessionAttendance.Id).ToList();
+                    if (attendance[0].Id != obj.AttendanceList[0].Id) // If there were already attendance records, remove the new ones.
+                        _unitOfWork.Attendance.RemoveRange(obj.AttendanceList);
+
+                    RecursiveMatch(attendance, obj.AttendanceList); // Match old and new records and write them to the db
+                        
+                    _unitOfWork.Save();                                  
+                }
+                
+                
                 if (obj.isFromEdit)
                     return RedirectToAction("ViewAttendance", new { sessionId = obj.SessionAttendance.CourseSessionId, status = obj.Status });
                 else
                     return RedirectToAction("Index", "Session", new { area = "Applicant", status = obj.Status});
             }
             return View(obj);
+        }
+
+        /// <summary>
+        /// Created to update already existing Attendance records instead of adding new ones.
+        /// <para>Matches values based on CourseEnrollmentId, updates objects of the first list with values of the second and writes it to the db.</para>
+        /// </summary>
+        /// <param name="attendanceA"></param>
+        /// <param name="attendanceB"></param>
+        private void RecursiveMatch(List<Attendance> attendanceA, List<Attendance> attendanceB)
+        {
+            bool match = false;
+            foreach (var a in attendanceA)
+            {
+                foreach (var b in attendanceB)
+                {
+                    if (a.CourseEnrollmentId == b.CourseEnrollmentId)
+                    {
+                        a.DateTaken = b.DateTaken;
+                        a.Excused = b.Excused;
+                        a.MarkedAttendance = b.MarkedAttendance;
+                        _unitOfWork.Attendance.Update(a);
+                        attendanceA.Remove(a);
+                        attendanceB.Remove(b);
+                        match = true;
+                        break;
+                    }
+                    
+                }
+                if (match)
+                {
+                    if(attendanceA.Count() > 0 && attendanceB.Count() > 0)
+                        RecursiveMatch(attendanceA, attendanceB);
+                    break;
+
+                }
+            }
         }
 
         [HttpGet]
@@ -177,7 +256,6 @@ namespace NPAU.Controllers
             };
             List<SessionAttendance> sessionAttendances = _unitOfWork.SessionAttendance.GetAll(sa => sa.CourseSessionId == sessionId).ToList();
             CourseSession targetSession = _unitOfWork.CourseSession.GetFirstOrDefault(cS => cS.Id == sessionId);
-
             foreach (SessionAttendance sa in sessionAttendances)
             {
                 AttendanceVM attendanceVM = new AttendanceVM();

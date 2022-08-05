@@ -1,0 +1,32 @@
+First ,Last,Class,Birth date
+Luisa ,Bernardo,8,7/29/2009
+Albertina ,Andre,8,12/6/2008
+Alda isabel ,Matusse,8,3/8/2009
+Aline Loao ,Magule,8,3/28/2009
+Ana,Sara,9,
+Anaria ,Carlos,8,10/15/2009
+Azelia ,Moises,9,7/19/2007
+Cecilia ,Sousa,8,3/21/2009
+Celia ,Paulino,8,6/4/2009
+Dadiva ,da Conceicao,8,3/4/2009
+Delifina ,Domigos,8,9/26/2009
+Elodia ,Chauque,9,
+Ema ,Samuel,9,
+Esperanca Luis ,Simbine,9,3/7/2008
+Helena Lucas ,Viera,8,8/26/2009
+Helvia Evaristo ,Massave,8,11/10/2009
+Herminia Laura ,Novela,9,9/22/2005
+Joana ,Helder,8,11/5/2009
+Joice  Silvano ,Machava,8,4/18/2009
+Lidia ,Sergio,8,
+Lorcia  ,Albino,8,
+Luana ,Nicolau,8,6/3/2009
+Luisa juvencio ,Cotinho,8,4/4/2009
+Maria ,da Graca,8,12/22/2009
+Matilde ,Reginaldo,8,2/20/2005
+Noemia ,da Gloria Julio,8,7/7/2007
+Orlanda Armando ,Mulhanga,8,5/21/2009
+Rabeca ,Cesar ,8,2/17/2009
+Sandra ,Carlos,9,5/14/2007
+Suzana ,Manuel,8,1/19/2009
+Wendy ,da Sara,8,1/16/2009

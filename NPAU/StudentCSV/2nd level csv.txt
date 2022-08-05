@@ -1,0 +1,34 @@
+First,Last,Class,Birth date
+Floretina Domigos ,Cofe,10,8/1/2004
+Luisa ,Fatima,10,9/3/2004
+Ana ,Dawane,10,8/23/2006
+Biatriz ,Antonio,10,7/20/2007
+Egnencia Dulce ,Pedro,10,9/11/2004
+Lucrencia ,Domigos,10,11/24/2006
+Flora ,Rosa,10,3/1/2003
+Alice ,Celina,10,
+Eugenia, Carolina,10,5/18/2005
+Elisa Jaime ,Mudlovo,10,4/12/2004
+Marta ,Fernando,10,6/29/2007
+Isaura ,Carlos,10,5/1/2005
+Sara ,Pedro,10,3/5/2007
+Marcia ,Augosto,10,
+Monica ,Manuel,10,3/4/2005
+Luisa ,Carlos,10,
+Amelia Nossai,Carlos,10,9/30/2005
+Veronica ,Afonso,10,
+Salda ,Joana,10,
+Hamina ,Baltazar,10,11/3/2007
+Celeste ,Macamo,10,4/15/2006
+Nomsa ,Maria,10,10/18/2003
+Antonieta ,Vitorino,10,
+Roda ,Moises,10,3/31/2005
+Sandra ,Ozias,10,
+Alda ,Americo,10,8/30/2006
+Neima ,Jose,10,1/7/2007
+Marlene ,Boaventura,10,2/12/2007
+Dorca ,Justino,10,5/19/2005
+Elsa,Hermenegildo,10,1/18/2004
+Amalia ,Lucas,10,7/20/2006
+Rosa Sergio ,Saue,10,7/4/2005
+Amelia ,Bernado ,10,2/2/2007

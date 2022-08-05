@@ -1,0 +1,15 @@
+First,Last,Class,Birth date
+Anastancia Arlindo,Arlindo,12,1/29/2003
+Cacilda ,Estevao,11,
+Cheila ,Horaco,11,4/16/2006
+Constancia ,Fernandes,11,
+Constancia Joao ,Novela,11,7/15/2006
+Delma ,Esmenia,12,2/15/2003
+Edna ,Cesar,11,4/23/2004
+Elsa ,Filipe,11,8/18/2004
+Isaura ,Sitoe,12,10/12/2005
+Marcia Regina ,Matavele,11,10/25/2003
+Maria ,da Silva,12,11/10/2005
+Matelina,?,11,5/7/2004
+Rita ,Alegria ,11,8/5/2005
+Tatiana ,Sergio,11,

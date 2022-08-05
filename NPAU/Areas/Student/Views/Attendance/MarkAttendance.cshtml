@@ -11,13 +11,16 @@
         <h4>No Students are enrolled in this course session</h4>
     }
     
-    <h5 class="text-primary">Date: @DateTime.Now.ToShortDateString()</h5>
     <form method="post" enctype="multipart/form-data">
         <input type="hidden" readonly asp-for=isFromEdit>
         <input type="hidden" readonly asp-for=Status>
         <input type="hidden" readonly asp-for=SessionAttendance.Id>
         <input type="hidden" readonly asp-for=SessionAttendance.CourseSessionId>
-
+        <div class="mb-3">
+            <label asp-for="SessionAttendance.DateTaken"></label>
+            <input asp-for="SessionAttendance.DateTaken" class="student-edit-input form-control" />
+            <span asp-validation-for="SessionAttendance.DateTaken" class="text-danger"></span>
+        </div>
         <table class="table table-bordered table-striped" style="width:100%">
             <h2 class="text-primary">
                 <span class="col-10"></span>
@@ -43,7 +46,7 @@
                     <input type="hidden" asp-for=@Model.AttendanceList[i].SessionAttendanceId>
                     <tr>
                         <td width="40%">
-                            <label>@(Model.AttendanceList[i].CourseEnrollment.Student?.FullName ?? "No name found")</label>
+                            <label>@(Model.AttendanceList[i]?.CourseEnrollment?.Student?.FullName ?? "No name found")</label>
                         </td>
                         <td width="30%">
                             <div>

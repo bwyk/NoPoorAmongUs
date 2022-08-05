@@ -13,7 +13,8 @@ namespace Models.Academic
         [Key]
         public int Id { get; set; }
         [DataType(DataType.Date)]
-        public DateTime DateTaken { get; set; } = DateTime.Now.Date;
+        public DateTime DateTaken { get; set; } = DateTime.Now; 
+
         //public List<Attendance> Attendances { get; set; }
         public int CourseSessionId { get; set; }
         [ForeignKey("CourseSessionId")]

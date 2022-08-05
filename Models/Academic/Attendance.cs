@@ -15,7 +15,7 @@ namespace Models.Academic
         public string MarkedAttendance { get; set; } = string.Empty;
         public bool Excused { get; set; }
         [DataType(DataType.Date)]
-        public DateTime DateTaken { get; set; } = DateTime.Now;
+        public DateTime DateTaken { get; set; }// = DateTime.Now; assigned in controller if the user did not pick one
         public int CourseEnrollmentId { get; set; }
         [ForeignKey("CourseEnrollmentId")]
         public CourseEnrollment CourseEnrollment { get; set; }
