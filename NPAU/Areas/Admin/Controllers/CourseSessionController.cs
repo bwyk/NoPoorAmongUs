@@ -21,7 +21,7 @@ public class CourseSessionController : Controller
         IEnumerable<CourseSession> objSessionList = _unitOfWork.CourseSession.GetAll();
         return View(objSessionList);
     }
-    public async Task<IActionResult> UpsertAsync(int? id)
+    public IActionResult Upsert(int? id)
     {
         CourseSessionVM courseSessionVM = new()
         {

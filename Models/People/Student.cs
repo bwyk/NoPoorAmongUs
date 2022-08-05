@@ -36,9 +36,11 @@ namespace Models
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
         //[Required]
-        public string Village { get; set; }
+        public string? Village { get; set; }
         //[Required]
-        public string Address { get; set; }
+        public string? Address { get; set; }
+        [DisplayName("GPS Coordinates")]
+        public string? GPSCoordinates{ get; set; }
 
         [Required]
         [DisplayName("English Level")]

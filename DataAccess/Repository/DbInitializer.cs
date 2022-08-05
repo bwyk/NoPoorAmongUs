@@ -6,6 +6,8 @@ using Models;
 using Models.Academic;
 using Models.People;
 using Utilities;
+using Microsoft.VisualBasic.FileIO;
+
 
 namespace DataAccess.Repository
 {
@@ -45,10 +47,6 @@ namespace DataAccess.Repository
             _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor_English)).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole(SD.Role_Instructor_IT)).GetAwaiter().GetResult();
 
-            //SeedGuardians();
-            //SeedCourses();
-            SeedRelationships();
-            SeedCourseEnrollment();
             //Create "Super Admins"
             _userManager.CreateAsync(new ApplicationUser
             {
@@ -61,14 +59,68 @@ namespace DataAccess.Repository
             ApplicationUser user = _db.ApplicationUser.FirstOrDefault(u => u.Email == "kevinmclennan@mail.weber.edu");
 
             _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
+            var path1 = @".\StudentCSV\1st level csv.txt";
+            var path2 = @".\StudentCSV\2nd level csv.txt";
+            var path3 = @".\StudentCSV\3rd level csv.txt";
 
-            //SeedGuardians();
-            //SeedCourses();
+            SeedRealStudents(path1, 1);
+            SeedRealStudents(path2, 2);
+            SeedRealStudents(path3, 3);
+            _db.SaveChanges();
+            SeedCourseEnrollment();
             SeedRelationships();
             //SeedCourseSessionAsync();
             //SeedCourseEnrollmentAsync();
             SeedNoteTypes().GetAwaiter().GetResult();
             SeedStudentNotes();
+
+        }
+
+        private void SeedRealStudents(string path, int courseLevel)
+        {
+            using (TextFieldParser csvParser = new TextFieldParser(path))
+            {
+                csvParser.CommentTokens = new string[] { "#" };
+                csvParser.SetDelimiters(new string[] { "," });
+                csvParser.HasFieldsEnclosedInQuotes = true;
+
+                // Skip the row with the column names
+                csvParser.ReadLine();
+
+                while (!csvParser.EndOfData)
+                {
+                    // Read current line fields, pointer moves to the next line.
+                    string[] fields = csvParser.ReadFields();
+                    string First = fields[0];
+                    string Last = fields[1];
+                    string birth = fields[3];
+                    if (birth.Length != 0)
+                    {
+                        var birthSplit = birth.Split('/');
+                        if (birthSplit[0].Length != 2)
+                            birthSplit[0] = birthSplit[0].PadLeft(2, '0');
+                        if (birthSplit[1].Length != 2)
+                            birthSplit[1] = birthSplit[1].PadLeft(2, '0');
+                        birth = birthSplit[0] + '/' + birthSplit[1] + '/' + birthSplit[2];
+                    }
+                    else
+                    {
+                        birth = "01/01/1900";
+                    }
+
+                    Student? student = _db.Students.FirstOrDefault(s => s.FirstName == First && s.LastName == Last);
+                    if (student == null)
+                        _db.Students.Add(new Student()
+                        {
+                            Status = SD.StudentStatusAccepted,
+                            FirstName = First,
+                            LastName = Last,
+                            ComputerLevel = courseLevel,
+                            EnglishLevel = courseLevel,
+                            Birthday = DateTime.ParseExact(birth, "MM/dd/yyyy", null)// null is culture
+                        });
+                }
+            }
         }
 
         private (Student, Student, Student, Student, Student) GetStudents()
